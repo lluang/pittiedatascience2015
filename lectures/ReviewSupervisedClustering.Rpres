@@ -1,0 +1,247 @@
+Review
+========================================================
+author: Louis Luangkesorn
+date: January 2014
+
+
+Machine learning overview
+=========================
+type: section
+
+Machine Learning Review
+===========================
+![Branches of Machine Learning](resources/ml_map.png)
+
+Branches of Machine Learning
+============================
+
+-  Clustering
+-  Classification
+-  Regression
+-  Dimensionality reduction (Feature Selection)
+
+Clustering
+==========
+
+-  Look at training data, then generate clusters.
+-  Assign test data to clusters.
+-  Predictions based on what cluster test data is assigned.
+
+Classification
+================
+
+-  From training data, classifications are based on output data.
+-  Test data assigned to classes based on predictors.
+-  Predictions based on class assigned
+
+Regression
+===========
+
+-  Use training data to develop regression model.
+-  Use regression model on test data to generated predicted output scores.
+
+Dimensionality reduction
+=========================
+
+-  Use methods to reduce the number of potential predictors to a manageable number.
+-  Analysis of Variance (ANOVA)
+-  Clustering with factors
+
+Other major methods covered
+===========================
+
+-  Text mining
+-  Associative rules
+-  Time series
+
+Supervised learning
+===================
+
+-  Training data includes the outcome scores.
+-  Develop prediction of outcome score based on predictors.
+-  Apply model to test data.
+
+Unsupervised learning
+=====================
+
+-  Training data does not include outcome score.
+-  Typically, the goal is to determine if the data is from different classes or clusters.
+-  Use when there is little scored data available.
+-  Unsupervised learning methods take advantage of the volume of un-scored training data to make up for the lack of existing outcome data.
+
+Model evaluation
+================
+
+-  Precision and Recall curves
+-  Cumulative Recall
+-  Hold-out experiments
+-  Leave one out cross validation (LOOCV)
+
+
+Supervised learning
+===================
+type: section
+
+Supervised learning
+====================
+
+-  Regression
+  -  Logistic Regression
+  -  Regression trees
+  -  Artificial Neural Networks (ANN)
+  -  Support Vector Machines (SVM)
+  -  Multiadaptive Regression Splines (MARS)
+-  Classification
+  -  Naive Bayes
+  -  AdaBoost
+  -  *k*-Nearest Neighbors
+  -  Random Forests
+
+
+Regression and supervised learning
+==================================
+
+-  Regression is used to categorize the data or make a decision.
+  -  e.g. is a signal a buy/sell/hold signal
+  -  Is the transaction a fraud
+-  Note difference from how you learned regression where the output of the model is the expected value for a particular combination of predictors.
+  -  Regression in supervised learning generates a score which is used to generate a categorical outcome.
+  -  Contrast: Linear regression creates a model that predicts a value based on a predictors.
+  
+Regression methods
+==================
+
+-  Linear Regression
+-  Artificial Neural Networks (ANN)
+-  Support Vector Machines (SVM)
+-  Regression trees/Recursive partitioning
+-  Multiadaptive Regression Splines (MARS)
+
+Linear Regression
+======================
+
+-  Fit a model relating output to predictors.
+-  Model determines a score, the score is the predicted value of the score for a new sample.
+-  For classification, the score maps the data point to a region that has been divided into categories for classification.
+  -  Linear implies that region boundaries (hyperplanes are linear.
+- Logistic regression use the use of regression to predict probabilities
+  - Probabilities add up to 1.0
+
+
+Neural Networks
+==================
+
+-  A two-stage regression or classification model.
+-  For K-class classification, top level nodes are the probability of a sample being of class *k*
+-  Bottom nodes are the data
+-  In between layers are derived features that are linear combinations of the input data.
+
+Support Vector Machines
+=========================
+
+-  Used for regression or classification.
+-  Generate hyperplanes that divide the feature space into regions.
+-  Because the data may not be separable, the Support Vector is based on minimizing the error (training data on wrong side of region boundaries)
+
+  
+Regression trees/Recursive partitioning
+=======================================
+
+-  Tree based methods partition the feature space.
+-  Each partition divides a region into two regions (binary splits).
+-  Method chooses one factor and the value of the factor that leads to the best division.
+  - Best defined as the division that improves the prediction the most.
+
+Multivariate adaptive regression splines (MARS)
+===============================================
+
+-  Tree based method
+-  Adaptive procedure for regression (so similar to recursive partitioning)
+
+Classification
+==============
+
+-  Goal is to classify or cluster samples so that a decision can be made on what to do with a subject.
+-  Recognize that different classifications/clusters have different characteristics that require different decision rules.
+
+Evaluation for supervised learning
+==================================
+
+-  Evaluation in data mining is based on error rate.
+-  Use of hold-out test data.
+-  Can the method accurately predict the event, not necessarily that the scoring system was accurate.
+-  Contrast to linear regression, where the performance measure is the probability that a given coefficient = 0.
+
+
+Supervised learning methods
+===============================
+
+-  Regression trees
+-  Random Forests
+
+
+Regression tress
+=================
+
+-  Examples was done using algae data.
+-  Try weather data as well.
+
+Algae data
+===========
+
+- Load using Rattle
+- Determine target
+- Build model
+- Iterate
+- Note: we're skipping data transformation because it cannot be done in Rattle
+
+Using Rattle
+================
+
+-  Load data
+-  Evaluate Linear model
+-  Re-load data ignoring non-significant variables
+-  Repeat
+-  Note that a complete model evaluation could not be done from within Rattle.
+
+Try same thing with Regression Tree
+=========================================
+
+-  Note that Regression tree automates model development
+
+Weather example
+==================
+type: sub-section
+
+Weather data
+=============
+
+-  Weather data from Canberra, Australia.
+-  Goal is to predict if it will rain tomorrow
+-  "Date", "MinTemp", "MaxTemp","Rainfall", "Evaporation", "Sunshine",
+"WindGustDir", "WindGustSpeed", "Temp9am","Humidity9am", "Cloud9am", "WindDir9am", "WindSpeed9am", "Pressure9am", "Temp3pm", "Humidity3pm", "Cloud3pm", "WindDir3pm", "WindSpeed3pm", "Pressure3pm" 
+-  Predict "Rain tomorrow"
+
+Look at summary of data
+=======================
+
+-  One value of location (set to ignore)
+-  Check that values are categorical or numeric as appropriate.
+-  Set "Rain tomorrow" as the target.
+
+Examples
+========
+
+-  Recursive partitioning
+-  Logistic Regression
+-  Support Vector Machine
+-  Neural Network
+
+Model evaluation
+=================
+
+- Confusion (Error) Matrix
+- Precision/Recall curves
+- Receiver Operator Characteristic (True positive vs false positive)
+- Sensitivity/Specificity
+- Lift

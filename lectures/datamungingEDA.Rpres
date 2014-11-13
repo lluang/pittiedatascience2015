@@ -1,0 +1,288 @@
+Data Munging and Exploratory Data Analysis
+========================================================
+author: Louis Luangkesorn
+date: January 2014
+
+Topics
+========================================================
+
+-  Data munging
+-  Exploratory Data Analysis
+-  Predictive models
+
+Data munging
+=============
+type: subject
+
+Data munging
+============
+
+-  We obtain data from various sources.
+-  But the data may not be in a usable form.
+  -  Data collection was not organized with analysis in mind.
+  -  It may have been impractical to collect what we wanted.
+  -  The format of data delivered may not be what our analysis tools need.
+-  Managing the data is *data munging*.
+
+
+Reading in data
+===============
+
+- Data can be provided in the form of R data files (`*.RData`)
+- Files
+  - comma separated format (csv)
+  - Excel spreadsheets
+  - Databases
+  - Network, internet sources
+- Covered in the document *R Data Import/Export*
+- Application programming interfaces (API) for network based sources.
+
+Sample database - Algae
+=======================
+
+- Included with *Data Mining with R*
+- 200 water samples of taken from the same river over three months.
+- 11 variables
+  - Season, size, speed of river
+  - 8 Different chemical parameters
+- 7 freqency values of harmful algae
+- Later, we will try to predict algae in 140 observations of nominal and chemical parameters.
+
+
+Data from a file
+================
+
+```{r echo=FALSE}
+library(ggplot2)
+library(lattice)
+library(DMwR)
+```
+
+```{r}
+algae <- read.table('~/Ubuntu One/DataScience/bookdata/Analysis.txt',
+  header=F,
+  dec='.',
+  col.names=c('season','size','speed',
+              'mxPH','mnO2','Cl','NO3', 
+              'NH4','oPO4','PO4','Chla', 
+              'a1','a2','a3','a4', 
+              'a5','a6','a7'),
+  na.strings=c('XXXXXXX'))
+```
+
+Results
+=======
+
+```{r}
+head(algae)
+```
+
+Data visualization
+==================
+
+-  Visualization provides a summary of the data.
+-  We want to see what the data looks like.
+-  Also identify if any of the data looks 'wrong'
+
+Algae data
+==========
+
+```{r}
+summary(algae)
+```
+
+Histogram
+=========
+
+```{r}
+qplot(mxPH, data = algae, geom = "histogram")+ aes(y = ..density..) + theme_bw()
+```
+
+Check for normal distribution
+=============================
+
+```{r, echo=FALSE, fig=TRUE}
+library(car)
+par(mfrow=c(1,2))
+hist(algae$mxPH, prob=T, xlab='',
+      main='Histogram of maximum pH value',ylim=0:1)
+lines(density(algae$mxPH,na.rm=T))
+rug(jitter(algae$mxPH))
+qqPlot(algae$mxPH,main='Normal QQ plot of maximum pH')
+par(mfrow=c(1,1))
+```
+
+Boxplot
+=======
+
+```{r}
+boxplot(algae$oPO4,ylab='Orthophosphate (oPO4)')
+rug(jitter(algae$oPO4),side=2)
+abline(h=mean(algae$oPO4,na.rm=T),lty=2)
+```
+
+Scatterplot
+===========
+
+```{r, echo=FALSE}
+plot(algae$NH4,xlab='')
+abline(h=mean(algae$NH4,na.rm=T),lty=1)
+abline(h=mean(algae$NH4,na.rm=T)+sd(algae$NH4,na.rm=T),lty=2)
+abline(h=median(algae$NH4,na.rm=T),lty=3)
+```
+
+Boxplot with conditioning
+=========================
+
+```{r}
+algae$size <- factor(algae$size, levels = c("small", "medium", "large"))
+qplot(size, a1, data = algae, geom = "boxplot") + theme_bw()
+```
+
+Violin plots show more detail
+=============================
+
+```{r}
+qplot(factor(size), a1, data = algae, geom = "violin") + theme_bw()
+```
+
+Strip plots show how different parts of the data stream look
+============================================================
+
+```{r}
+minO2 <- equal.count(na.omit(algae$mnO2),
+                     number=4,overlap=1/5)
+stripplot(season ~ a3|minO2,
+          data=algae[!is.na(algae$mnO2),])
+```
+
+Data munging
+=============
+type: section
+
+Removing observations with missing values
+=========================================
+
+-  Some observations have missing values, which causes a problem when looking for correlations.
+-  Look at any data before removing it, to make sure there is not an underlying issue
+
+```{r}
+head(algae[!complete.cases(algae),])
+nrow(algae[!complete.cases(algae),])
+```
+
+Remove observations
+===================
+
+```{r}
+algae <- na.omit(algae)
+```
+
+or you could have just ignored specific rows.
+
+```
+algae <- algae[-c(62, 199),]
+```
+
+Counting missing values
+=======================
+
+- Use `apply()` to apply a function to many data records.
+
+```{r echo=FALSE}
+algae <- read.table('~/Ubuntu One/DataScience/bookdata/Analysis.txt',
+  header=F,
+  dec='.',
+  col.names=c('season','size','speed',
+              'mxPH','mnO2','Cl','NO3', 
+              'NH4','oPO4','PO4','Chla', 
+              'a1','a2','a3','a4', 
+              'a5','a6','a7'),
+  na.strings=c('XXXXXXX'))
+```
+
+```{r}
+apply(algae, 1, function(x) sum(is.na(x)))
+```
+
+Filling in missing values
+=========================
+
+If there is a missing value, you could:
+
+1. Remove the data.
+2. Ignore the missing value.
+3. Fill it in.
+
+1. Centrality statistic (mean, median, mode)
+  
+```
+algae[is.na(algae$Chla), "Chla"] <- median(algae$Chla, na.rm = T)
+```
+
+Filling unknown values by exploring correlations
+================================================
+
+-  If we know a certain variable is highly correlated with our variable of interest (*mxPH*), we can use the value of that variable to fill in the missing variable of interest.
+-  First, obtain correlations
+
+==========
+
+```{r}
+symnum(cor(algae[,4:18], use = "complete.obs"))
+```
+
+Applying correlations
+=====================
+
+-  NH4 correlated with NO, PO4 correlated with oPO4.
+-  Use linear regression to determine the regression equation
+
+```{r}
+algaeNoMA <- algae[-manyNAs(algae),]
+lm(PO4 ~ oPO4, data = algaeNoMA)
+```
+
+Filling in the missing value
+============================
+
+- Observation 28 is missing a value for PO4.
+
+```{r}
+algae[28,]
+algae[28, "PO4"] <- 42.90 + 1.29 * algae[28, "oPO4"]
+```
+
+Use conditioning values
+=======================
+
+What if we could use a centrality statistic, conditioned on some variable.
+
+```{r}
+data(algae)
+algae$season <- factor(algae$season, levels = c("spring","summer", "autumn", "winter"))
+qplot(mxPH, data = algae, facets = . ~ season, geom="histogram") + theme_bw()
+```
+
+Conditioning on multiple values
+===============================
+
+```{r}
+qplot(mxPH, data = algae, facets = . ~ size * speed, geom="histogram") + theme_bw()
+```
+
+Same thing, but use jittering
+=============================
+
+```{r}
+stripplot(size ~ mxPH | speed, data = algae, jitter = T)
+```
+
+-  Use the combination of classifying values, then take a statistic of centrality for the missing value.
+
+Filling in missing values using similarities
+============================================
+
+-  Take the point with the missing value, then identify several observations that are very similar.
+-  Use a statistic of centrality among those similar observations.
+-  e.g. Use *k-Nearest-Neighbors* to identify similar observations.

@@ -1,0 +1,135 @@
+Clustering
+========================================================
+author: IE 2064 Data Science
+date: April 2014
+
+Clustering
+========================================================
+
+-  Clustering is one the four core groups of data mining techniques.
+-  Group observations based on how similar they are.
+-  Break data into meaningful groups then contract the clusters against each other.
+-  Group observations to make datasets easier to manage.
+
+Application
+===========
+
+- Unsupervised clustering was used to look at fraud cases.
+- The transactions that were different than the majority were viewed as potential fraud.
+- When there is no training data, clustering will identify cases that are different from each other, then you can determine what made them different.
+- Contrast: classification methods are used when you know what makes them different, and you are trying to determine which samples should be grouped together.
+
+Clustering methods
+====================
+
+- Modified box plot rule
+- Local outlier factors
+- *k*-means
+- Hierarchical clustering
+
+K-means clustering
+==================
+type: section
+
+Romano-British pottery data
+===========================
+
+- Data is chemical composition of 48 specimens of Romano-British pottery
+-  $Al_2O_3, FE_2O_3, MgO, CaO, Na_2O, K_2O, TiO_2, MnO, BaO$
+-  Five sites (kilns)
+-  Can we divide up the specimens into groups, and do the groups cross kilns?
+
+Pottery data
+============
+
+- Included in package that goes along with the book *A Handbook of Statistical Analysis Using R, 2nd edition*
+
+```
+library(HSAUR2)
+data(pottery)
+```
+
+Analysis steps
+================
+
+-  Load data
+-  Look at data (*rggobi*)
+-  Clustering analysis
+
+
+
+K-means
+==========
+
+-  *k*-means techniques seeks to partition a set of data into a specific number of groups by minimizing some numerical criteria.
+-  There are a combinatorial number of ways to do this, so cannot use exhaustive search to find the best way.
+
+Algorithm
+============
+
+1.  Find an initial set of *k* clusters (e.g. randomly)
+2.  Calculate mean value for each cluster.
+3.  Measure distance between each observation and each of the *k* vectors of mean values (for each cluster)
+4.  Assign each observation to the closest of the *k* mean values.
+5.  Repeat steps 2-4 until the clusters are stable.
+
+Distance metrics
+================
+
+-  Euclidean distance
+$$d(a,b) = \sqrt{\sum_{i \in N} (a_i - b_i)^2}$$
+-  Manhattan distance
+$$d(a,b) =\sum_{i \in N} (|a_i - b_i|)$$
+
+Output
+=========
+
+-  Set of *k* centers of clusters.
+-  Assign each observation to nearest mean.
+-  Evaluation - Within cluster sum of squares.
+
+Tuning k-means
+==============
+
+-  Choice of distance metric.
+-  Number of clusters. (can iterate)
+-  Use HClust centers as a starting point instead of random clusters.
+-  Weighted *k*-means 
+
+Hierarchical clustering
+=======================
+type: section
+
+- Classification comes from a series of clusters.
+- Agglomerative hierarchical clustering uses successive fusions (merges) of individuals into groups.
+- Clustering goes from all single member groups to a single large group.
+- Evaluation determines at what point you should have stopped (similar to recursive partitioning)
+
+Algorithm
+==========
+
+1.  Determine what are the closest two cluster. Merge them together.
+2.  If the number of clusters remaining equals 1, stop, otherwise repeat from step 1.
+
+Decide where you should have stopped.
+
+
+Tuning Hierarchical clustering
+============================
+
+- Choice of distance metric
+- Agglomeration method
+- How many clusters to have
+
+Summary
+===========
+type: section
+
+Summary
+========
+
+
+-  Clustering is a way of grouping observations into clusters without knowing how they should be grouped.
+-  Very sensitive to choices such as how many groups to make.  Need to use analyst judgment.
+-  We covered some methods that were used for fraud (rare event) detection based on outliers.
+-  *k*-means, hierarchical, and model based are additional standard methods.

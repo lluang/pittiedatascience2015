@@ -1,0 +1,388 @@
+Twitter and Big Data
+========================================================
+author: Louis Luangkesorn
+date: February 2014
+
+```{r echo=FALSE}
+requesttokenurl = 'https://api.twitter.com/oauth/request_token'
+authorizeurl = 'https://api.twitter.com/oauth/authorize'
+accesstokenurl = 'https://api.twitter.com/oauth/access_token'
+Accesstoken = '1397701171-sdVgvADWPIXKUrtbb9U8rILnrgV9ek7xzFzw3Sl'
+Accesstokensecret =	'Mu7cbilFLpMJ7e62xdq41x2cm4pHMUFJ5Z0grOhBvpyMN'
+appurl = 'https://dev.twitter.com/apps/5649521/show'
+```
+
+Big data
+=============
+type: section
+
+
+What is Big Data?
+=================
+
+-  A recognition that the standard methods and techniques as taught in traditional statistics is inappropriate when data is collected on an automated basis.
+-  Traditional statistics research was done on the basis of data scarcity, where data collection was expensive.
+-  Design of experiments planned the data collection with the goal of answering a specific question.
+-  When data collection became automated, we now had data collection that was not planned for the experiment in question.
+
+Qualities of big data
+=====================
+left:50%
+
+- Volume
+- Velocity
+- Variety
+
+***
+
+![3Vs of Big data](resources/BigData3vs.png)
+
+Volume
+======
+left:70%
+
+-  Data is now collected in large quantities on a mass basis.
+-  Reports, transaction data, object tracking, computer servers.
+-  The big dividing line: Can the data processing be done on an individual computer?
+  -  Volume:  More data then can fit in memory.
+  -  Processing capability:  Processing requires more than a PC.
+
+***
+
+![3Vs of Big data](resources/BigData3vs.png)
+
+
+Variety
+=======
+left:70%
+
+-  Data can come from many sources.
+  -  E.g. combine complaints and locations of fires.
+  -  Combine sales data with census data.
+-  Data can come in many forms.
+  -  Structured tables (DBMS, Spreadsheets)
+  -  Unstructured text (reports, Twitter)
+  -  Images, video
+
+***
+
+![3Vs of Big data](resources/BigData3vs.png)
+
+
+Velocity
+======
+left:60%
+
+-  Data can be time sensitive.
+-  Static data (census)
+-  Changing slowly over time (popularity)
+-  Linked to an incident where an immediate response is required (natural disaster, major accident, disease outbreak)
+
+***
+
+![3Vs of Big data](resources/BigData3vs.png)
+
+
+Varacity
+========
+left:60%
+
+-  Data is of uncertain origin, of uncertain quality, and of uncertain relevance.
+-  Contrast with the case where the data collection is designed for the purpose of doing the analysis.
+-  Note: this has always been true, but now we compute based on this type of data.
+
+
+> "The government are very keen on amassing statistics. They collect them, add them, raise them to the nth power, take the cube root and prepare wonderful diagrams. But you must never forget that every one of these figures comes in the first instance from the village watchman, who just puts down what he damn pleases." - *Josiah Stamp, UK, 19th century*
+
+Why big data is an issue now
+============================
+
+1. Decline in prices of sensors makes it cheaper and easier to collect data.
+2. Declining cost of storage and access makes it more practical to have available data.
+3. People are more willing to reveal information if it provides benefits to them.
+4. *Machine learning* methods allow for using a wider range of data.
+5. When data gets to a certain size, conventional statistical tests of significance are not useful, because even tiny effects will test as significant.
+
+Dangers with big data
+=====================
+
+-  Garbage in, garbage out.
+-  More data equals more likely to find anomalies.
+-  Linking data equals more potential to find interesting connections.  *Not* necessarily more likely to be significant.
+
+Difficulties in working with big data
+=====================================
+
+1.  The more complex the data, the more difficult it is to make sure the data is suitable for our purposes *cleaning the data*.
+2.  Rare or unusual events are by nature unpredictable. Data mining does not guarantee that we can understand an event, even if it does help us uncover a pattern.
+3.  Linking data sets increases the complexity and the likelihood of finding spurious (false) patterns.
+
+Accessing data
+==============
+type: section
+
+Working with Internet API
+========================================================
+
+-  Data usually comes out of databases that are accessed through a network.
+-  You need experience working with networked databases.
+  -  Access proceedures.
+  -  Using the Application Programming Interface (API) to query data.
+  -  Processing results in a data frame.
+  -  Analyze results.
+  
+Twitter
+===================
+
+-  Microblogging service.
+-  Allows 140 character messages (tweets) to be broadcast to subscribers to an account.
+  -  Based on SMS (Short Messaging Service)
+  -  Accessed by internet browser, mobile device, or mobile phone.
+  -  Because it is easy and low cost to use on a phone, it is often used to broadcast messages about ongoing events by people who are on site.
+-  Hashtags (#) identify subjects that can be specifically searched for.
+
+What makes Twitter data interesting
+===================================
+
+-  Time sensitive
+-  High volumes
+-  Messy (abbreviations, no standardized tags)
+-  Mix of structured (tags) and unstructured
+-  Need to think about how to use it.
+
+API
+=============
+
+-  Twitter API can be used for a program to transmit messages or search for messages.
+-  Can include unmanned devices.
+-  Can use Twitter as one measure of popularity or interest in a topic.
+-  E.g. flu, current events, popularity of celebrities (Lady Gaga, Oprah Winfrey), popularity of organizations (Pittsburgh Pirates)
+-  An R Facebook API also exists and can be used the same ways.
+
+Authentication and access
+=========================
+type: section
+
+Access
+======
+
+- Data access is restricted.
+- Ensure that process has rights to the data.
+- How does a person do it?
+- How does a program do it?
+
+Authentication
+==============
+
+-  Twitter provides a token that you provide your program.
+-  You manually log in and get the token.
+-  If needed, the token can be revoked or changed, and you need to log in yourself.
+-  Another example:  SSH (Secure Shell) keys for accessing software resources (or Bitbucket) from a remote computer.
+
+Twitter OAuth
+=============
+
+-  Twitter authentication is done through **OAuth**.
+-  Two pieces of information, a *secret* and a *key*.
+-  These are used to validate a *Credential* which is used to validate a process.
+    -  In R, save the Credential to the `.RData` file, then open this every time you want to use R and Twitter. Otherwise, need to register a new credential with every session.
+-  Credential is passed with every request to Twitter to verify that the request has permission to act.
+
+```
+credential$handshake()
+registerTwitterOAuth(credential)
+```
+
+Accessing data
+==============
+type: section
+
+Searching Twitter
+=================
+
+-  How do you search when working on the web?
+
+Searching Twitter through R
+===========================
+
+1.  Construct a search.
+2.  Send the search query.
+3.  Receive the results.
+4.  Convert the results into a data frame.
+5.  Process results.
+
+Construct and perform a search
+==============================
+
+-  Determine search term
+-  On Twitter, you typically search for a user (@) or a subject (#) that is commonly used.
+-  Use the `searchTwitter` function of the `twitter` package.
+-  Because sometimes the result set can be very large, set the maximum number of tweets to return unless you are prepared for a very large data set.
+-  Returns a `list`
+
+```
+library(twitteR)
+twtList<-searchTwitter(searchTerm,n=maxTweets)
+```
+
+Convert results to a data frame
+===============================
+
+- More convenient to process results from a data frame.
+- Because you commonly do the conversion when you do a search, combine the steps into a function.
+
+```
+TweetFrame<-function(searchTerm, maxTweets)
+{
+  twtList<-searchTwitter(searchTerm,n=maxTweets)
+  return(do.call("rbind", lapply(twtList,as.data.frame)))
+}
+tweetfluDF <- TweetFrame('#flu', 500)
+```
+
+
+Analyze results
+===============
+type: section
+
+Look at the structure of the results
+====================================
+
+```
+> tweetfluDF[1,]
+```
+
+Look at the results
+===================
+
+-  Consider if all of them are relevant
+
+```
+> head(tweetfluDF$text, n=5)
+
+[1] "Disinfecting the house #sick #flu #gross"                                                                                                
+[2] "O Raul Quadros só pode tomar drogas pesadas. Moça Bonita não tá cheia, o Gum não choca com o goleiro e Diego virou Diogo Cavalieri. #Flu"
+[3] "RT @Crof: Dr. Racaniello on avian #flu, vaccines, and #polio http://t.co/id2ygSvWoE"                                                     
+[4] "First flu-related pediatric death of season in Va. | http://t.co/dTgFJDgqx8 http://t.co/6lvSyZ3Nkm #flu #death"                          
+[5] "Sick #Flu"  
+```
+
+Another example
+===================
+
+```
+tweetpiratesDF <- TweetFrame('#Pirates', 500)
+head(tweetpiratesDF$text, n=5)
+
+[1] "Good to bag a goal today in a decent win #Pirates"                                                                                         
+[2] "RT @Baseball_Photos: 1/18/1947 - #Pirates buy first baseman Hank Greenberg from the #Tigers for $25,000 to $35,000. http://t.co/93tvGjm0pZ"
+[3] "\"Turn me on with your Electric Feel\" #Crush2014 #Pirates #ElectricFeel http://t.co/byBfCMAI57"                                           
+[4] "\"@wdwfacts: Walt Disney World Photo of the Day: Classic...  http://t.co/spP8wi9zM4\" yo ho, yo ho... A #pirates life for me"              
+[5] "RT @Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/5mlvwiGPD5"     
+```
+
+Try again
+==========
+
+```
+tweetpiratesDF <- TweetFrame('@Pirates', 500)
+head(tweetpiratesDF$text, n=5)
+
+[1] "RT @Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/5mlvwiGPD5"                                                         
+[2] "RT @von_legend: The @Pirates Finalize All Arbitration Eligible Deals! http://t.co/fehkb3oogK @jdunio @TheRealSmathers @IsItTheShoes926 @Jos…"
+[3] "RT @von_legend: The @Pirates Finalize All Arbitration Eligible Deals! http://t.co/fehkb3oogK @jdunio @TheRealSmathers @IsItTheShoes926 @Jos…"
+[4] "@wudeydo34 heard a rumor you were returning to the @pirates ... And by rumor I mean I made that up #hotstove #DontSTFD yet"                  
+[5] "“@Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/0Dns0eNmff” @Singletary26_2"      
+```
+
+
+Analysis of creation times
+==========================
+
+```
+qplot(created, data=tweetfluDF, geom="histogram")
+```
+![Creation times of 500 #flu Tweets](twitter-figure/twitterflucreation.png)
+
+
+Interarrivaldistribution
+========================
+
+```
+eventDelays<-as.integer(diff(sortFluDF$created))
+mean(eventDelays)
+sd(eventDelays)
+
+> mean(eventDelays)
+[1] 88.83166
+> sd(eventDelays)
+[1] 111.3646
+```
+
+What distribution do we know has a mean and standard deviation with this type of relationship?
+
+
+Plot interarrival distribution
+==============================
+
+```
+hist(sort(eventDelays),freq=FALSE, breaks=30)
+```
+![Interarrival times of 500 #flu Tweets](twitter-figure/twitterFluInterarrival.png)
+
+Comparing popularity
+====================
+type: sub-section
+
+Compare popularity of two tags
+==============================
+
+- Let's try to compare popularity of two organizations.
+- *Lowes* and *Home Depot*
+- Both are big box stores that cater to home renovation contractors and  home improvement Do It Yourselfers.
+- What makes Twitter a good or bad choice to collect data like this?
+
+Collecting data
+================
+
+```
+tweetlowesDF <- TweetFrame("@lowes",500)
+tweethomedepotDF <- TweetFrame("@homedepot",500)
+sortweetDF<-tweetDF[order(as.integer()
+  (tweetlowesDF$created)), ]
+eventlowesDelays<- as.integer(diff(sortweetDF$created))
+sortweetDF<-tweetDF[order(as.integer()
+  tweethomedepotDF$created)), ]
+eventhomedepotDelays<- as.integer(diff(sortweetDF$created))
+```
+
+Look at mean interarrival time
+==============================
+
+```
+> mean(eventlowesDelays)
+[1] 216.3166
+> mean(eventhomedepotDelays)
+[1] 207.2004
+```
+
+
+Look at confidence intervals
+============================
+
+- Lets see if they are signficant.
+- We think that independent arrivals should be Poisson, so use confidence intervals on the Poisson distribution.
+
+```
+> sum(eventhomedepotDelays<=207)
+[1] 363
+> poisson.test(363,500)$conf.int
+[1] 0.6532273 0.8046634
+> sum(eventlowesDelays <= 207)
+[1] 292
+> poisson.test(292,400)$conf.int
+[1] 0.6486627 0.8187152
+```
+
+- These 95% c.i. are fairly similar, so the difference is not that great.
+

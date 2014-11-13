@@ -1,0 +1,689 @@
+Classifying Microarray Samples
+========================================================
+author: IE 2064 Data Science
+date: March 2014
+
+Introduction
+========================================================
+type: section 
+
+Problem overview
+================
+
+-  Bioinformatics - Classifying microarray samples
+-  Mutations of acute lymphoblastic leukemia
+-  Assumption: you know nothing about bioinformatics
+
+Feature selection
+=================
+
+-  Select the subset of features (variables) of a problem that is relevant for the analysis of the data.
+-  Dimensionality reduction.
+
+Data mining methods
+===================
+
+-  Classification methods
+  -  Random forests
+  -  *k*-Nearest neighbors
+  -  SVM
+  -  Ensembles
+- Cross validation experiments
+
+Bioinformatics
+==============
+type: section
+
+Background on microarray experiments
+====================================
+left:60%
+
+- Learning the problem domain is one of our tasks as data scientists.
+- Bioinformatics is especially difficult because it is a scientific field.
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+Analysis of differential gene expressions
+=========================================
+
+-  Gene expression microarrays allow us to characterize a set of samples based on the expression (presence) of a set of genes.
+-  Variables are a set of genes.
+-  Values are the expression level of that gene.
+
+Using bioinformatics within R
+=============================
+
+-  Bioinformatics is a large application area of statistics, data analysis.
+-  In *R*, methods and data sets are found in the *Bioconductor* set of packages.
+
+Data set
+========
+
+-  Study on acute lymphoblastic leukemia (ALL).
+-  Microarray samples from 128 individuals with ALL.
+-  Two different types of tumors:  T-cell and B-cell.  Focus on B-cell (95 samples)
+```{r, echo=FALSE, }
+#source("http://bioconductor.org/biocLite.R")
+#biocLite()
+#biocLite("ALL")
+library(DMwR)
+library(Biobase)
+library(ALL)
+data(ALL)
+```
+
+ALL dataset
+===========
+
+```{r}
+ALL
+```
+
+Dataset components
+==================
+- 12,625 genes (features)
+- 128 samples.
+```{r, echo=FALSE}
+pD <- phenoData(ALL)
+varMetadata(pD)
+```
+
+Types of ALL and abnormalities
+===============================
+```{r, echo=FALSE}
+table(ALL$BT,ALL$mol.bio)
+```
+
+Some features (genes) in the data
+=================================
+```{r}
+head(featureNames(ALL))
+```
+
+And sample identifiers
+======================
+```{r}
+head(sampleNames(ALL))
+```
+
+Look at only the B-cell ALL
+===========================
+```{r}
+tgt.cases <- which(ALL$BT %in% levels(ALL$BT)[1:5] & 
+                   ALL$mol.bio %in% levels(ALL$mol.bio)[1:4])
+ALLb <- ALL[,tgt.cases]
+ALLb$BT <- factor(ALLb$BT)
+ALLb$mol.bio <- factor(ALLb$mol.bio)
+```
+
+Look at the gene expression levels matrix
+===========================================
+```{r}
+es <- exprs(ALLb)
+dim(es)
+summary(as.vector(es))
+```
+```{r, echo=FALSE}
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("genefilter")
+library(genefilter)
+```
+
+A graphical representation
+==========================
+
+```{r, echo=FALSE}
+hist(as.vector(es),breaks=80,prob=T,
+     xlab='Expression Levels',
+     main='Histogram of Overall Expression Levels')
+abline(v=c(median(as.vector(es)),
+           shorth(as.vector(es)),
+           quantile(as.vector(es),c(0.25,0.75))),
+       lty=2,col=c(2,3,4,4))
+legend('topright',c('Median','Shorth','1stQ','3rdQ'),
+       lty=2,col=c(2,3,4,4))
+```
+
+Are the distributions of the gene expression levels of samples different across mutations?
+==========================
+
+```{r}
+sapply(levels(ALLb$mol.bio),function(x) summary(as.vector(es[,which(ALLb$mol.bio == x)])))
+```
+-  Each quartile is proportionally similar, so probably keep them together.
+
+Feature selection
+=================
+type: section
+
+Feature selection
+=================
+
+-  Goal is to take the subset of features (variables) that are most relevant for the analysis of data.
+-  Often there are a large number of candidate variables, so you need to filter them.
+-  AKA *dimensionality reduction*
+
+Methods for feature selection
+=============================
+
+-  Filters
+  - Use statistical properties of the features to select the final step.
+-  Wrappers
+  -  Use data mining tools in the selection process.
+  
+Simple filters based on distribution properties
+===============================================
+
+-  Base on the distribution of expression level.
+-  Some genes cannot help differentiate between samples.
+  -  Genes that are not expressed at all.
+  -  Very little variability between samples
+-  Look at the median and IQR of distributions.
+
+Expression levels of genes across samples
+==========================================
+-  Plot the size of the IQR against median for each gene.
+-  Which have low variability?
+
+***
+
+```{r, echo=FALSE}
+rowIQRs <- function(em) 
+  rowQ(em,ceiling(0.75*ncol(em))) - rowQ(em,floor(0.25*ncol(em)))
+plot(rowMedians(es),rowIQRs(es),
+     xlab='Median expression level',
+     ylab='IQR expression level',
+     main='Main Characteristics of Genes Expression Levels')
+```
+
+Feature selection using ANOVA
+==============================
+
+-  Comparing means across groups is a function of ANOVA.
+-  Modify ANOVA to determine subgroups of the data set and statistical significance level.
+-  Generate a filtering function that can be applied to an expression matrix.
+
+ANOVA results
+=============
+```{r, echo=FALSE}
+f <- Anova(ALLb$mol.bio,p=0.01)
+ff <- filterfun(f)
+selGenes <- genefilter(exprs(ALLb),ff)
+ALLb2 <- ALLb[selGenes,]
+```
+```{r}
+ALLb2
+```
+
+ANOVA results median and IQR
+============================
+```{r, echo=FALSE}
+es <- exprs(ALLb2)
+plot(rowMedians(es),rowIQRs(es),
+     xlab='Median expression level',
+     ylab='IQR expression level',
+     main='Distribution Properties of the Selected Genes')
+```
+
+Some potential transformations
+==============================
+-  We see a wide range of expression levels and IQR, so this can be used to filter the selected genes.
+-  Scaling can be done by normalizing the data.
+  -  Avoid problem of variables with large values being more likely to register as significant.
+  -  For each variable, subtract a typical value and dividing by a measure of the spread.
+  -  Usually done during modeling, not feature selection.
+  
+Filtering using Random Forests
+===============================
+
+-  Used to ranking features in terms of usefulness for a classification task.
+-  Try to apply Random forests to the gene expression matrix.
+-  First some preprocessing of the feature names
+
+```{r}
+library(randomForest)
+featureNames(ALLb2) <- make.names(featureNames(ALLb2))
+es <- exprs(ALLb2)
+```
+
+Rank the genes using Random Forests
+======================================
+```{r}
+dt <- data.frame(t(es),Mut=ALLb2$mol.bio)
+rf <- randomForest(Mut ~  .,dt,importance=T)
+imp <- importance(rf)
+imp <- imp[,ncol(imp)-1]
+rf.genes <- names(imp)[order(imp,decreasing=T)[1:20]]
+```
+
+Now look at the median levels of the top 20 genes
+=================================================
+
+```{r, echo=FALSE}
+sapply(rf.genes,function(g) tapply(dt[,g],dt$Mut,median))
+```
+
+Analyzing the results
+======================
+
+-  Look for diversity in gene expression in a sample.
+
+```{r, echo=FALSE}
+library(lattice)
+ordMut <- order(dt$Mut)
+levelplot(as.matrix(dt[ordMut,rf.genes]),
+          aspect='fill', xlab='', ylab='',
+          scales=list(
+            x=list(
+              labels=c('+','-','*','|')[as.integer(dt$Mut[ordMut])],
+              cex=0.7,
+              tck=0)
+            ),
+          main=paste(paste(c('"+"','"-"','"*"','"|"'),
+                           levels(dt$Mut)
+                          ),
+                     collapse='; '),
+          col.regions=colorRampPalette(c('white','orange','blue'))
+          )
+```
+
+Filtering using clustering ensembles
+=====================================
+
+-  Generate groups of variables that are supposed to be similar.
+-  Use the resulting clusters to obtain an ensemble classification model where *m* models will be obtained with 30 variables, one from each cluster.
+-  Ensembles models generally outperform the individual models used to form the model.
+-  Performance comes from the diversity among the individual models.
+  - Different predictors (from using different predictors from each cluster in each model)
+
+Hierarchical clustering example
+==============================
+
+-  Use a hierarchical clustering algorithm to generate clusters of variables in the dataset.
+```{r}
+library(Hmisc)
+vc <- varclus(t(es))
+clus30 <- cutree(vc$hclust,30)
+table(clus30)
+```
+
+Randomly generate groups of predictors
+========================================
+-  Create 30 groups and generate sets of predictors by randomly selecting one variable from each cluster.
+
+```{r, echo=FALSE}
+getVarsSet <- function(cluster,nvars=30,seed=NULL,verb=F) 
+{
+  if (!is.null(seed)) set.seed(seed)
+
+  cls <- cutree(cluster,nvars)
+  tots <- table(cls)
+  vars <- c()
+  vars <- sapply(1:nvars,function(clID)
+    {
+      if (!length(tots[clID])) stop('Empty cluster! (',clID,')')
+      x <- sample(1:tots[clID],1)
+      names(cls[cls==clID])[x]
+    })
+  if (verb)  structure(vars,clusMemb=cls,clusTots=tots)
+  else       vars
+}
+getVarsSet(vc$hclust)
+getVarsSet(vc$hclust)
+```
+
+Predicting Cytogenetic abnormalities
+======================================
+type: section
+
+Defining prediction task
+========================
+-  Our goal is to classify samples and forecast the the presence of a mutation:  
+  -  *ALL1/AF4, BCR/ABL, ESA/PBX1, NEG*
+- Based on the 94 cases of B-cell ALL
+
+Evaluation metric
+==================
+
+-  Multi-class classification problem.
+-  Evaluate methodology through the error rate or accuracy of the method.
+-  In the absence of costs of misclassification, we will assume that each classification has equal costs.
+$$\overline{acc} = 1 - \frac{1}{N}\sum_{i=1}^N L_{0/1}(y_i, \hat{y}_i)$$
+$$L_{0/1}(y_i, \hat{y}_i)=\begin{array}{l}
+0 \text{ if }y_i = \hat{y}_i\\
+1 \text{ otherwise}
+\end{array}$$
+
+Experimental procedure - Error rate
+=====================================
+
+-  Need to estimate error rate.
+-  Use Leave-One-Out Cross Validation (LOOCV)
+-  Requirements
+  -  Learner
+  -  Dataset
+  -  Settings of the experiment
+
+```{r}
+data(iris)
+rpart.loocv <- function(form,train,test,...) {
+  require(rpart,quietly=T)
+  m <- rpart(form,train,...)
+  p <- predict(m,test,type='class')
+  c(accuracy=ifelse(p == resp(form,test),100,0))
+}
+```
+
+Output of LOOCV
+================
+
+-  Based on *iris* flower dataset
+```{r}
+exp <- loocv(learner('rpart.loocv',list()),
+             dataset(Species~.,iris),
+             loocvSettings(seed=1234,verbose=F))
+summary(exp)
+```
+
+Apply modeling techniques to the microarray dataset
+===================================================
+
+-  Use three different modeling techniques.
+  -  Random forests
+  -  Support Vector Machines (SVM)
+  - *k*-nearest neighbors
+
+Random Forests
+===============
+
+- Particularly good for problems with large number of features.
+  - Select features until lack of improvement.
+-  Select the number of trees to be used.
+-  Each tree is developed using a random subset of the data.
+-  Effectively, this is an ensemble model.
+-  Each tree created gets a vote.  The winner is the overall prediction.
+
+k-Nearest Neighbors
+=====================
+
+-  *Lazy learner* - Does not build a model, only store dataset.
+-  For each new test case, find the *k* most similar training cases and use that the be the prediction.
+-  Depends on the definition of *similarity*.
+  - Usually use some distance metric.
+  $$d(x_i, x_j)=\sqrt{\sum_{k=1}^p (X_{i,k} - X_{j,k})^2}$$
+-  Generally, set *k* to be odd so that there are not ties.
+
+
+Application of kNN
+====================
+```{r}
+library(class)
+data(iris)
+idx <- sample(1:nrow(iris),as.integer(0.7*nrow(iris)))
+tr <- iris[idx,]
+ts <- iris[-idx,]
+preds <- knn(tr[,-5],ts[,-5],tr[,5],k=3)
+table(preds,ts[,5])
+```
+
+Or a custom function from DMwR package
+========================================
+```
+kNN <- function(form,train,test,norm=T,norm.stats=NULL,...) {
+  require(class,quietly=TRUE)
+  tgtCol <- which(colnames(train)==as.character(form[[2]]))
+  if (norm) {
+    if (is.null(norm.stats)) tmp <- scale(train[,-tgtCol],center=T,scale=T)
+    else tmp <- scale(train[,-tgtCol],center=norm.stats[[1]],scale=norm.stats[[2]])
+    train[,-tgtCol] <- tmp
+    ms <- attr(tmp,"scaled:center")
+    ss <- attr(tmp,"scaled:scale")
+    test[,-tgtCol] <- scale(test[,-tgtCol],center=ms,scale=ss)
+  }
+  knn(train[,-tgtCol],test[,-tgtCol],train[,tgtCol],...)
+}
+```
+
+Apply the custom function
+============================
+```{r}
+preds.norm <- kNN(Species ~ .,tr,ts,k=3)
+table(preds.norm,ts[,5])
+preds.notNorm <- kNN(Species ~ .,tr,ts,norm=F,k=3)
+table(preds.notNorm,ts[,5])
+```
+
+Comparing models with LOOCV
+===========================
+
+-  Goal: obtain an unbiased estimate of the classification accuracy of the methods.
+-  Use some basic filters for feature selection
+  -  Remove genes with low variance.
+  -  Use ANOVA
+  -  Use Random forests and clustering
+-  Need to specify parameters for each method
+
+Specifying parameters for methods
+=================================
+```{r}
+vars <- list()
+vars$randomForest <- list(ntree=c(500,750,100),
+                          mtry=c(5,15,30),
+                          fs.meth=list(list('all'),
+                                       list('rf',30),
+                                       list('varclus',30,50)))
+vars$svm <- list(cost=c(1,100,500),
+                 gamma=c(0.01,0.001,0.0001),
+                 fs.meth=list(list('all'),
+                              list('rf',30),
+                              list('varclus',30,50)))
+vars$knn <- list(k=c(3,5,7,11),
+                 norm=c(T,F),
+                 fs.meth=list(list('all'),
+                              list('rf',30),
+                              list('varclus',30,50)))
+```
+
+Now, build an ensemble of models
+================================
+```
+varsEnsembles <- function(tgt,train,test,
+                          varsSets,
+                          baseLearner,blPars,
+                          verb=F)
+```
+-  Target variable
+-  Training and test datasets
+-  Sets of variable names (clusters of variables)
+-  Name of learner and learning arguments.
+-  Result:  set of predictions for the test set.
+
+```{r, echo=FALSE}
+varsEnsembles <- function(tgt,train,test,
+                          varsSets,
+                          baseLearner,blPars,
+                          verb=F)
+{
+  preds <- matrix(NA,ncol=length(varsSets),nrow=NROW(test))
+  for(v in seq(along=varsSets)) {
+    if (baseLearner=='knn')
+      preds[,v] <- knn(train[,varsSets[[v]]],
+                       test[,varsSets[[v]]],
+                       train[,tgt],blPars)
+    else {
+      m <- do.call(baseLearner,
+                   c(list(as.formula(paste(tgt,
+                                           paste(varsSets[[v]],
+                                                 collapse='+'),
+                                           sep='~')),
+                          train[,c(tgt,varsSets[[v]])]),
+                     blPars)
+                   )
+      if (baseLearner == 'randomForest')
+        preds[,v] <- do.call('predict',
+                             list(m,test[,c(tgt,varsSets[[v]])],
+                                  type='response'))
+      else
+        preds[,v] <- do.call('predict',
+                             list(m,test[,c(tgt,varsSets[[v]])]))
+    }
+  }
+  ps <- apply(preds,1,function(x)
+                 levels(factor(x))[which.max(table(factor(x)))])
+  ps <- factor(ps,
+               levels=1:nlevels(train[,tgt]),
+               labels=levels(train[,tgt]))
+  if (verb) structure(ps,ensemblePreds=preds) else ps
+}
+```
+
+```{r, echo=FALSE}
+genericModel <- function(form,train,test,
+                         learner,
+                         fs.meth,
+                         ...)
+  {
+    cat('=')
+    tgt <- as.character(form[[2]])
+    tgtCol <- which(colnames(train)==tgt)
+
+    # Anova filtering  
+    f <- Anova(train[,tgt],p=0.01)
+    ff <- filterfun(f)
+    genes <- genefilter(t(train[,-tgtCol]),ff)
+    genes <- names(genes)[genes]
+    train <- train[,c(tgt,genes)]
+    test <- test[,c(tgt,genes)]
+    tgtCol <- 1
+
+    # Specific filtering 
+    if (fs.meth[[1]]=='varclus') {
+      require(Hmisc,quietly=T)
+      v <- varclus(as.matrix(train[,-tgtCol]))
+      VSs <- lapply(1:fs.meth[[3]],function(x)
+                    getVarsSet(v$hclust,nvars=fs.meth[[2]]))
+      pred <- varsEnsembles(tgt,train,test,VSs,learner,list(...))
+
+    } else {
+      if (fs.meth[[1]]=='rf') {
+        require(randomForest,quietly=T)
+        rf <- randomForest(form,train,importance=T)
+        imp <- importance(rf)
+        imp <- imp[,ncol(imp)-1]
+        rf.genes <- names(imp)[order(imp,decreasing=T)[1:fs.meth[[2]]]]
+        train <- train[,c(tgt,rf.genes)]
+        test <- test[,c(tgt,rf.genes)]
+      }
+
+      if (learner == 'knn') 
+        pred <- kNN(form,
+             train,
+             test,
+             norm.stats=list(rowMedians(t(as.matrix(train[,-tgtCol]))),
+                             rowIQRs(t(as.matrix(train[,-tgtCol])))),
+             ...)
+      else {
+        model <- do.call(learner,c(list(form,train),list(...)))
+        pred <- if (learner != 'randomForest') predict(model,test)
+                else predict(model,test,type='response')
+      }
+
+    }
+
+    c(accuracy=ifelse(pred == resp(form,test),100,0))
+  }
+```
+
+Run Experiments
+====================
+
+```{r, echo=FALSE}
+load('DMwRcode/knn.Rdata')
+load('DMwRcode/svm.Rdata')
+load('DMwRcode/randomForest.Rdata')
+```
+```{r}
+rankSystems(svm,max=T)
+```
+
+Look at all three types of trials
+==================================
+```{r}
+all.trials <- join(svm,knn,randomForest,by='variants')
+rankSystems(all.trials,top=10,max=T)
+```
+
+Check characteristics of the best one
+=====================================
+
+```{r}
+getVariant('knn.v2',all.trials)
+```
+
+Generate a confusion matrix by looking at predictions and errors
+================================================================
+
+```{r, echo=FALSE}
+bestknn.loocv <- function(form,train,test,...) {
+  require(Biobase,quietly=T)
+  require(randomForest,quietly=T)
+  cat('=')
+  tgt <- as.character(form[[2]])
+  tgtCol <- which(colnames(train)==tgt)
+  # Anova filtering
+  f <- Anova(train[,tgt],p=0.01)
+  ff <- filterfun(f)
+  genes <- genefilter(t(train[,-tgtCol]),ff)
+  genes <- names(genes)[genes]
+  train <- train[,c(tgt,genes)]
+  test <- test[,c(tgt,genes)]
+  tgtCol <- 1
+  # Random Forest filtering
+  rf <- randomForest(form,train,importance=T)
+  imp <- importance(rf)
+  imp <- imp[,ncol(imp)-1]
+  rf.genes <- names(imp)[order(imp,decreasing=T)[1:30]]
+  train <- train[,c(tgt,rf.genes)]
+  test <- test[,c(tgt,rf.genes)]
+  # knn prediction
+  ps <- kNN(form,train,test,norm=T, 
+            norm.stats=list(rowMedians(t(as.matrix(train[,-tgtCol]))),
+                            rowIQRs(t(as.matrix(train[,-tgtCol])))),
+            k=5,...)
+  structure(c(accuracy=ifelse(ps == resp(form,test),100,0)),
+            itInfo=list(ps)
+           )
+}
+dt <- data.frame(t(exprs(ALLb)),Mut=ALLb$mol.bio)
+```
+```
+resTop <- loocv(learner('bestknn.loocv',pars=list()),
+                dataset(Mut~.,dt),
+                loocvSettings(seed=1234,verbose=F),
+                itsInfo=T)
+```
+```{r, echo=FALSE}
+load('DMwRcode/resTop.Rdata')
+preds <- unlist(attr(resTop,'itsInfo'))
+table(preds,dt$Mut)
+```
+
+Summary
+=================
+type: section
+
+Data mining concepts
+====================
+
+-  Feature selection (dimensionality reduction)
+-  Classification methods
+-  Random forests
+-  *k*-Nearest Neighbors
+-  SVM
+-  Ensembles
+-  Leave-one-out Cross-validation experiments
+
+
+

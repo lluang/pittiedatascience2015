@@ -1,0 +1,216 @@
+Looking at Pertusis and Measles Cases
+========================================================
+author: IE 2064 Data Science
+date: April 2014
+
+```{r, echo=FALSE}
+library(reshape)
+library(ggplot2)
+library(plyr)
+library(TTR)
+library(forecast)
+# Avril Coghlan's function
+plotForecastErrors <- function(forecasterrors) {
+    # make a histogram of the forecast errors:
+    mybinsize <- IQR(forecasterrors)/4
+    mysd <- sd(forecasterrors)
+    mymin <- min(forecasterrors) - mysd * 5
+    mymax <- max(forecasterrors) + mysd * 3
+    # generate normally distributed data with mean 0 and standard deviation
+    # mysd
+    mynorm <- rnorm(10000, mean = 0, sd = mysd)
+    mymin2 <- min(mynorm)
+    mymax2 <- max(mynorm)
+    if (mymin2 < mymin) {
+        mymin <- mymin2
+    }
+    if (mymax2 > mymax) {
+        mymax <- mymax2
+    }
+    # make a red histogram of the forecast errors, with the normally
+    # distributed data overlaid:
+    mybins <- seq(mymin, mymax, mybinsize)
+    hist(forecasterrors, col = "red", freq = FALSE, breaks = mybins)
+    # freq=FALSE ensures the area under the histogram = 1 generate normally
+    # distributed data with mean 0 and standard deviation mysd
+    myhist <- hist(mynorm, plot = FALSE, breaks = mybins)
+    # plot the normal curve as a blue line on top of the histogram of forecast
+    # errors:
+    points(myhist$mids, myhist$density, type = "l", col = "blue", lwd = 2)
+}
+```
+
+Significant: Jelly Beans Cause Acne
+========================
+
+![xkcd: Jelly Beans Cause Acne](http://imgs.xkcd.com/comics/significant.png)
+
+Project Tycho
+========================================================
+type: section
+
+-  Infectious disease cases
+-  Look at pertusis cases (Whooping caugh) and measles
+- http://www.r-bloggers.com/looking-at-measles-data-in-project-tycho/
+
+Obtain data
+============
+
+-  Data from Project Tycho 'https://www.tycho.pitt.edu/'
+-  Incidence per 100,000 persons
+
+```
+"Weekly Pertussis Incidence, 1938-2012"
+"Data provided by Project Tycho, Data Version 1.0.0, released 28 November 2013."
+YEAR,WEEK,PENNSYLVANIA
+1938,1,2.07
+1938,2,3.64
+1938,3,3.46
+1938,4,2.85
+```
+
+Read in the data
+================
+```{r readpadata}
+pa1 <- read.csv('data/PERTUSSIS_Incidence_1938-2012_20140408092636.csv', na.strings='-', skip=2)
+pa2 <- reshape(pa1, varying=names(pa1)[-c(1,2)], v.names="Cases", idvar=c('YEAR', 'WEEK'), times=names(pa1)[-c(1,2)], timevar='STATE', direction='long')
+pa2$STATE=factor(pa2$STATE)
+ggplot(pa2, aes(YEAR, Cases)) + layer(geom="point") + ggtitle("Incidence of Pertusis in Pennsylvania: Cases per 100,000")
+```
+
+
+Repeat with measles
+=====
+
+```
+"Weekly Measles Incidence, 1928-2003"
+"Data provided by Project Tycho, Data Version 1.0.0, released 28 November 2013."
+YEAR,WEEK,PENNSYLVANIA,NEW YORK,CALIFORNIA
+1928,1,6.97,7.60,1.38
+1928,2,8.74,9.65,1.80
+1928,3,8.12,8.54,1.31
+1928,4,8.39,9.32,1.87
+```
+```{r measlesdata, echo=FALSE}
+measles1 <- read.csv('data/MEASLES_Incidence_1928-2003_20140408095019.csv', na.strings='-', skip=2)
+measles2 <- reshape(measles1, varying=names(measles1)[-c(1,2)], v.names="Cases", idvar=c('YEAR', 'WEEK'), times=names(measles1)[-c(1,2)], timevar='STATE', direction='long')
+measles2$STATE=factor(measles2$STATE)
+```
+
+And plot the data
+============
+
+```{r, echo=FALSE}
+ggplot(measles2, aes(YEAR, Cases)) + layer(geom="point") + ggtitle("Incidence of Measles in Pennsylvania \n Cases per 100,000")
+```
+Are there patterns within the year?
+========================================
+```{r, echo=FALSE}
+ggplot(measles2, aes(WEEK, Cases) ) + layer(geom="point") + ggtitle("Incidence of Measles in Pennyslania \n Cases per 100,000 by week")
+```
+
+
+
+Aggregate by year
+=================
+
+-  Vaccines were introduced around 1966, improved vaccine around 1968.
+-  Is the current low rate of measles due to other factors (i.e. was there a trend towards zero anyway)?
+
+```{r, echo=FALSE}
+measles3 <- ddply(measles2, .(YEAR, STATE), summarize, Annual=sum(Cases, na.rm=TRUE))
+ggplot(measles3, aes(YEAR, Annual) ) + layer(geom="point") +ggtitle("Total annual incidence of measles in PA  \n Cases per 100,000")
+```
+
+Look at just pre and post  1970 for weekly patterns
+=================================
+```{r, echo=FALSE}
+measlespre1962 <- measles2[measles2$YEAR<1962,]
+measlespre1962weekly <- ddply(measlespre1962, .(WEEK, STATE), summarize, Weekly=sum(Cases, na.rm=TRUE))
+ggplot(measlespre1962weekly, aes(WEEK, Weekly) ) + layer(geom="point") + ggtitle("PA Measles Incidence by week Pre-1962")
+```
+***
+```{r, echo=FALSE}
+measlespost1962 <- measles2[measles2$YEAR>1968,]
+measlespost1962weekly <- ddply(measlespost1962, .(WEEK, STATE), summarize, Weekly=sum(Cases, na.rm=TRUE))
+ggplot(measlespost1962weekly, aes(WEEK, Weekly) ) + layer(geom="point") + ggtitle("PA Measles Incidence by week Post-1968")
+```
+
+Treat this as a forecasting problem
+============
+
+```{r}
+measles4 <- measles3[measles3$YEAR < 1965,]
+measlestseries <- ts(measles4$Annual)
+plot.ts(measlestseries)
+```
+
+Definitely not stationary
+=========
+
+```{r}
+measlestseriesdiff1 <- diff(measlestseries, differences=1)
+plot.ts(measlestseriesdiff1)
+```
+
+Auto-correlation
+=====
+- Data looks stationary, so look for correlation
+- See where the auto-correlations exceed significance bounds
+```{r measlesacf, echo=FALSE}
+acf(measlestseriesdiff1, lag.max=20) 
+acf(measlestseriesdiff1, lag.max=20, plot=FALSE)
+```
+
+Partial auto-correlation
+===========
+
+```{r measlespacf, echo=FALSE}
+pacf(measlestseriesdiff1, lag.max=20)
+pacf(measlestseriesdiff1, lag.max=20, plot=FALSE)
+```
+
+Model selection
+===============
+-  Choose models where the values are not past significance bounds.
+-  ARIMA(0,1,3) - Auto-correlation goes to 0 after lag 3
+-  ARIMA(4,1,0) - partial correlation goes to 0 after lag 2
+-  Select the simplest model (parsimony), so ARIMA(0,1,3)
+
+Make a forecast
+==========
+
+- Fit the ARIMA(0,1,3) to the data
+
+```{r}
+measlestseriesarima <- arima(measlestseries, order=c(0,1,3))
+measlestseriesarima
+measlestseriesforecasts <- forecast.Arima(measlestseriesarima, h=5)
+```
+
+Plot the original data and forecasts
+===============
+```{r, echo=FALSE}
+plot.forecast(measlestseriesforecasts)
+```
+
+And plot errors
+==========
+```{r, echo=FALSE}
+plot.ts(measlestseriesforecasts$residuals)
+```
+***
+```{r,echo=FALSE}
+plotForecastErrors(measlestseriesforecasts$residuals) 
+```
+
+Let's try the same thing, but continue after 1965
+==================
+
+What could we do?
+=====================
+
+-  Look at all states and get incidence per 100,000
+-  See if there is a difference in before and after introduction of vaccines.
+
+

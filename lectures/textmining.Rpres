@@ -1,0 +1,305 @@
+Text Mining
+========================================================
+author: Louis Luangkesorn
+date:   January 2014
+
+Overview
+===============
+type: section
+
+What is textmining
+==================
+
+-  Text mining encompasses a vast field of approaches and methods with one thing in common:  text as input information.
+-  Text classification
+-  Text clustering
+-  Ontology (grouping things into categories)
+-  Taxonomy creation
+-  Document summary
+-  Corpus analysis
+
+
+Applications of text mining
+===========================
+
+-  Document clustering (articles about a specific topic)
+-  Categorization (e.g. spam)
+-  Information retrieval
+-  Linguistic Stylometry (identifying an author)
+
+Benefits of text mining
+=======================
+
+-  Analyzing information available in unstructured text.
+
+Conceptual process and framework
+================================
+type: section
+
+What does a text mining analysis consist of?
+============================================
+
+1. Data munging
+2. Preprocessing
+3. Convert texts into structured formats
+4. Computational activities
+
+Data munging
+============
+
+1.  Import text into computing environment.
+2.  Organize and structure the texts.
+
+
+Preprocessing
+=============
+
+-  Process text to obtain a convenient representation for later analysis.
+-  Text reformatting (white space removal)
+-  Stopword removal (common words)
+-  Stemming removal (word endings)
+
+Convert text into structured formats
+====================================
+
+-  Transform texts into formats that can be computed on.
+-  Create a *term-document matrix*
+-  Alternative - compute direct on characters using *string kernel methods*
+
+Computational activities
+========================
+
+-  Associate: association analysis, that is finding associations for a given term based on counting co-occurrence frequencies,
+-  Cluster: clustering of similar documents into the same groups,
+-  Summarize: summarization of important concepts in a text. Typically these are high-frequency terms,
+-  Categorize: classification of texts into predefined categories
+
+Terminology
+===========
+
+-  The data structure that contains the text is the *text document collection* or *corpus*.
+-  The form the text is in that is accessed are the *sources*
+-  Annotation that describes a text is *metadata*
+-  Operations on a text are *transformations*
+-  Extracting patterns of interest is *filtering*
+
+Text mining in R
+================
+type: section
+
+R conceptual layers
+================================
+
+-  `tm` package for text mining
+-  *Weka*, *OpenNLP*, and *Snowball* for stemmers, tokenization, sentence detection.
+-  `tm` can also be used as a component for methods that require text manipulation capabilities.
+
+Data structures
+===============
+
+-  Main structure is the *text document collection* or `Corpus`
+-  Represents a collection of `TextDocuments`.
+-  Database for texts.
+-  `TextDocuments` holds the actual text and metadata.
+
+Metadata
+=========
+
+- *Document metadata* (`DMetaData`) is specific to the individual text document.
+- *Collection metadeta* (`CMetaData`) is for global metadata on the collection level.
+- `DBControl` indicates if the collection is using a database backend or if the text is loaded in memory.
+
+Corpus
+======
+
+Objects of class Corpus can be manually created by
+
+```
+new("Corpus", .Data = ..., DMetaData = ..., CMetaData = ..., DBControl = ...)
+```
+
+ReaderControl
+=============
+
+Data is brought in using a *ReaderControl*
+
+- readPlain() - Read in files as plain text ignoring metadata
+- readRCV1() - Read in files in Reuters Corpus Volume 1 XML format
+- readReut21578XML() Read in files in Reuters-21578 XML format 
+- readGmane() - Read in Gmane RSS feeds
+- readNewsgroup() - Read in newsgroup posting (e-mails) in UCI KDD archive format
+- readPDF() - Read in PDF documents
+- readDOC() - Read in MS Word documents
+- readHTML() - Read in simply structured HTML documents
+
+
+TextDocument
+============
+
+-  `TextDocument` is the basic unit managed by a text document collection.
+-  Contains - Author, DateTimeStamp, Description, Origin, Heading, Language, LocalMetaData
+
+```
+R> new("PlainTextDocument", .Data = "Some text.", URI = uri, Cached = TRUE,
++ Author = "Mr. Nobody", DateTimeStamp = Sys.time(),
++ Description = "Example", ID = "ID1", Origin = "Custom",
++ Heading = "Ex. 1", Language = "en_US")
+setting
+```
+
+Text repository
+===============
+
+-  Stores representations of the same document collection.
+-  Tracks the transformations you have done.
+
+Term document matrix
+====================
+
+-  A common way of representing texts for further computation.
+-  Based on a `Corpus`.
+-  A *bag-of-words* mechanism (order is not important)
+
+Example
+- *text mining is fun*
+- *a text is a sequence of words*
+
+```
+  | a fun is mining of sequence text words
+------------------------------------------
+1 | 0  1  1   1     0     0      1     0 
+2 | 2  0  1   0     1     1      1     1
+```
+
+`TermDocMatrix`
+===============
+
+-  Provides a term-document matrix for a `Corpus` element.
+-  Allows for `Weighting` of there *term frequency* (`weightTf`)
+  - *binary* - ignores repetition within an individual text document.
+  - *inverse document frequency* - More importance to descriminative compared to irrelevant terms. (terms that differentiate documents)
+-  Uses a *tokenizer* to identify the words in the documents, then count and weight.
+  - Tokenizers come from other packages automatically installed with `tm`
+
+Sources
+=======
+
+- Sources in `tm` represent the document as stored on your computer.
+- Directories of text, MS Word, or Adobe PDF documents.
+- CSV files
+- Online sources in specific formats.
+
+
+Text Example: Oz
+================
+type: section
+
+Working with Oz text
+====================
+type: subsection
+
+Load in corpus and add meta data
+================================
+```{r}
+library(tm)
+oz <- Corpus(DirSource('data/oz'))
+meta(oz, tag = "Author", type = "local") <- c("Lyman Frank Baum", "Ruth Plumly Thompson","Lyman Frank Baum", "Ruth Plumly Thompson", "Lyman Frank Baum", "Ruth Plumly Thompson", "Lyman Frank Baum")
+meta(oz, "Heading", "local") <- c("The Emerald City of Oz", "The Cowardly Lion of Oz", "Ozma of Oz", "Ozoplaning with the Wizard of Oz", "The Marvelous Land of Oz", "The Royal Book of Oz", "The Wonderful Wizard of Oz")
+
+```
+
+Results of metadata
+===================
+
+```{r}
+meta(oz[[6]])
+```
+
+Process text
+============
+```{r}
+oz <- tm_map(oz, tolower)
+oz <- tm_map(oz,FUN=removeWords, stopwords())
+oz <- tm_map(oz,FUN=removeNumbers)
+oz <- tm_map(oz,FUN=removePunctuation)
+#oz <- tm_map(oz,FUN=stemDocument)
+```
+
+
+Looking at text processing results
+==================================
+
+- We need to look at the results of our text analysis.  What words do we see?
+- We could look at the actual words based on the `TermDocumentMatrix`
+-  We need a list of words and a list of frequencies across all of the documents in the corpus.
+-  Put the sorted list into a dataframe.
+
+```{r}
+ozMat <- TermDocumentMatrix(oz)
+ozMatrix <- as.matrix(ozMat)
+sortedoz <- sort(rowSums(ozMatrix),decreasing=TRUE)
+ozcloudDF <- data.frame(word=names(sortedoz), freq=sortedoz)
+head(ozcloudDF)
+```
+
+Wordcloud
+==========
+
+-  A wordcloud is a graphic that shows common words and their relative frequency in a text.
+
+
+```{r}
+library(wordcloud)
+wordcloud(ozcloudDF$word[1:30], ozcloudDF$freq[1:30])
+```
+
+Stylometric analysis example
+===========================
+type: sub-section
+
+Create a Term Document matrix
+=============================
+
+Say you want to determine the authorship of *The Royal book of Oz*. It was published with Baum as author, but it is suspected that Thompson actually wrote it.
+```{r}
+ozMatBaum <- TermDocumentMatrix(oz[c(1,2,3,5)])
+ozMatRoyal <- TermDocumentMatrix(oz[6])
+ozMatThompson <- TermDocumentMatrix(oz[c(2, 4)])
+```
+
+Count word usage
+================
+
+-  Look for terms used frequently. Set the lower limit to make a list of ~100 words
+
+```{r}
+baum <- findFreqTerms(ozMatBaum, 140)#162) 
+royal <- findFreqTerms(ozMatRoyal, 35)#40) 
+thomp <- findFreqTerms(ozMatThompson, 61)#68)
+length(baum)
+length(royal)
+length(thomp)
+```
+
+Look for similarities
+=====================
+
+```{r}
+length(intersect(baum, royal))
+length(intersect(thomp, royal))
+length(intersect(baum, thomp))
+```
+- Note how many more similarities there are between Royal with Baum vs Thompson (the last comparison of Baum and Thompson gives a sense of comparison)
+
+
+Summary
+=======
+
+- Text processing is a form of *unstructured data* analysis.
+- Has several components
+  1. Data munging
+  2. Preprocessing
+  3. Convert texts into structured formats
+  4. Computational activities
+
+

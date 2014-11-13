@@ -1,0 +1,126 @@
+Tree based methods
+========================================================
+author: IE 2064 Data Science
+date: April 2014
+
+Recursive Partitioning/Regression Tree
+======================
+
+-  A type of regression model.
+-  A tree type algorithm.
+  - Identifies a split point to divide data into two groups.
+  - Repeat.
+  - Prune tree so that you do not overfit.
+
+Algae data
+==========
+
+-  We had originally used this with the algae data.
+- First clean the data 
+  -  Remove observations with many missing values.
+  -  Linear regression to fill in a couple more points.
+```{r loadalgae}
+library(DMwR)
+library(ggplot2)
+data(algae)
+algae <- algae[-manyNAs(algae),]
+algae[28, "PO4"] <- 42.90 + 1.29 * algae[28, "oPO4"]
+```
+
+
+
+Tree based methods
+===================
+type: section
+
+Tree based methods
+===================
+
+- Used for regression and classification
+- *Stratify* or *segment* the predictor space into a number of simple regions.
+- To make a prediction for an observation, use the mean or median of the region the observation belongs to.
+- Think of these as **decision tree** methods.
+
+Regression tree example - Baseball players
+==========================================
+```{r}
+library(ISLR)
+data(Hitters)
+```
+
+Transform data
+===============
+
+- Remove observations with missing values
+- Log transform of Salary data
+- First look at only years played and hits
+
+Recursive partition
+====================
+
+-  The best partition in determining salary is the years played.
+-  After partitioning by years played, then look at hits.
+  -  Notice that the partition by number of hits is different for each group.
+  
+Results of recursive partitioning
+=================================
+
+-  A *tree* with *branches* and *leaves*
+-  *Leaves* are the *terminal nodes* at the bottom of the tree.
+-  *Internal nodes* are splits of the predictor space within the tree.
+
+Tree pruning
+=============
+  
+-  More detail always leads to predictions that are closer to the observed data.
+-  Why not use a more detailed tree.
+
+Pruning
+============
+
+-  Build a large tree, then prune back to a subtree.
+-  Base pruning on the cost complexity
+
+cp value statistics
+===================
+
+-  CP: cost complexity parameter
+-  nsplit: Number of splits
+-  rel error: Relative error
+-  xerror: Cross validation average relative error
+-  xstd: Cross validation error standard deviation
+
+Advantages of recursive partitioning
+====================================
+- Trees are very easy to explain to people. In fact, they are even easier
+to explain than linear regression!
+- Some people believe that decision trees more closely mirror human decision-making than do other regression and classification approaches.
+- Trees can be displayed graphically, and are easily interpreted even by a non-expert (especially if they are small).
+- Trees can easily handle qualitative predictors without the need to create dummy variables.
+- But: trees generally do not have the same level of predictive accuracy as some of the other regression and classification approaches.
+
+Random Forests
+==============
+type: section
+
+-  We saw this with algae bloom and classifying micro-arrays
+-  Build a number of trees based on a random sample of predictors.
+-  Trees vote on the classification of the observation.
+-  Benefit:  allows for predictors other than the very best to be evaluated.
+
+Example data: Glaucoma diagnosis
+==================================
+
+-  Goal: to predict Glaucoma
+-  Many predictors
+-  First use recursive partitioning/regression tree
+
+```{r}
+library(ipred)
+data(GlaucomaMVF)
+```
+
+Now random forest
+====================
+
+-  Note evaluation when compared to recursive partitioning.

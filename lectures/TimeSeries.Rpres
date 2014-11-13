@@ -1,0 +1,467 @@
+Time Series Analysis
+========================================================
+author: IE2064 Data Science
+date: April 2014
+
+```{r loadggplot, echo=FALSE}
+library(lattice)
+library(ggplot2)
+library(TTR)
+library(forecast)
+# Avril Coghlan's function
+plotForecastErrors <- function(forecasterrors) {
+    # make a histogram of the forecast errors:
+    mybinsize <- IQR(forecasterrors)/4
+    mysd <- sd(forecasterrors)
+    mymin <- min(forecasterrors) - mysd * 5
+    mymax <- max(forecasterrors) + mysd * 3
+    # generate normally distributed data with mean 0 and standard deviation
+    # mysd
+    mynorm <- rnorm(10000, mean = 0, sd = mysd)
+    mymin2 <- min(mynorm)
+    mymax2 <- max(mynorm)
+    if (mymin2 < mymin) {
+        mymin <- mymin2
+    }
+    if (mymax2 > mymax) {
+        mymax <- mymax2
+    }
+    # make a red histogram of the forecast errors, with the normally
+    # distributed data overlaid:
+    mybins <- seq(mymin, mymax, mybinsize)
+    hist(forecasterrors, col = "red", freq = FALSE, breaks = mybins)
+    # freq=FALSE ensures the area under the histogram = 1 generate normally
+    # distributed data with mean 0 and standard deviation mysd
+    myhist <- hist(mynorm, plot = FALSE, breaks = mybins)
+    # plot the normal curve as a blue line on top of the histogram of forecast
+    # errors:
+    points(myhist$mids, myhist$density, type = "l", col = "blue", lwd = 2)
+}
+
+```
+
+Overview
+========================================================
+
+- Applications of Time Series Analysis
+- Forecasting
+- Arrival rates
+
+Applications of Time Series Analysis
+========================================================
+
+-  Why are we interested in analyzing time series?
+-  What kinds of questions do we have when we look at time series data?
+
+Examples of time series data
+============================
+
+-  Financial data
+-  Sports
+-  Social media
+-  Event occurrences/Arrivals
+
+Things we look for
+===================
+
+-  Trends
+-  Cycles
+-  Changes in trends and cycles
+-  Can we tell the difference between a trend, a cycle, normal variation, and if a true change has occurred?
+
+Difficulties
+===============
+
+-  Random effects - separating out signal from noise.
+-  Non-stationary population - determining if the population is comparable across the time series.
+-  Survival bias - non-random portion of the population dropping out of the time series.
+
+
+
+Forecasting
+=============
+type: section
+
+
+Forecasting
+================
+
+-  Forecasting is taking a time series, and determining what will happen in the future if the same patterns continue.
+-  Possible patterns include:
+  1.  Stationary
+  2.  Trend
+  3.  Cyclic/Seasonality
+-  Need to determine pattern with the understanding that there is a random component
+
+Looking at time series
+=======================
+
+### Look at New York City Births
+
+```{r nybirths}
+births <- scan("data/nybirths.dat")
+birthstimeseries <- ts(births, frequency=12, start=c(1946,1))
+birthstimeseries
+```
+
+```{r souvenirsales, echo=FALSE}
+souvenir <- scan("data/fancy.dat")
+souvenirtimeseries <- ts(souvenir, frequency=12, start=c(1987,1))
+```
+
+Looking at time series
+======================
+
+- What type of patterns do you see?
+
+```{r plotnybirths}
+plot.ts(birthstimeseries)
+```
+
+Decomposing a time series
+===========================
+
+-  We can **decompose** a tie series by separating it into its constituent components.
+  1.  Irregular component
+  2.  Trend component
+  3.  Seasonal component
+-  Note: we may have to transform the data, e.g. trend is accelerating so use a log transform.
+
+
+
+Stationary forecasting
+=======================
+
+-  Moving average
+-  Exponential smoothing/Auto regressive
+
+Simple Moving Average
+=====================
+
+-  Takes a window of data and the forecast is the average of the data elements in the window.
+
+```{r smabirths}
+birthsSMA=SMA(birthstimeseries, n=6)
+```
+```{r, echo=FALSE}
+nybirths = data.frame(births = as.numeric(birthstimeseries),
+                      birthSMA = as.numeric(birthsSMA))
+```
+
+SMA example - NYC Births
+=========================
+```{r, echo=FALSE}
+plot.ts(birthstimeseries)
+```
+***
+```{r, echo=FALSE}
+plot.ts(birthsSMA)
+```
+
+Decomposing time series data
+=============================
+
+-  Estimating time component and seasonal components of seasonal time series data
+-  Additive model
+$$Y[t] = T[t] + S[t] + e[t]$$
+
+-  Multiplicative model
+$$Y[t] = T[t] * S[t] * e[t]$$
+
+Decomposing NYC Births
+===========
+
+-  Monthly seasonality factor
+
+```{r decomposenycbirths}
+birthstimeseriescomponents <- decompose(birthstimeseries)
+birthstimeseriescomponents$seasonal[1:12]
+```
+
+Decomposing NYC Births
+========
+```{r plotdecomposednycbirths}
+plot(birthstimeseriescomponents)
+```
+
+Forecasts using exponential smoothing
+==========
+
+-  Exponential smoothing is based on modifying the previous estimate with new data.
+-  Baseline - Single exponential
+-  Trend - Double exponential
+-  Seasonality - Triple exponential
+-  Implemented as the *Holt Winters* algorithm
+
+Exponential smoothing with NYC births
+=============
+
+```{r nycexponential}
+birthsimpleexponential <- HoltWinters(birthstimeseries, beta=FALSE, gamma=FALSE)
+birthsimpleexponential
+```
+
+Look at the forecast
+====================
+
+-  In what way is this off?
+
+```{r plotsimpleforecast}
+plot(birthsimpleexponential)
+```
+
+Try exponential smoothing again
+============
+```{r birthHoltsWinters}
+birthexponentialsmooth <- HoltWinters(birthstimeseries)
+birthexponentialsmooth
+```
+
+Look at the forecast
+====================
+
+```{r plotsimple}
+plot(birthsimpleexponential)
+```
+***
+```{r plottriple}
+plot(birthexponentialsmooth)
+```
+
+Compare the SSE
+===============
+```{r comparesseexponential}
+birthsimpleexponential$SSE
+birthexponentialsmooth$SSE
+birthstimeseriescomponents$SSE
+```
+
+Correlation in time series
+============
+
+-  Moving average and exponential assume no correlation between successive events.
+-  Accounting for correlations may improve forecasts.
+
+Autoregressive Integrated Moving Average (ARIMA) Models
+========================
+
+-  ARIMA models include an explicit 
+-  Defined on a stationary time series.
+-  If there is a trend, you need to take *difference* between successive points until the trend is removed (i.e. the data varies around a common mean)
+-  The number of times you need to take the difference is the *order* of the ARIMA model.
+
+Sydney souvenir examples
+=============
+
+-  Sales at a souvenir stand in Australia
+
+
+```{r souvenirplot}
+plot.ts(souvenirtimeseries)
+```
+
+Now take a diff
+============
+
+```{r}
+souvenirtimeseriesdiff1 <- diff(souvenirtimeseries, differences=1)
+plot.ts(souvenirtimeseriesdiff1)
+```
+
+Correlation
+===========
+
+-  After you have removed the trend, you can plot correlations and auto-correlations
+-  ARIMA(p,d,q)
+  -   Partial auto-correlation
+  -   Diff (order)
+  -   Correlation
+-  Where diff=0, then ARMA(p,q) model
+
+Volcanic dust example
+=============
+- Example: volcanic dust veil index in the Northern Hemisphere: 1500-1969
+
+```{r volcanicdust}
+volcanodust <- scan("http://robjhyndman.com/tsdldata/annual/dvi.dat", skip=1)
+volcanodustseries <- ts(volcanodust,start=c(1500))
+plot.ts(volcanodustseries)
+```
+
+Auto-correlation
+=====
+- Data looks stationary, so look for correlation
+- See where the auto-correlations exceed significance bounds
+```{r volcanoacf}
+acf(volcanodustseries, lag.max=20) 
+#acf(volcanodustseries, lag.max=20, plot=FALSE)
+```
+
+Partial auto-correlation
+===========
+
+```{r volcanopacf}
+pacf(volcanodustseries, lag.max=20)
+pacf(volcanodustseries, lag.max=20, plot=FALSE)
+```
+
+Model selection
+===============
+-  Choose models where the values are not past significance bounds.
+-  ARMA(2,0) - partial correlation goes to 0 after lag 2
+-  ARMA(0,3) - Auto-correlation goes to 0 after lag 3
+-  ARMA(p,q) as both tail to 0 (ignore significance as order gets large)
+-  Select the simplest model (parsimony), so ARMA(2,0) or ARMA(p,q)
+
+Make a forecast
+==========
+
+- Fit the ARIMA(2,0,0) to the data
+
+```{r}
+volcanodustseriesarima <- arima(volcanodustseries, order=c(2,0,0))
+volcanodustseriesarima
+```
+
+Now, make a forecast
+=============
+
+- 31 more years
+
+```{r volcanoarimaforecast}
+volcanodustseriesforecasts <- forecast.Arima(volcanodustseriesarima, h=31)
+```
+
+
+Plot the original data and forecasts
+===============
+```{r}
+plot.forecast(volcanodustseriesforecasts)
+```
+
+And plot errors
+==========
+```{r}
+plot.ts(volcanodustseriesforecasts$residuals)
+```
+***
+```{r}
+plotForecastErrors(volcanodustseriesforecasts$residuals) 
+```
+
+Arrival rates
+==============
+type: section
+
+
+Arrivals and events
+=====================
+
+-  We want to know if the the arrival or event process has changed.
+  -  Has an intervention increased or decreased the rate of events?
+  -  Is there a trend in the rate of events?
+-  What constitutes a significant change in a rate?
+
+
+Analysis of creation times
+==========================
+
+```
+qplot(created, data=tweetfluDF, geom="histogram")
+```
+![Creation times of 500 #flu Tweets](twitter-figure/twitterflucreation.png)
+
+
+Interarrival distribution
+========================
+
+```
+eventDelays<-as.integer(diff(sortFluDF$created))
+mean(eventDelays)
+sd(eventDelays)
+
+> mean(eventDelays)
+[1] 88.83166
+> sd(eventDelays)
+[1] 111.3646
+```
+
+What distribution do we know has a mean and standard deviation with this type of relationship?
+
+
+Plot interarrival distribution
+==============================
+
+```
+hist(sort(eventDelays),freq=FALSE, breaks=30)
+```
+![Interarrival times of 500 #flu Tweets](twitter-figure/twitterFluInterarrival.png)
+
+Comparing popularity
+====================
+type: sub-section
+
+Compare popularity of two tags
+==============================
+
+- Let's try to compare popularity of two organizations.
+- *Lowes* and *Home Depot*
+- Both are big box stores that cater to home renovation contractors and  home improvement Do It Yourselfers.
+- What makes Twitter a good or bad choice to collect data like this?
+
+Collecting data
+================
+
+```
+tweetlowesDF <- TweetFrame("@lowes",500)
+tweethomedepotDF <- TweetFrame("@homedepot",500)
+sortweetDF<-tweetDF[order(as.integer()
+  (tweetlowesDF$created)), ]
+eventlowesDelays<- as.integer(diff(sortweetDF$created))
+sortweetDF<-tweetDF[order(as.integer()
+  tweethomedepotDF$created)), ]
+eventhomedepotDelays<- as.integer(diff(sortweetDF$created))
+```
+
+Look at mean interarrival time
+==============================
+
+```
+> mean(eventlowesDelays)
+[1] 216.3166
+> mean(eventhomedepotDelays)
+[1] 207.2004
+```
+
+
+Look at confidence intervals
+============================
+
+- Lets see if they are signficant.
+- We think that independent arrivals should be Poisson, so use confidence intervals on the Poisson distribution.
+
+```
+> sum(eventhomedepotDelays<=207)
+[1] 363
+> poisson.test(363,500)$conf.int
+[1] 0.6532273 0.8046634
+> sum(eventlowesDelays <= 207)
+[1] 292
+> poisson.test(292,400)$conf.int
+[1] 0.6486627 0.8187152
+```
+
+- These 95% c.i. are fairly similar, so the difference is not that great.
+
+
+Summary
+=========
+type:section
+
+- Time series analysis can be used to identify trends
+  -  Stationary
+  -  Trends
+  -  Seasonality/cycles
+-  Separate out random effects from trend effects (i.e. separate out signal from noise)
+- For predictive modeling, the question should be how do you know if you have one time series, or more than one.
+- Determine if two time series are different.

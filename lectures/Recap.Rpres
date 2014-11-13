@@ -1,0 +1,196 @@
+Review of topics in Data Science
+========================================================
+author: IE 2064 Data Science
+date: April 2014
+
+Data science course
+===================
+type: section
+
+
+What is data science?
+=====================
+
+- *Data Science refers to an emerging area of work concerned with the collection, preparation, analysis, visualization, management, and preservation of large collections of information.* - Jeffrey Stanton
+
+- *The Analytics Section of INFORMS is focused on promoting the use of data-driven analytics and fact-based decision making in practice. The Section recognizes that analytics is seen as both (i) a complete business problem solving and decision making process, and (ii) a broad set of analytical methodologies that enable the creation of business value.*  -  INFORMS Section on Analytics
+
+Machine Learning
+================
+![Branches of Machine Learning](resources/ml_map.png)
+
+What is Big Data?
+=================
+
+-  A recognition that the standard methods and techniques as taught in traditional statistics is inappropriate when data is collected on an automated basis.
+-  Traditional statistics research was done on the basis of data scarcity, where data collection was expensive.
+-  Design of experiments planned the data collection with the goal of answering a specific question.
+-  When data collection became automated, we now had data collection that was not planned for the experiment in question.
+
+Qualities of big data
+=====================
+left:40%
+
+- Volume
+- Velocity
+- Variety
+
+***
+
+![3Vs of Big data](resources/BigData3vs.png)
+
+What does a data scientist do?
+=========================
+type: section
+
+The Data Science Venn Diagram
+=============================
+left:40%
+The primary colors of data
+  - Hacking skills, 
+  - Math and statistics knowledge, and 
+  - Substantive expertise.
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+
+Three categories of data science
+=======================================
+
+- Descriptive analytics
+    - Prepares and analyzes historical data
+    - Identifies patterns from samples for reporting of trends
+- Predictive analytics
+    - Predicts future probabilities and trends
+    - Finds relationships in data that may not be readily apparent with descriptive analysis
+- Prescriptive analytics
+    - Evaluates and determines new ways to operate
+    - Targets business objectives
+    - Balances all constraints
+
+Data science requirements
+========================================================
+
+1. Read in data
+2. Handle data of indefinite size
+3. Manipulate data
+4. Understand the data and problem
+5. Mathematical/statistical analysis
+6. Presentation of results
+
+
+Data science applications
+==============================
+type: section
+
+Application categories
+==========================
+
+- Exploratory data analysis
+- Text processing
+- Predictions
+
+Exploratory data analysis
+==========================
+
+-  Visualization
+-  Visual cues -  position, size, direction, colors
+-  Categories, time series, spatial data
+-  Multi-variate visualization
+-  Distributions
+-  Comparisons
+
+Text processing
+=================
+
+-  Frequent word analysis
+-  Visualization with word clouds/wordles
+-  Text mining
+  -  text classification
+  -  Clustering
+  -  Document summary
+  -  Corpus analysis
+
+Predictions
+==============
+
+-  The purpose of data mining is we want to make decisions?
+-  Given a new observation, how should we react?
+-  How do we use our past observations to inform our reaction to a new observation.
+
+Machine Learning
+================
+left:40% 
+
+-  Regression
+-  Classification
+-  Clustering
+-  Dimensionality reduction (feature selection)
+-  Model evaluation
+
+***
+
+![Branches of Machine Learning](resources/ml_map.png)
+
+
+Regression
+===========
+
+-  Use training data to develop regression model.
+-  Use regression model on test data to generated predicted output scores.
+
+Regression methods
+=============
+
+-  Linear regression
+-  Recursive partitioning (Classification and regression trees)
+-  Support vector machines
+-  Goal is to make predictions, not determine if model terms are statically significant
+
+Classification
+================
+
+-  From training data, classifications are based on output data.
+-  Test data assigned to classes based on predictors.
+-  Predictions based on class assigned
+
+Classification methods
+===================
+
+-  Recursive partitioning
+-  Support Vector machines
+-  *k*-Nearest Neighbors
+-  Naive Bayes
+-  Random Forests
+
+Clustering
+==========
+
+-  Look at training data, then generate clusters.
+-  Assign test data to clusters.
+-  Predictions based on what cluster test data is assigned.
+
+
+Clustering Methods
+==================
+
+-  Modified box-plot rules
+-  *k*-Means
+-  Outlier based methods
+-  Hierarchical clustering
+
+Dimensionality reduction
+=========================
+
+-  Classification where there are a large number of features
+-  Use methods to reduce the number of potential predictors to a manageable number.
+
+Dimensionality reduction
+============================
+
+-  Analysis of Variance (ANOVA)
+-  Clustering with factors
+-  Random Forests
+-  Principle Component Analysis

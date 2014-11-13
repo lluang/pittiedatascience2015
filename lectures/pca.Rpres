@@ -1,0 +1,139 @@
+Principle Component Analysis
+========================================================
+author: IE 2064
+date: April 2014
+
+Principle Component Analysis
+========================================================
+
+- PCA is a procedure which converts a set of possible correlated variables into a set of uncorrelated variables.
+- From $x_1, x_2, \ldots, x_q$ to $y_1, y_2, \ldots, y_m$
+- $y_i$ arq uncorrelated with each other.
+- *Orthoganal*
+- Each $y_i$ is a linear combination of the $x_1, x_2, \ldots, x_n$
+
+Goal of PCA
+===========
+
+-  Replace the features $x_i$ with a small set of $y_i$ that accounts for a substantial proportion of the variation in the original variables.
+-  A smaller set of variables may be more informative than the original, large set.
+-  The linear combinations used to construct the first few principle components may give insight into the relationships among the original variables.
+-  Dimensionality reduction.
+
+Method
+======
+
+-  Orthoganal linear transformation into a new coordinate system.
+-  Use eigenvalue decomposition ($\lambda$) of a data covariance matrix ($\bf{S}$) (after normalizing the data).
+-  First component is the single axis that explains the most variance.
+-  Subsequence components are each the axis that explains the most unexplained variance, given that it is orthogonal to all other existing components.
+$$y_1 = a_{11}x_1 + a_{12}x_2 + \ldots + a{1q}x_q$$
+
+Principle components
+======================
+
+- Each principle component acounts for a proportion $P_j$ of the total variation of the original data.
+$$P_j  = \frac{\lambda_j}{trace(\bf{S})}$$
+- The first $m$ principle components account for
+$$P^{(m)} =\frac{\sum_{j=1}^m \lambda_j}{trace(\bf{S})}$$
+
+Heptathelon example
+===================
+type: section
+
+The Olymphic Heptathlon
+=========================
+
+-  Women's counterpart of the decathelon
+  -  Shot put, long jump, 100m hurdles, 200m, high jump, javelin, 800m
+  -  Scores are assigned based on performance in each event. 
+  -  Question:  Which events are correlated in scores?
+
+1988 Olymphics
+=========================
+
+-  1988 Seoul Olympics
+-  25 competitors
+
+```{r heptathelondata}
+data(heptathlon, package="HSAUR2")
+heptathlon$hurdles <- max(heptathlon$hurdles)-heptathlon$hurdles
+heptathlon$run200m <- max(heptathlon$run200m) - heptathlon$run200m
+heptathlon$run800m <- max(heptathlon$run800m) - heptathlon$run800m
+score <- which(colnames(heptathlon)=="score")
+```
+
+Look at correlation numerically
+===============================
+```{r}
+round(cor(heptathlon[,-score]),2)
+```
+
+
+And plot the correlations
+=======================================
+```{r}
+plot(heptathlon[,-score])
+```
+
+Outlier
+========
+-  Most of the graphs show one outlier.
+-  Lets remove the outlier.
+
+```{r}
+heptathlon <- heptathlon[-grep("PNG", rownames(heptathlon)),]
+plot(heptathlon[,-score])
+```
+Look at correlation numerically
+===============================
+```{r}
+round(cor(heptathlon[,-score]),2)
+```
+
+Take PCA
+========
+
+```{r}
+heptathlon_pca <- prcomp(heptathlon[,-score], scale=TRUE)
+print(heptathlon_pca)
+```
+
+Summarize PCA results
+===========
+```{r}
+summary(heptathlon_pca)
+```
+
+Variances explained by the principle components
+===================
+```{r}
+plot(heptathlon_pca)
+```
+
+Can we predict final score based on the first principle component?
+===============
+```{r}
+predict(heptathlon_pca)[,1]
+```
+
+Compare this to the final
+=============
+```{r}
+plot(heptathlon$score, heptathlon_pca$x[,1])
+cor(heptathlon$score, heptathlon_pca$x[,1])
+```
+
+Look at first two principle components
+========
+```{r}
+biplot(heptathlon_pca, col=c("black", "gray"))
+```
+
+Summary
+==========
+
+-  PCA looks for linear combinations of original variables to summarize the data set.
+-  Looks for uncorrelated (orthogonal) new variables to describe the data.
+-  Derived variables may help simplify later analysis.
+

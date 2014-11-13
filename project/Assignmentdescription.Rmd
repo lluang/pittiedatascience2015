@@ -1,0 +1,71 @@
+Assignments for IE 2064 Data Science
+====================================
+
+The goal of this course is to gain practical skills, knowledge, and understanding in the analysis of data to make data driven decisions.  The grading in this course is built around three presentations on a single topic, where the presentations demonstrate increasing understanding of the data, the problem domain, and the application of methods for processing, analyzing, and presenting the data, question, and results.
+
+Each assignment consists of a short paper and a presentation. The paper should be written in R Markdown format (delivered as a pdf) and the presentation should be written in R Presentation format (delivered as HTML)
+
+For assignment 1 and 2, the paper should be no more than 4 pages (not counting figures), the presentation should be 5-8 minutes.
+
+For the final project, the paper should be no more than 8 pages (not counting figures), the presentation should be 10-12 minutes.
+
+The requirements for the assignment are below, so the data set you choose should be rich enough so that these tasks can be done.  However, if you have a data analysis that needs to be done for some other purpose (work data, thesis, research project) see me and we can adapt the project so that it contributes to your other work.
+
+The ultimate goal of this project is to have a paper and presentation that you can show to potential employers as proof of the knowledge and capabilities you have learned in this class!
+
+Collaboration
+=============
+
+Collaboration is encouraged. However, the question that you will explore in the final project must be unique. In the case where two people propose substantially similar final projects we will discuss this after the second presentation.  That said, you may partner with one other person do the first two presentations and reports if you are using the same dataset. For the second presentation, you will have a two part final section where you will propose your final project.
+
+In addition, you are encourage to discuss and assist with each other's projects. However, if you receive such assistance, you should acknowledge that assistance in and acknowledgments section in the report and presentation.
+
+Project description
+===================
+
+1.  Exploratory data analysis
+2.  Preliminary data analysis
+3.  Final report and presentation
+
+1. Exploratory Data Analysis
+============================
+
+- Due February 3
+
+From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the following:
+
+-    Suggest hypotheses about the causes of observed phenomena.
+-    Assess assumptions on which statistical inference will be based.
+-    Support the selection of appropriate statistical tools and techniques.
+-    Provide a basis for further data collection through surveys or experiments.
+
+The first assignment
+
+1.  Identify a data set. Discuss the collection of the data. Who organized the collection, who actually performed the collection, for what purposes.
+2.  Discuss types of questions that users of the data may be interested in.
+3.  Data summary.  What data elements are present, provide a summary of categories identified in the data. Some statistical summaries.
+4.  Data visualization
+5.  Text analysis - What were difficulties faced doing the analysis?
+6.  Suggest hypothesis for what process 
+  
+  
+2.  Preliminary data analysis
+=============================
+
+Due March 3
+
+1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
+2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
+3.  Preliminary analysis including data visualization.
+4.  Hypothesis(es) to be tested for the final project.
+5.  Plan of work.
+  
+3.  Final project
+=================
+
+1.  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected? What makes it interesting (Think in terms of the dimensions of big data: velocity, volume, variety)
+2.  Discuss problem being studied.  What makes it interesting? difficult? What decision will be made by the recipients (hypothetical) of this report?
+3.  What were obstacles you faced while analysing the data? How did you deal with data that you would have wanted but was not available?
+4.  Hypothesis.  What is the believed real world relationship between the predictors and outcome (or the counterparts as applicable to your project)
+4.  Analysis - Methodology. How it relates predictors to outcomes
+5.  Conclusions - Note: It is not necessary for there to be a 'successful' application of data mining methods that 'solves' the problem. But you should explain how the methodology you applied failed. (i.e. it may imply that the relationship hypothesized does not exist, although if you say this, you should probably have tried either additional methodologies or an additional hypothesis before reaching this conclusion)
