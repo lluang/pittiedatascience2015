@@ -1,6 +1,6 @@
-# IE 2064:  Data Science – Spring 2014
+# IE 2064:  Data Science – Spring 2015
 
-- Time:  M/W 10:45 – 12:00
+- Time:  Tue  5:20 - 7:50
 - Place:  1020 Benedum Hall
 - Instructor:  Dr. Louis Luangkesorn
 
