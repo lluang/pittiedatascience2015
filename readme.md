@@ -4,13 +4,13 @@
 - Place:  1020 Benedum Hall
 - Instructor:  Dr. Louis Luangkesorn
 
-## Description
+# Description
 
 Data science covers methods for collecting, preparing, analyzing, and visualizing large collections of information.  This course will cover aspects of descriptive and predictive analytics, starting with obtaining and processing data from published and online sources and moving to descriptive and predictive analytics. Topics will include:  working with data, organizing data, summarizing data, sampling data, working with web based API for accessing data, statistical analysis of data, working with text, combining data sets, identifying relationships between data sets, data mining, and reporting.  The focus is on understanding and applying methods on real data over mathematical rigor.  The course will use R for data preparation, data analysis, model development, and interpreting results.
 
 Note:  Students should work through the tutorial An Introduction to R (listed as supplement) prior to the beginning of the course.
 
-##  Textbooks
+#  Textbooks
 
 -  Jeff Stanton, (2013), Introduction to Data Science V. 2.  Available at http://jsresearch.net/wiki/projects/teachdatascience
 
@@ -19,15 +19,23 @@ Note:  Students should work through the tutorial An Introduction to R (listed as
 
 -  Graham Williams, (2011), Data Mining with Rattle and R: The Art of Excavating Data for Knowledge Discovery, UseR Series,Springer, ISBN: 978-1-4419-9889-7
 
-## Supplements
+# Supplements
 
 -  Bill Venables, David Smith, and the R Core Team, (2013), An Introduction to R - Notes on R: A Programming Environment for Data Analysis and Graphics, available at http://cran.r-project.org/manuals.html and distributed along with R
 
 -  Hadley Wickham, (2009), ggplot2: Elegant Graphics for Data Analysis, Springer, ISBN: 0387981403.  You only need Chapter 2: Getting started with ggplot which is available at the book website.  http://ggplot2.org/book/
 
-## Software tools
+-  James, Witten, Hastie, Tibshirani, (2013) An Introduction to Statistical Learning: with Applications in R (Springer Texts in Statistics) ISBN: 1461471370 http://www-bcf.usc.edu/~gareth/ISL/getbook.html  Highly recommended. Very detailed, but focuses on practice in contrast to the Elements of Statistical Learning.  Freely available for download.
 
-### R
+-  Hastie, Tibshirani, Friedman (2009) The Elements of Statistical Learning, ISBN: 978-0-387-84857-0 http://statweb.stanford.edu/~tibs/ElemStatLearn/ Probably the best standard.  Tends toward the theoretical. You may want it for completeness or for research purposes, but Introduction to Statistical Learning is a better place to start.
+
+
+
+- 
+
+# Software tools
+
+## R
 
 - R environment for statistical computing. http://cran.r-project.org. The easiest way to get is is through through Revolution Analytics http://www.revolutionanalytics.com/downloads/
 
@@ -37,13 +45,13 @@ Note:  Students should work through the tutorial An Introduction to R (listed as
 
     R will install all the associated libraries automatically. This will take a few minutes as Rattle is a very full featured data mining application.
 
-###  R Studio
+##  R Studio
 
 -	R Studio Integrated Development Environment.
 
     http://www.rstudio.com/ide/ Install this after installing R. Includes knitr and R Markdown for reporting.
 
-###  Git Version Control
+##  Git Version Control
 
 
 -  Bitbucket sourcecode repository.
@@ -56,6 +64,28 @@ http://git-scm.com/
 
     http://www.sourcetreeapp.com/
 
+
+## Alternatives to R
+
+###  Python
+
+-  Scikit-Learn: http://scikit-learn.org/stable/index.html
+-  Learn Data Science - Self directed learning - http://github.com/nborwankar/LearnDataScience
+-  IPython Cookbook - Examples of a range of different scientfic programming tasks in Python, including some statistics and machine learning - http://ipython-books.github.io/cookbook/
+
+### Java Virtual Machine
+
+-  Weka Machine learning libraries and an applications - 
+http://www.cs.waikato.ac.nz/ml/weka/index.html
+  -  It comes with an Application Programming Interface (API) that is accessible from most JVM based languages.
+  -  Also accessed through other languages like R and Python.
+-  Book: Data Mining: Practical Machine Learning Tools and Techniques
+
+###  Matlab/Octave
+
+-  Libraries exist, but there is no standard set of libraries.
+-  Note: typically, these libraries are very low level and intended for use by strong scientific programmers.
+-  Very difficult to use with text data.
 
 ##  Prerequisites:
 

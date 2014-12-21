@@ -1,7 +1,7 @@
 Getting Started in Data Science
 ========================================================
 author: Louis Luangkesorn
-date: January 2014
+date: January 2015
 
 Notecard
 ========
@@ -11,7 +11,7 @@ Notecard
 - Graduate students: What was your undergraduate major/college?
 -	How much statistics have you had?
 - What is your level of programming?
-- What experience do you have with data analysis environments (SAS/SPSS/S-Plus/R/Python/Matlab)?	
+- What experience do you have with data analysis environments (SAS/SPSS/S-Plus/R/Python/Matlab/F#)?
 
 Data science course
 ===================
@@ -33,9 +33,26 @@ Goals
 
 Contrast
 ========
+incremental: true
 
 -  Computer programming - Teaches a computer language, but not necessarily the specific task of working with data.
--  Data mining (statistics) - Focus on data mining methods.
+-  Business Intelligence - Focus on displaying data summaries from data found in databases.
+-  Big Data - Methods for working with large databases (large meaning larger than practical for a single machine)
+-  Statistics - Methods of testing hypothesis using observed data.
+
+Some related topics
+===================
+
+-  Machine learning
+  - Focuses on methods for improving knowledge or performance of an intelligent agent.
+  -  Many applied statistics and pattern recognition fields.
+  -  Computer vision, robotics.
+-  Data mining (Knowledge Discovery and Data Mining (KDD))
+  -  More focused on application to data than machine learning
+  -  Includes the entire process of data analytics
+    - Data preparation, model learning, data evaluation, . . .
+
+
 -  What is missing?
   -  How to transform the messy, electronically collected data into a form that can be analyzed.
   -  Working with unstructured, non-numeric, error-prone data.
@@ -44,20 +61,23 @@ Contrast
 This Course
 ===========
 
-1.  Introduction to Data Science 
+1.  Introduction to Data Science
 2.  Data Science tools: R, R Studio, and Git
 3.  About data and data problems
 4.  Data munging: getting and working with data
 5.  Introduction to data visualization
 6.  Text mining and analysis
-7.  Linear regression
-8.  Supervised and unsupervised learning
-9.  Prediction models
-10.  Classification methods
+7.  Association rules
+8.  Linear regression
+9.  Supervised and unsupervised learning
+10.  Prediction models
+11.  Recursive partitioning (decision trees)
+11.  Clustering and Classification methods
 
 Machine Learning
 ================
 ![Branches of Machine Learning](resources/ml_map.png)
+<!--http://scikit-learn.org/stable/_static/ml_map.png-->
 
 Tools
 =====
@@ -66,6 +86,8 @@ Tools
   -  Rattle - Data Mining in R
 2.  R-Studio - IDE for R
 3.  Git - Source code version control
+
+
 
 Textbooks
 =========
@@ -91,15 +113,15 @@ Assignments
   -  Discuss types of questions that users of the data may be interested in.
   -  Data visualization
   -  Text analysis - What were difficulties faced doing the analysis?
-  
-  
+
+
 2.  Identify a question
 =======================
   -  Specify a question that you will explore for the final project.  What makes it interesting? Difficult?
   -  Discuss what kind of problem this question is.
   -  Preliminary analysis.
   -  Plan of work.
-  
+
 3.  Final project
 =================
   -  Discuss origin and structure of data.  What is missing?
@@ -115,7 +137,7 @@ Learning Data Science
 2.  Learn by doing. Do the examples in both Stanton and Torgo. You need to see what they did, not just read about it or watch someone else do it.
 3.  Try, try, and try again. You are doing experiments. Assume that the first thing you try will not work.
 4.  Talk and listen.
-5.  Class participation. Defined in this course in how much you help others learn. 
+5.  Class participation. Defined in this course in how much you help others learn.
 
 What is a data scientist?
 =========================
@@ -128,7 +150,7 @@ Data
 -  *Data is not information, information is not knowledge, knowledge is not understanding, understanding is not wisdom* - Tim Berners-Lee
 -  Our goal is wisdom.
 -  The tools we use are a means to an end.
- 
+
 
 Forms of data
 =============
@@ -192,7 +214,7 @@ Data scientist skills
 
 
 
-Aspects of data science 
+Aspects of data science
 =======================
 type: sub-section
 
@@ -200,8 +222,8 @@ The Data Science Venn Diagram
 =============================
 left:40%
 The primary colors of data
-  - Hacking skills, 
-  - Math and statistics knowledge, and 
+  - Hacking skills,
+  - Math and statistics knowledge, and
   - Substantive expertise.
 
 ***
@@ -221,7 +243,7 @@ left:65%
 Data Science:  Math and Statistics
 ==================================
 left:65%
--  The next step is to actually extract insight from it. 
+-  The next step is to actually extract insight from it.
 -  Apply appropriate math and statistics methods.
 -  Without this, you can produce what looks like meaningful output using a computer, but the output is without meaning.  VERY DANGEROUS.
 - *Lies, damned lies, and statistics*
@@ -233,7 +255,7 @@ left:65%
 Data Science:  Substantive Expertise
 ====================================
 left:65%
--  Science is about discovery and building knowledge, which requires some motivating questions about the world and hypotheses tested with statistical methods. 
+-  Science is about discovery and building knowledge, which requires some motivating questions about the world and hypotheses tested with statistical methods.
 -  Most academics (you) have math and statistics plus substantive expertise.
 
 ***
@@ -300,7 +322,7 @@ Criteria
 
 1.  Employer forces a choice of language.
 2.  Libraries available.
-  -  Some fields have many tools 
+  -  Some fields have many tools
   -  Libraries mean much of the work has been done for you.
 3.  Ability to customize solutions.
 
@@ -354,7 +376,7 @@ type: section
 Data Hackers
 ====================
 
--  Data is a commodity traded electronically; therefore, in order to be in this market you need to speak hacker (computer programming). 
+-  Data is a commodity traded electronically; therefore, in order to be in this market you need to speak hacker (computer programming).
 -  This, however, does not require a background in computer science.
 -  Being able to manipulate text files at the command-line
 -  Understanding vectorized operations
@@ -370,7 +392,7 @@ Tools for computer programming
   -  Data manipulation, analysis, presentation
   -  Documentation
   -  Change management
-  
+
 Data manipulation, analysis, presentation
 =========================================
 
@@ -385,7 +407,7 @@ Documentation
 
 -  Reports *Markdown*
 -  Slide presentations *R Presentation*
--  Web based documentation *Wiki*  
+-  Web based documentation *Wiki*
 
 Change management
 =========================================
@@ -410,7 +432,7 @@ Programming and development
   -  Editing code
   -  Eases installation of libraries
   -  Supports *Markdown* and *R Presentations*
-  
+
 
 Documentation
 =============
