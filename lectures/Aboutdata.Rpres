@@ -1,7 +1,7 @@
 Tools of Data Science
 ========================================================
 author: Louis Luangkesorn
-date: January 2014
+date: January 2015
 
 The Data Science Venn Diagram
 =============================
@@ -14,6 +14,7 @@ The primary colors of data
 ***
 
 ![Drew Conway Data Science](resources/Data_Science_VD.png)
+<!--http://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram-->
 
 Hacking skills
 ==============
@@ -188,4 +189,174 @@ Tasks that you need to be able to do
 - `git push` - Uploads committed changes to the remote repository.
 
 
+Thinking about data
+===================
+type: section
 
+Thinking about data
+===================
+
+-  We will spend most of our time looking at how to work with data.
+-  But what we need to do first is think about why.
+-  Define the problem.
+
+Data as storytelling
+====================
+incremental: true
+
+-  Our goal is looking at data is insight.
+-  The alternative to looking at data is _____.
+-  To do better, we need to ask good questions and develop a story.
+-  To tell a good story, we need to learn a structure to a story.
+
+
+
+Scoping a data project
+======================
+incremental: true
+
+-  **Co**ntext
+-  **N**eeds
+-  **V**ision
+-  **O**utcome
+
+Context
+=======
+type: subsection
+
+Context
+=======
+incremental: true
+
+- Context is the frame that is apart from the particular problem we are trying to solve.
+- *The big picture*
+- Who is interested in the results of this project?
+- What are they generally trying to achieve?
+- What overall work is this project contributing to?
+
+Sources of contexts
+=====================
+
+- Long term goals
+- Organization missions
+- Decision points
+- Personal curiosity
+
+Example
+=======
+
+- The Allegheny County Health Department is having a series of meetings with communities around the county and wants to know what type of health insurance people have in each community.
+
+Needs
+======
+type: subsection
+
+Needs
+======
+
+-  Needs are challenges that are to be met through the data project.
+-  Needs should be presented in terms of the organization.
+-  The need is NOT build a model/chart/graph. The need is to solve a specific problem.
+
+How can data fill needs
+=======================
+incremental: true
+
+-  Create knowledge.
+-  Understand some part of how the world works.
+-  Better understanding leads to better decisions.
+-  What will we do differently if we have the knowledge that data gives us?
+
+Learning what the needs are
+===========================
+incremental: true
+
+-  Talking to people.
+-  Ask for stories about what the people involved care about, what they work on, what they are stuck on.
+-  Ask questions to dig deeper into what needs to be understood, why, and by whom.
+
+
+What makes a good need
+======================
+incremental: true
+
+-  Relates directly to an action that depends on having good information.
+-  Information will inform an action.
+-  Information could be related to a bigger strategic question in meeting the organizations larger goals.
+-  Without a good definition of need, the work is fluff.
+-  A need is a problem, the need is never *we need a tool*.
+
+Vision
+======
+type: section
+
+Vision
+======
+
+-  Where are we going?
+-  What might it look like to achieve our goal?
+
+What does success look like?
+============================
+
+-  What are potential results of the data analysis?
+-  What kind of argument will you make with the data?
+-  What kind of decisions will result from seeing outcomes?
+
+Talking about results
+=========================
+
+-  How will the data be used to support the decisions?
+-  How should the data be presented to best support the use of the data?
+-  Mockups of the output
+  -  Example reports of outcomes
+  -  Simplified graphs
+  -  Sketches of displays or user interfaces to spark discussion of using a tool
+
+Thinking about arguments
+=========================
+
+-  The results of data analysis should be a decision.
+-  The results need to advocate one choice over another.
+-  Question:  What makes a convincing case of one choice over another?  Will the data analysis provide that case?
+
+Aspects of an argument
+======================
+
+-  Who needs to be convinced? What is their background, their priorities?
+-  Are they interested in subjective or objective measurements?
+-  Do they need an experiment?
+
+This defines how simple or complext the data analysis needs to be.
+
+Outcome
+=======
+type: subsection
+
+Outcome
+=======
+
+-  How will the data analysis be used?
+-  How will it be integrated into the organization?
+-  Who will own the integration?
+-  Who will use it?
+-  How will success be measured?
+
+Who will have to use the results
+===
+
+-  Who will interpret or act on the work?
+-  Who are they?
+-  What are their requirements?
+
+Who will handle keeping the work relevant?
+==========================================
+
+-  Will this need to be rerun at some point?
+-  What needs to be adjusted between runs?
+
+What do we hope will change after we finish the work?
+========
+
+-  What will change in the organization?
+-  How do we verify the change?

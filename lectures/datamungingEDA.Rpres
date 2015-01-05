@@ -1,7 +1,7 @@
 Data Munging and Exploratory Data Analysis
 ========================================================
 author: Louis Luangkesorn
-date: January 2014
+date: January 2015
 
 Topics
 ========================================================
@@ -37,6 +37,19 @@ Reading in data
 - Covered in the document *R Data Import/Export*
 - Application programming interfaces (API) for network based sources.
 
+Data manipulation
+=====================
+
+Basic data manipulation tools.
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
 Sample database - Algae
 =======================
 
@@ -57,9 +70,9 @@ library(ggplot2)
 library(lattice)
 library(DMwR)
 ```
-
+<!--http://www.dcc.fc.up.pt/~ltorgo/DataMiningWithR/datasets.html-->
 ```{r}
-algae <- read.table('~/Ubuntu One/DataScience/bookdata/Analysis.txt',
+algae <- read.table('resources/Analysis.txt',
   header=F,
   dec='.',
   col.names=c('season','size','speed',
@@ -190,7 +203,7 @@ Counting missing values
 - Use `apply()` to apply a function to many data records.
 
 ```{r echo=FALSE}
-algae <- read.table('~/Ubuntu One/DataScience/bookdata/Analysis.txt',
+algae <- read.table('resources/Analysis.txt',
   header=F,
   dec='.',
   col.names=c('season','size','speed',

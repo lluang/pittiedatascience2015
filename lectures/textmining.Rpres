@@ -1,7 +1,7 @@
 Text Mining
 ========================================================
 author: Louis Luangkesorn
-date:   January 2014
+date:   January 2015
 
 Overview
 ===============
@@ -71,7 +71,7 @@ Computational activities
 
 -  Associate: association analysis, that is finding associations for a given term based on counting co-occurrence frequencies,
 -  Cluster: clustering of similar documents into the same groups,
--  Summarize: summarization of important concepts in a text. Typically these are high-frequency terms,
+-  Summarize: summary of important concepts in a text. Typically these are high-frequency terms,
 -  Categorize: classification of texts into predefined categories
 
 Terminology
@@ -177,7 +177,7 @@ Example
 -  Provides a term-document matrix for a `Corpus` element.
 -  Allows for `Weighting` of there *term frequency* (`weightTf`)
   - *binary* - ignores repetition within an individual text document.
-  - *inverse document frequency* - More importance to descriminative compared to irrelevant terms. (terms that differentiate documents)
+  - *inverse document frequency* - More importance to discriminate between classifications compared to irrelevant terms. (terms that differentiate documents)
 -  Uses a *tokenizer* to identify the words in the documents, then count and weight.
   - Tokenizers come from other packages automatically installed with `tm`
 
@@ -218,7 +218,7 @@ meta(oz[[6]])
 Process text
 ============
 ```{r}
-oz <- tm_map(oz, tolower)
+#oz <- tm_map(oz, FUN=tolower)
 oz <- tm_map(oz,FUN=removeWords, stopwords())
 oz <- tm_map(oz,FUN=removeNumbers)
 oz <- tm_map(oz,FUN=removePunctuation)

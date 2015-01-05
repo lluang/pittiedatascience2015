@@ -68,10 +68,9 @@ This Course
 5.  Introduction to data visualization
 6.  Text mining and analysis
 7.  Association rules
-8.  Linear regression
-9.  Supervised and unsupervised learning
-10.  Prediction models
 11.  Recursive partitioning (decision trees)
+8.  Linear regression
+10.  Prediction models
 11.  Clustering and Classification methods
 
 Machine Learning
@@ -109,26 +108,36 @@ Assignments
 
 1. Exploratory Data Analysis
 ============================
-  -  Identify a data set. Discuss the origin and structure of the data.
-  -  Discuss types of questions that users of the data may be interested in.
-  -  Data visualization
-  -  Text analysis - What were difficulties faced doing the analysis?
+-  Identify a data set. Discuss the origin and structure of the data.
+-  Text analysis - What were difficulties faced working with the data?
+-  Data summary
+-  Data visualization
+    -  At least three views of the data (different visual cues)
+    -  The expectation is that at least one may be not useful, but you should have found at least one that tells a story.
+-  CoNVO - Context, Need, Vision, Outcome
 
 
-2.  Identify a question
-=======================
-  -  Specify a question that you will explore for the final project.  What makes it interesting? Difficult?
-  -  Discuss what kind of problem this question is.
-  -  Preliminary analysis.
-  -  Plan of work.
+2.  Preliminary Data analysis
+======================
+-  Preliminary analysis.
+  -  An appropriate, complex visualization (at least two visual cues)
+  -  Apply at least 3 types of methods to the data
+  -  The expectation is at least one will prove to be completely inappropriate.
+-  Hypothesis - Question to be answered.
+  -  CoNVO - Context, Need, Vision, Outcome
+-  Plan of work - How will you answer the question
 
 3.  Final project
 =================
-  -  Discuss origin and structure of data.  What is missing?
-  -  Discuss problem being studied.  What makes it interesting? difficult?
-  -  What were obstacles you faced while analyzing the data?
-  -  Analysis
-  -  Conclusions
+-  Data manipulation - What made working with the data interesting or difficult?
+-  CoNVO - Context, Need, Vision, Outcome
+- Hypothesis from Preliminary Data Analysis
+  - How did hypothesis change?
+-  Data visualization
+-  Analysis
+  -  Methods used
+  -  Results
+-  Conclusions
 
 Learning Data Science
 =====================
@@ -336,7 +345,7 @@ Read in data
 Handle data of indefinite size
 ========================================================
 
--  Indefinite size tends to using array or matrix based computation.
+-  Indefinite size implies usinging array or matrix based computation.
 -  Languages with functional characteristics helpful.
   -  Vectorization makes it easier to read implementations of analytical methods.
   -  No side effects requirement of functional languages leads to thinking of operations on all rows or records rather than one record at a time.

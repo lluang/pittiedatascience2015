@@ -1,7 +1,7 @@
 Regression
 ========================================================
 author: IE 2064 Data Science
-date: February 2014
+date: February 2015
 
 Example: Predicting attendance at a game
 ========================================================
@@ -20,8 +20,9 @@ Game attendance data
 ====================
 
 ```{r}
-attend<-read.delim("resources/afl.txt", header=TRUE)
+attend<-read.delim("data/afl.txt", header=TRUE)
 head(attend)
+#http://www.statsci.org/data/oz/afl.html
 ```
 
 Data field
