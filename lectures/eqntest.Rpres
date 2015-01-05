@@ -1,6 +1,0 @@
-Title
-========================================================
-$$L_{0/1}(y_i, \hat{y}_i)=\begin{array}{l}
-0 \text{ if }y_i = \hat{y}_i\\
-1 \text{ otherwise}
-\end{array}$$
