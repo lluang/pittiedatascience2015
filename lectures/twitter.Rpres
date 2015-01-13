@@ -3,14 +3,7 @@ Twitter and Big Data
 author: Louis Luangkesorn
 date: February 2014
 
-```{r echo=FALSE}
-requesttokenurl = 'https://api.twitter.com/oauth/request_token'
-authorizeurl = 'https://api.twitter.com/oauth/authorize'
-accesstokenurl = 'https://api.twitter.com/oauth/access_token'
-Accesstoken = '1397701171-sdVgvADWPIXKUrtbb9U8rILnrgV9ek7xzFzw3Sl'
-Accesstokensecret =	'Mu7cbilFLpMJ7e62xdq41x2cm4pHMUFJ5Z0grOhBvpyMN'
-appurl = 'https://dev.twitter.com/apps/5649521/show'
-```
+
 
 Big data
 =============
@@ -101,7 +94,7 @@ Why big data is an issue now
 2. Declining cost of storage and access makes it more practical to have available data.
 3. People are more willing to reveal information if it provides benefits to them.
 4. *Machine learning* methods allow for using a wider range of data.
-5. When data gets to a certain size, conventional statistical tests of significance are not useful, because even tiny effects will test as significant.
+5. When data gets to a certain size and variety, conventional statistical tests of significance are not useful, because given the number of potential connections that are being tested, it is likely that something will test as significant.
 
 Dangers with big data
 =====================
@@ -260,11 +253,11 @@ Look at the results
 ```
 > head(tweetfluDF$text, n=5)
 
-[1] "Disinfecting the house #sick #flu #gross"                                                                                                
-[2] "O Raul Quadros só pode tomar drogas pesadas. Moça Bonita não tá cheia, o Gum não choca com o goleiro e Diego virou Diogo Cavalieri. #Flu"
-[3] "RT @Crof: Dr. Racaniello on avian #flu, vaccines, and #polio http://t.co/id2ygSvWoE"                                                     
-[4] "First flu-related pediatric death of season in Va. | http://t.co/dTgFJDgqx8 http://t.co/6lvSyZ3Nkm #flu #death"                          
-[5] "Sick #Flu"  
+[1] "RT @DrFriedenCDC People should still get #flu vaccination if they have not yet this season. Vaccination is the best way to prevent flu."   
+[2] "What ingredient in the #flu #vaccine scares you and why? via @mindofandre @DrJenGunter http://t.co/or9sFI6btw"                             
+[3] "#CDC Says Doctors Aren't Doing Enough to Fight #Flu http://t.co/SKtGOijXSA"                                                                
+[4] "Do your part to help stop the spread of #Flu http://t.co/kvKsIQtyaJ"                                                                       
+[5] "RT @abmmedical: Rainy day in LA stay warm, come by our office if you have the #flu #cold for top notch medical care http://t.co/B5WN8L6Xqg"
 ```
 
 Another example
@@ -274,11 +267,11 @@ Another example
 tweetpiratesDF <- TweetFrame('#Pirates', 500)
 head(tweetpiratesDF$text, n=5)
 
-[1] "Good to bag a goal today in a decent win #Pirates"                                                                                         
-[2] "RT @Baseball_Photos: 1/18/1947 - #Pirates buy first baseman Hank Greenberg from the #Tigers for $25,000 to $35,000. http://t.co/93tvGjm0pZ"
-[3] "\"Turn me on with your Electric Feel\" #Crush2014 #Pirates #ElectricFeel http://t.co/byBfCMAI57"                                           
-[4] "\"@wdwfacts: Walt Disney World Photo of the Day: Classic...  http://t.co/spP8wi9zM4\" yo ho, yo ho... A #pirates life for me"              
-[5] "RT @Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/5mlvwiGPD5"     
+1] "RT @TimDavis888: Review   \"Sea Cutter is an absolute  Treasure! \"  #mg #kidlit #historical #adventure #pirates ➤ http://t.co/CraXfct5nz"
+[2] "RT @TimDavis888: Review   \"Sea Cutter is an absolute  Treasure! \"  #mg #kidlit #historical #adventure #pirates ➤ http://t.co/CraXfct5nz"
+[3] "http://t.co/lIVB1No3a0 [Pirates Prospects] - The Pirates Have Almost No Position Battl #Pirates http://t.co/3ok39KlkPM"                   
+[4] "RT @TimDavis888: Review   \"Sea Cutter is an absolute  Treasure! \"  #mg #kidlit #historical #adventure #pirates ➤ http://t.co/CraXfct5nz"
+[5] "RT @AMurphyTHW: Why Jung-Ho Kang Doesn't Mean the end for Neil Walker http://t.co/0Ui1OJpSic #BUCN #Pirates @SportsTalkRT"
 ```
 
 Try again
@@ -288,11 +281,11 @@ Try again
 tweetpiratesDF <- TweetFrame('@Pirates', 500)
 head(tweetpiratesDF$text, n=5)
 
-[1] "RT @Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/5mlvwiGPD5"                                                         
-[2] "RT @von_legend: The @Pirates Finalize All Arbitration Eligible Deals! http://t.co/fehkb3oogK @jdunio @TheRealSmathers @IsItTheShoes926 @Jos…"
-[3] "RT @von_legend: The @Pirates Finalize All Arbitration Eligible Deals! http://t.co/fehkb3oogK @jdunio @TheRealSmathers @IsItTheShoes926 @Jos…"
-[4] "@wudeydo34 heard a rumor you were returning to the @pirates ... And by rumor I mean I made that up #hotstove #DontSTFD yet"                  
-[5] "“@Pirates: Happy Birthday to #Pirates LHP Wandy Rodriguez! http://t.co/0Dns0eNmff” @Singletary26_2"      
+[1] "RT @TribSports: The @Pirates open voluntary minicamp without Pedro Alvarez, writes @BiertempfelTrib. http://t.co/1VlJmjxt4i"                 
+[2] "This is honestly one of the most interesting signings of the #MLB offseason, and it was done cheaply by the @Pirates. http://t.co/6jhN4yiRZj"
+[3] "RT @TribSports: The @Pirates open voluntary minicamp without Pedro Alvarez, writes @BiertempfelTrib. http://t.co/1VlJmjxt4i"                 
+[4] "RT @TribSports: The @Pirates open voluntary minicamp without Pedro Alvarez, writes @BiertempfelTrib. http://t.co/1VlJmjxt4i"                 
+[5] "@wv_power @pirates \nA lesson to be learned from the comments after the story. \n\nhttp://t.co/EJ0V2FWySo"       
 ```
 
 
@@ -309,14 +302,15 @@ Interarrivaldistribution
 ========================
 
 ```
+sortFluDF <- tweetfluDF[order(as.integer(tweetfluDF$created)),]
 eventDelays<-as.integer(diff(sortFluDF$created))
 mean(eventDelays)
 sd(eventDelays)
 
 > mean(eventDelays)
-[1] 88.83166
+[1] 41.77956
 > sd(eventDelays)
-[1] 111.3646
+[1] 70.44069
 ```
 
 What distribution do we know has a mean and standard deviation with this type of relationship?
@@ -326,7 +320,7 @@ Plot interarrival distribution
 ==============================
 
 ```
-hist(sort(eventDelays),freq=FALSE, breaks=30)
+hist(as.integer(diff(sortFluDF$created)), freq=FALSE, breaks=30)
 ```
 ![Interarrival times of 500 #flu Tweets](twitter-figure/twitterFluInterarrival.png)
 
@@ -348,12 +342,12 @@ Collecting data
 ```
 tweetlowesDF <- TweetFrame("@lowes",500)
 tweethomedepotDF <- TweetFrame("@homedepot",500)
-sortweetDF<-tweetDF[order(as.integer()
+sortweetLowesDF<-tweetlowesDF[order(as.integer()
   (tweetlowesDF$created)), ]
-eventlowesDelays<- as.integer(diff(sortweetDF$created))
-sortweetDF<-tweetDF[order(as.integer()
+eventlowesDelays<- as.integer(diff(sortweetLowesDF$created))
+sortweetHDDF<-tweethomedepotDF$created[order(as.integer()
   tweethomedepotDF$created)), ]
-eventhomedepotDelays<- as.integer(diff(sortweetDF$created))
+eventhomedepotDelays<- as.integer(diff(sortweetHDDF$created))
 ```
 
 Look at mean interarrival time

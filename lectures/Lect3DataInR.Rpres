@@ -258,7 +258,7 @@ Time series path plot
 ```{r}
 year <- function(x) as.POSIXlt(x)$year + 1900
 qplot(unemploy / pop, uempmed, data = economics,
-  geom = "path", colour = year(date)) + scale_area()
+  geom = "path", colour = year(date)) + scale_size_area()
 ```
 
 
