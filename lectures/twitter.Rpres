@@ -342,12 +342,12 @@ Collecting data
 ```
 tweetlowesDF <- TweetFrame("@lowes",500)
 tweethomedepotDF <- TweetFrame("@homedepot",500)
-sortweetLowesDF<-tweetlowesDF[order(as.integer()
-  (tweetlowesDF$created)), ]
-eventlowesDelays<- as.integer(diff(sortweetLowesDF$created))
-sortweetHDDF<-tweethomedepotDF$created[order(as.integer()
-  tweethomedepotDF$created)), ]
-eventhomedepotDelays<- as.integer(diff(sortweetHDDF$created))
+
+sortFluDF <- tweetfluDF[order(as.integer(tweetfluDF$created)),]
+sortLowesDF <- tweetlowesDF[order(as.integer(tweetlowesDF$created)),]
+sortHDDF <- tweethomedepotDF[order(as.integer(tweethomedepotDF$created)),]
+eventlowesDelays<- as.integer(diff(sortLowesDF$created))
+eventHDDelays<- as.integer(diff(sortHDDF$created))
 ```
 
 Look at mean interarrival time
@@ -355,9 +355,9 @@ Look at mean interarrival time
 
 ```
 > mean(eventlowesDelays)
-[1] 216.3166
-> mean(eventhomedepotDelays)
-[1] 207.2004
+[1] 307.2625
+> mean(eventHDDelays)
+[1] 230.024
 ```
 
 
@@ -368,14 +368,14 @@ Look at confidence intervals
 - We think that independent arrivals should be Poisson, so use confidence intervals on the Poisson distribution.
 
 ```
-> sum(eventhomedepotDelays<=207)
+> sum(eventHDDelays<=230)
 [1] 363
 > poisson.test(363,500)$conf.int
 [1] 0.6532273 0.8046634
-> sum(eventlowesDelays <= 207)
-[1] 292
-> poisson.test(292,400)$conf.int
-[1] 0.6486627 0.8187152
+> sum(eventlowesDelays <= 230)
+[1] 356
+> poisson.test(356,500)$conf.int
+[1] 0.6399511 0.7899406
 ```
 
 - These 95% c.i. are fairly similar, so the difference is not that great.
