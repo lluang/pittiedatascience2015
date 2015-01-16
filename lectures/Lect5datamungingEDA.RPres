@@ -67,6 +67,7 @@ Data from a file
 
 ```{r echo=FALSE}
 library(ggplot2)
+library(gridExtra)
 library(lattice)
 library(DMwR)
 ```
@@ -122,8 +123,19 @@ hist(algae$mxPH, prob=T, xlab='',
 lines(density(algae$mxPH,na.rm=T))
 rug(jitter(algae$mxPH))
 qqPlot(algae$mxPH,main='Normal QQ plot of maximum pH')
+#ggplot(algae, aes(x=mxPH)) + geom_histogram(aes(y = ..density..), fill="white",colour="black") +geom_density() +theme_bw() +ggtitle("Histogram of maximum pH value") + ylim(0,1) + geom_rug()
+# create the parameters for the geom_abline for the QQ-plot
+#pspacing = (1/(length(algae$mxPH)+1))
+#pseq = seq(pspacing, 1.0-pspacing, by = pspacing)
+
+#x <- qnorm(pseq, mean=mean(algae$mxPH, na.rm=TRUE), sd = sd(algae$mxPH, na.rm=TRUE)) 
+#slope = (max(algae$mxPH, na.rm=TRUE)- min(algae$mxPH, na.rm=TRUE))/(max(x)-min(x))
+#int = min(algae$mxPH, na.rm=TRUE) - slope * min(x)
+#ggplot(algae, aes(sample=mxPH)) + stat_qq() + geom_abline(slope=slope, intercept=int)
+
 par(mfrow=c(1,1))
 ```
+
 
 Boxplot
 =======
