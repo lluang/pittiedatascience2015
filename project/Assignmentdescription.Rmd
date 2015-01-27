@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 Assignments for IE 2064 Data Science
 ====================================
 
@@ -23,9 +26,9 @@ In addition, you are encourage to discuss and assist with each other's projects.
 Project description
 ===================
 
-1.  Exploratory data analysis
-2.  Preliminary data analysis
-3.  Final report and presentation
+1.  Exploratory data analysis (February 3)
+2.  Preliminary data analysis (March 3)
+3.  Final report and presentation (Final week)
 
 1. Exploratory Data Analysis
 ============================
@@ -42,11 +45,10 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 The first assignment
 
 1.  Identify a data set. Discuss the collection of the data. Who organized the collection, who actually performed the collection, for what purposes.
-2.  Discuss types of questions that users of the data may be interested in.
-3.  Data summary.  What data elements are present, provide a summary of categories identified in the data. Some statistical summaries.
+2.  Discuss types of questions that users of the data may be interested in using the Context, Needs, Vision, Outcome framework.
+3.  Data summary. Discuss element present in the context of the elements of big data: Volume, Velocity, Variety, Veracity. Provide useful statistical summaries.
 4.  Data visualization
 5.  Text analysis - What were difficulties faced doing the analysis?
-6.  Suggest hypothesis for what process 
   
   
 2.  Preliminary data analysis
@@ -64,7 +66,7 @@ Due March 3
 =================
 
 1.  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected? What makes it interesting (Think in terms of the dimensions of big data: velocity, volume, variety)
-2.  Discuss problem being studied.  What makes it interesting? difficult? What decision will be made by the recipients (hypothetical) of this report?
+2.  Discuss problem being studied in terms of CoNVO.
 3.  What were obstacles you faced while analysing the data? How did you deal with data that you would have wanted but was not available?
 4.  Hypothesis.  What is the believed real world relationship between the predictors and outcome (or the counterparts as applicable to your project)
 4.  Analysis - Methodology. How it relates predictors to outcomes
