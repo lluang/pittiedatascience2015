@@ -3,10 +3,24 @@ Regression
 author: IE 2064 Data Science
 date: February 2015
 
+
+Topics
+======
+
+-  Motivating regression example
+-  Machine learning
+-  Regression
+-  Algae bloom example
+-  Regression Trees
+-  Model evaluation
+
 Example: Predicting attendance at a game
 ========================================================
 type: section
 
+```{r, echo=FALSE}
+library(ggplot2)
+```
 An example: Australian Rules Football game attendance
 =====================================================
 
@@ -45,9 +59,8 @@ Plot the data
 Try plotting attendance vs membership.
 
 ```{r}
-plot(MCG ~ Members, data = attend, xlab = "Combined membership
-of teams playing", ylab = "MCG Match Day Atten-
-dance" )
+qplot(Members, MCG, data = attend, xlab = "Combined membership
+of teams playing", ylab = "MCG Match Day Attendance" )
 ```
 
 Let's try a linear model
@@ -55,15 +68,18 @@ Let's try a linear model
 ```{r}
 model1 <- lm(MCG ~ Members-1, data = attend)
 summary(model1)
+#Create a data.frame to save the prediction
+xmin <- floor(min(attend$Members))
+xmax <- ceiling(max(attend$Members))
+predict1 <- data.frame(Members = attend$Members)
+predict1$MCG <- predict(model1, predict1)
 ```
 
 And plot the linear model
 =========================
 ```{r}
-plot(MCG ~ Members, data = attend, xlab = "Combined membership
-of teams playing", ylab = "MCG Match Day Atten-
-dance" )
-abline(model1)
+# Scatter plot where the linear regression line is added
+qplot(Members, MCG, data = attend, xlab = "Combined membership of teams playing", ylab = "MCG Match Day Attendance" ) + geom_line(data=predict1)
 ```
 
 
@@ -86,9 +102,13 @@ Try the new model
 ```{r}
 model2<-lm(MCG~Members+away.inter-1, data = attend)
 summary(model2)
+predict2 <- data.frame(Members = attend$Members, 
+                       away.inter = attend$away.inter)
+predict2$MCG <- predict(model2, predict2)
+qplot(Members, MCG, data = attend, xlab = "Combined membership of teams playing", ylab = "MCG Match Day Attendance" ) + geom_line(data=predict2)
 ```
 
-Multiple linear regression
+Machine learning overview
 ==========================
 type: section 
 
@@ -139,6 +159,10 @@ Basic predictive algorithms
   - Association Rules
 
 
+Regression
+======
+type:section
+
 Linear regression
 =================
 
@@ -156,7 +180,7 @@ summary(model1)
 Parts of a linear model
 =======================
 
-$$ y = \beta_0 + \beta_1 x$$
+$$y = \beta_0 + \beta_1 x$$
 
 -  *trend* - The optimal line relating the predictor to the outcome.
 -  *variation* error of the prediction line from the actual outcome.
@@ -219,7 +243,6 @@ type: section
 
 ```{r echo=FALSE}
 library(DMwR)
-library(ggplot2)
 data(algae)
 head(algae[,5:10], n=5)
 head(algae[,11:18], n=5)
