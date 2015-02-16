@@ -85,9 +85,39 @@ Of note is the fact that the data project is not actually a part of any of these
 
 Understanding this CoNVO framework drives many of the decisions to be made by the data scientist. First, it helps in identifying outcomes and decision variables, which are based on the Need and Outcome of the organization. Second it helps in model evaluation, for example in making the tradeoffs between Type I and Type II errors (and their counterparts in other model evaluation methods).
 
+University programs in Analytics
+===================================
 
--  Science is about discovery and building knowledge, which requires some motivating questions about the world and hypotheses tested with statistical methods.
--  Most academics (you) have math and statistics plus substantive expertise.
+There are three types of data science and analytics programs. The Georgia Tech MS in Analytics program recognizes this by having three tracks: analytical tools, business analytics, and computational data analytics.
 
-***
+Analytical tools
+-----------------
+
+Analytical tools refers to the use of descriptive, predictive, and prescriptive analytics.  This is also the framework that is followed by the Institute for Operations Research and Management Sciences.
+
+- Descriptive analytics
+  - Prepares and analyzes historical data
+  - Identifies patterns from samples for reporting of trends
+-  Predictive analytics
+  - Predicts future probabilities and trends
+  - Finds relationships in data that may not be readily apparent with descriptive analysis
+-  Prescriptive analytics
+  - Evaluates and determines new ways to operate
+  - Targets business objectives
+  - Balances all constraints
+
+Topics covered under analytical tools include parametric and non-parametric statistics, regression, forecasting, data mining, machine learning, optimization, stochastic modeling, and simulation.
+
+Business Analytics
+------------------
+
+Business analytics focuses on the understanding of how analytics is used in business and industry.  Focus here is on how to understand, frame, and solve problems in the context of business unit and to execute projects within business unit. This is very similar to what has been generally known as business intelligence (BI).
+
+The focus in this type of program is doing visualization and business unit specific tasks (marketing, pricing, revenue management, customer relationship management, human resources).
+
+Computational Data Analytics
+---------------------
+
+Computational data anaytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  
+
 
