@@ -1,7 +1,7 @@
 Text Mining
 ========================================================
 author: Louis Luangkesorn
-date:   January 2015
+date:   February 2015
 
 Overview
 ===============
@@ -125,7 +125,7 @@ Data is brought in using a *ReaderControl*
 
 - readPlain() - Read in files as plain text ignoring metadata
 - readRCV1() - Read in files in Reuters Corpus Volume 1 XML format
-- readReut21578XML() Read in files in Reuters-21578 XML format 
+- readReut21578XML() Read in files in Reuters-21578 XML format
 - readGmane() - Read in Gmane RSS feeds
 - readNewsgroup() - Read in newsgroup posting (e-mails) in UCI KDD archive format
 - readPDF() - Read in PDF documents
@@ -167,7 +167,7 @@ Example
 ```
   | a fun is mining of sequence text words
 ------------------------------------------
-1 | 0  1  1   1     0     0      1     0 
+1 | 0  1  1   1     0     0      1     0
 2 | 2  0  1   0     1     1      1     1
 ```
 
@@ -273,8 +273,8 @@ Count word usage
 -  Look for terms used frequently. Set the lower limit to make a list of ~100 words
 
 ```{r}
-baum <- findFreqTerms(ozMatBaum, 140)#162) 
-royal <- findFreqTerms(ozMatRoyal, 35)#40) 
+baum <- findFreqTerms(ozMatBaum, 140)#162)
+royal <- findFreqTerms(ozMatRoyal, 35)#40)
 thomp <- findFreqTerms(ozMatThompson, 61)#68)
 length(baum)
 length(royal)
