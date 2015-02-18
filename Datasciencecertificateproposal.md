@@ -120,4 +120,12 @@ Computational Data Analytics
 
 Computational data anaytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  
 
+Tool requirements
+------------------
+
+Most of the programs explicitly state R as a tool used in the curriculum.  A number of them also add Python as a language used for data science.  A few programs also state Java is used (I suspect that these are for those in the Computational Data Analysis type programs as Java is often used in the technologies used for high performance computing in commercial settings (e.g. Hadoop, MapReduce)).
+
+Proposal for a data science certificate in Industrial Engineering
+====================
+
 
