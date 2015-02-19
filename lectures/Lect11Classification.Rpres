@@ -1,17 +1,19 @@
 Supervised Clustering
 ========================================================
 author: IE2064 Data Science
-date: March 2014
+date: February 2015
 
 
 
-Clustering and classification
+Classification
 =============================
 
+-  Logistics Regression
 -  Naive Bayes
 -  *Adaboost* classifiers
 -  Random Forests
 -  *k*-Nearest Neighbors
+
 ```{r salesdata, echo=FALSE}
 library(DMwR)
 data(sales)
@@ -117,7 +119,7 @@ globalStats <- matrix(unlist(globalStats),
 globalStats[which(globalStats[,'iqr']==0),'iqr'] <- 
    globalStats[which(globalStats[,'iqr']==0),'median']
 ```
-Clustering - Supervised approaches
+Classification - Supervised approaches
 =======================================
 type: section
 

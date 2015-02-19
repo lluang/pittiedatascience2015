@@ -33,10 +33,12 @@ Clustering methods
 - Hierarchical clustering
 - Modified box plot rule
 - Local outlier factors
+- Principal Component Analysis
 
 Classification methods
 =============================
 
+-  Logistic regression
 -  Naive Bayes
 -  *Adaboost* classifiers
 -  Random Forests
