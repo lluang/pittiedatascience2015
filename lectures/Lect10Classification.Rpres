@@ -257,6 +257,7 @@ summary(nb.res)
 
 ```{r, echo=FALSE}
 ho.ORh <- function(form, train, test, ...) {
+  # Clustering based Outlier Rankings (ORh)
   #require(dprep,quietly=T)
   ntr <- nrow(train)
   all <- rbind(train,test)
@@ -329,6 +330,7 @@ Why is it worse?
 -  Try to apply SMOTE
 
 ```{r, echo=FALSE}
+#Takes a long time!
 nb.s <- function(train,test) {
   require(e1071,quietly=T)
   sup <- which(train$Insp != 'unkn')
@@ -551,7 +553,7 @@ nb <- naiveBayes(Species ~ .,tr)
 table(predict(nb,ts),ts$Species)
 ```
 
-Now, make 90% unlabeled
+Now, make 90% unlabeled and try to predict
 =======================
 ```{r, echo=FALSE}
 trST <- tr
@@ -567,14 +569,14 @@ nbSTbase <- naiveBayes(Species ~ .,trST[-nas,])
 table(predict(nbSTbase,ts),ts$Species)
 ```
 
-Now, use self-training
+Now, use self-training then try to predict
 ======================
 ```{r}
 nbST <- SelfTrain(Species ~ .,trST,learner('naiveBayes',list()),'func')
 table(predict(nbST,ts),ts$Species)
 ```
 
-```{r, echo=FALSE}
+```{echo=FALSE}
 pred.nb <- function(m,d) {
   p <- predict(m,d,type='raw')
   data.frame(cl=colnames(p)[apply(p,1,which.max)],
@@ -611,11 +613,19 @@ nb.st.res <- holdOut(learner('ho.nb.st',
                   hldSettings(3,0.3,1234,T),
                   itsInfo=TRUE
                   )
+save(pred.nb, file="pred.nb.Rdata")
+save(nb.st, file="nb.st.Rdata")
+save(ho.nb.st, file="ho.nb.st.Rdata")
+save(nb.st.res, file = "nb.st.res.Rdata")
 ```
 
 Self training evaluation
 ========================
 ```{r}
+pred.nb=load(file = "pred.nb.Rdata")
+nb.st=load("nb.st.Rdata")
+ho.nb.st=load("ho.nb.st.Rdata")
+nb.st.res=load("nb.st.res.Rdata")
 summary(nb.st.res)
 ```
 
@@ -656,7 +666,7 @@ legend('bottomright',c('NaiveBayes','ORh','NaiveBayes-ST'),
 
 And self-training with AdaBoost
 ===============================
-```{r, echo=FALSE}
+```{echo=FALSE}
 pred.ada <- function(m,d) {
   p <- predict(m,d,type='probability')
   data.frame(cl=colnames(p)[apply(p,1,which.max)],
@@ -693,11 +703,19 @@ ab.st.res <- holdOut(learner('ho.ab.st',
                   hldSettings(3,0.3,1234,T),
                   itsInfo=TRUE
                   )
+save(pred.ada, file="pred.ada.Rdata")
+save(ab.st, file="ab.st.Rdata")
+save(ho.ab.st, file="ho.ab.st.Rdata")
+save(ab.st.res, file = "ab.st.res.Rdata")
 ```
 
 Self-training with AdaBoost results
 ===================================
 ```{r}
+pred.ada=load(file = "pred.ada.Rdata")
+ab.st=load("ab.st.Rdata")
+ho.ab.st=load("ho.ab.st.Rdata")
+ab.st.res=load("ab.st.res.Rdata")
 summary(ab.st.res)
 ```
 
