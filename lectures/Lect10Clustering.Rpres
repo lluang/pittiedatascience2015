@@ -32,7 +32,8 @@ Clustering methods
 - *k*-means
 - Hierarchical clustering
 - Modified box plot rule
-- Local outlier factors
+- Local outlier factors (LOF)
+- Clustering based Outlier Rankings (ORh)
 - Principal Component Analysis
 
 Classification methods
@@ -583,7 +584,7 @@ Normalized distance to Typical Price
 
 -  Now look at metrics for unlabeled cases.
 -  Need measures that have been normalized to the scale or deviation of the data
--  NDTP(u) - Normaliced distance to typical price
+-  NDTP(u) - Normalized distance to typical price
 $$NDTP_p(u)=\frac{|u-\tilde{U}_p|}{IQR_p}$$
 
 ```{r, echo=FALSE}
