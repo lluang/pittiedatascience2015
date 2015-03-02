@@ -580,7 +580,7 @@ nbST <- SelfTrain(Species ~ .,trST,learner('naiveBayes',list()),'func')
 table(predict(nbST,ts),ts$Species)
 ```
 
-```{echo=FALSE}
+```{r, echo=FALSE}
 pred.nb <- function(m,d) {
   p <- predict(m,d,type='raw')
   data.frame(cl=colnames(p)[apply(p,1,which.max)],

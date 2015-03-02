@@ -303,6 +303,19 @@ Positive and Negative Predictive Value
 -  PPV - If the prediction method predicts positive, what is the probability of the sample being positive?
 -  NPV - If the prediction method predicts negative, what is the probability of the sample being negative?
 
+Sensitivity and specificity
+==================
+
+Predicted | Observed |_             
+----------|----------|------------
+          | **Event**    | **Non-event** 
+Event     | TP       |  FP
+Non-event | FN       |  TN
+
+
+
+
+
 Receiver Operating Characteristic (ROC)
 ==================
 
