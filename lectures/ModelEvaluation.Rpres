@@ -238,6 +238,30 @@ avgNDTP <- function(toInsp,train,stats) {
 }
 ```
 
+Subset selection methods
+==================================
+type: subsection
+
+Subset selection
+===================
+
+-  To evaluate a regression model, we can look at the coefficient of variation of the error.
+-  $CV = \frac{\sigma}{\mu}$
+-  But, in general, more terms lead to lower $\sigma$.
+-  Need to balance lower errors against model complexity
+
+**chart of misclassification vs subset size**
+
+Results of cross-validation
+================================
+
+-  For each candidate model (subset size), cross validation will generate a series of estimates of error.
+-  Identify the best model.
+-  Take the sum of the mean error plus the standard error (standard deviation of error).
+-  Find the model with the smallest subset size that is less than this sum.
+
+**Example**
+
 Classification methods
 ==================
 type: section
@@ -309,3 +333,4 @@ Receiver Operating Characteristic (ROC)
 -  Taken from the radio electronics industry.
 -  Can the instrument detect a signal from noise.
 -  Combines Sensitivity and Specificity
+
