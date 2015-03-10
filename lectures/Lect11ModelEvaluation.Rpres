@@ -274,6 +274,18 @@ $$F=\frac{\beta^2+1 * Prec * Rec}{\beta^2 * Prec + Rec}$$
 - Where $0\leq \beta \leq 1$
 - *F-measure*  uses $\beta$ to specify the relative importance of recall to precision.
 
+Precision - recall curve example
+=====================
+```{r}
+library(ROCR)
+data(ROCR.simple)
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "prec", "rec")
+plot(perf)
+```
+
+
+
 Sensitivity and specificity
 =======================
 
@@ -288,11 +300,11 @@ Sensitivity and specificity
 
 -  Sensitivity
 
-$$\frac{\text{# Samples with the event AND predicted to have the event}}{\text{# samples having the event}}$$
+$$\frac{\text{\# Samples with the event AND predicted to have the event}}{\text{\# samples having the event}}$$
 
 -  Specificity
 
-$$\frac{\text{# Samples without the event AND predicted as nonevents}}{\text{# samples without the event}}$$
+$$\frac{\text{\# Samples without the event AND predicted as nonevents}}{\text{\# samples without the event}}$$
 
 - *J index* combines these
 $$J = Sensitivity + Specificity -1$$
@@ -302,6 +314,7 @@ Positive and Negative Predictive Value
 
 -  PPV - If the prediction method predicts positive, what is the probability of the sample being positive?
 -  NPV - If the prediction method predicts negative, what is the probability of the sample being negative?
+
 
 Sensitivity and specificity
 ==================
@@ -313,8 +326,10 @@ Event     | TP       |  FP
 Non-event | FN       |  TN
 
 
-
-
+```{r}
+sensspec <- performance(pred, "sens", "spec")
+plot(sensspec)
+```
 
 Receiver Operating Characteristic (ROC)
 ==================
@@ -322,3 +337,52 @@ Receiver Operating Characteristic (ROC)
 -  Taken from the radio electronics industry.
 -  Can the instrument detect a signal from noise.
 -  Combines Sensitivity and Specificity
+-  Plot *1 - Specificity* against *Sensitivity* (FPR vs TPR)
+-  AUC - Area Under ROC curve
+
+ROC curve
+========
+
+-  Evaluate a model against a continuum of thresholds.
+-  Thresholds are scores used to separate the range of possible observations into two potential classes.
+-  For each threshold, determine the resulting Specificity and Sensitivity.
+-  Plot on ROC chart.
+-  A perfect model has 100% Sensitivity and specificity.
+-  In practice, higher sensitivity leads to lower specificity (being able to identify all representatives of a class leads to also having false positives)
+
+
+True positive rate vs false positive rate
+=====
+
+```{r}
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf, main="ROC Curve")
+```
+
+
+Lift charts
+=============
+
+-  Evaluate a model against a complete random selection of samples.
+
+1.  Predict a set of samples that were not used in building the model but have known outcomes.
+2.  Determine the *baseline* event rate, i.e. the percentage of true events in the data set.
+3.  Using the model, order the data by classification probability (i.e. the samples most likely to be events first)
+4.  For each class probability value, calculate the actual percentage of true eents in all samples below the probability value.
+5. Divide the percent of true events for each probability threshold by the baseline event rate.  Fraction is the lift (>1.0)
+- Cumulative recall charts also 
+
+Lift chart example
+============
+
+```{r}
+par(mfrow=c(1,2))
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "lift", "rpp")
+plot(perf, main="Lift Chart")
+cp <- performance(pred, "rec", "rpp")
+plot(cp, main="Cumulative recall chart")
+par(mfrow=c(1,1))
+```
+
