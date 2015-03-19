@@ -125,6 +125,33 @@ Tool requirements
 
 Most of the programs explicitly state R as a tool used in the curriculum.  A number of them also add Python as a language used for data science.  A few programs also state Java is used (I suspect that these are for those in the Computational Data Analysis type programs as Java is often used in the technologies used for high performance computing in commercial settings (e.g. Hadoop, MapReduce)).
 
+Online certificates in data science
+================================
+
+A number of universities have started offering on-line certificate programs in data science, often on platforms such as Coursera or edX. The standard format is 5-10 modules of 4-6 weeks each.  Illustrative are the courses in Johns Hopkins University Data Science track at Coursera which are 9 4 week modules plus a capstone that is intended to take place over 8 weeks, overlapping the last two courses.
+
+1. The Data Scientist’s Toolbox
+2. R Programming
+3. Getting and Cleaning Data
+4. Exploratory Data Analysis
+5. Reproducible Research
+6. Statistical Inference
+7. Regression Models
+8. Practical Machine Learning
+9. Developing Data Products
+10.Data Science Capstone
+
+The 9 courses can be broken up into 5 courses in the practice of data science, R programming, and working with data, 3 courses in statistical methods, and then a overview course that pulls everything together in parallel with the capstone project. Note that this parallels the often repeated observation that the statistical analysis is 20% of a typical data project.
+
+This is in contrast to an online course sequence that is more focused on statistics as opposed to practice, such as University of Illinois data mining certificate on Coursera.
+
+1. Pattern Discovery in Data Mining
+2. Text Retrieval and Search Engines
+3. Cluster Analysis in Data Mining
+4. Text Mining and Analytics
+5. Data Visualization
+6. Data Mining Capstone
+
 Proposal for a data science certificate in Industrial Engineering
 ====================
 
