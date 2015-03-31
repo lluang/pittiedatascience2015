@@ -15,7 +15,7 @@ Predicting stock market returns
 ===============================
 type: section
 
-Stock market trading
+Example: Stock market trading
 =====================
 
 -  Lots of historical data.
@@ -27,6 +27,7 @@ Some terminology
 
 -  Goal of stock trading is to maintain a portfolio of assets based on buy and sell orders.
 -  Develop a trading strategy that achieves as much profit as possible.
+  - And is completely automated.
 -  Use data mining methods to develop indications that drive the trading strategy.
 
 Available data
@@ -43,7 +44,8 @@ Available data
 
 Sample data
 ===================
-```{r, echo=FALSE}
+```{r, echo=FALSE }
+options(width=80, digits=2, scipen=8)
 library(DMwR)
 library(xts)
 library(quantmod)
@@ -54,7 +56,8 @@ head(GSPC)
 Plot the series - Indicator
 ============================
 
-Create an indicator that summarizes the prices over the next 10 days.
+- Create an indicator that summarizes the prices over the next 10 days.
+- Candle chart has a the bar for open/close, with whiskers for the high/low. 
 
 ```{r Tindpredictor, echo=FALSE}
 ###################################################
@@ -127,12 +130,8 @@ Feature selection
 
 ```{r featureselection}
 library(randomForest)
-data.model <- specifyModel(T.ind(GSPC) ~ Delt(Cl(GSPC),k=1:10) + 
-       myATR(GSPC) + mySMI(GSPC) + myADX(GSPC) + myAroon(GSPC) + 
-       myBB(GSPC)  + myChaikinVol(GSPC) + myCLV(GSPC) + 
-       CMO(Cl(GSPC)) + EMA(Delt(Cl(GSPC))) + myEMV(GSPC) + 
-       myVolat(GSPC)  + myMACD(GSPC) + myMFI(GSPC) + RSI(Cl(GSPC)) +
-       mySAR(GSPC) + runMean(Cl(GSPC)) + runSD(Cl(GSPC)))
+data.model <- specifyModel(T.ind(GSPC) ~ 
+       Delt(Cl(GSPC),k=1:10) +myATR(GSPC) + mySMI(GSPC) + myADX(GSPC) + myAroon(GSPC) +  myBB(GSPC)  + myChaikinVol(GSPC) + myCLV(GSPC) +  CMO(Cl(GSPC)) + EMA(Delt(Cl(GSPC))) + myEMV(GSPC) +  myVolat(GSPC)  + myMACD(GSPC) + myMFI(GSPC) + RSI(Cl(GSPC)) + mySAR(GSPC) + runMean(Cl(GSPC)) + runSD(Cl(GSPC)))
 set.seed(1234)
 rf <- buildModel(data.model,method='randomForest',
              training.per=c(start(GSPC),index(GSPC["1999-12-31"])),
@@ -187,9 +186,9 @@ Classifiers
 -  Start by creating training and evaluation datasets.
 ```{r}
 Tdata.train <- as.data.frame(modelData(data.model,
-                       data.window=c('1970-01-02','1999-12-31')))
+              data.window=c('1970-01-02','1999-12-31')))
 Tdata.eval <- na.omit(as.data.frame(modelData(data.model,
-                       data.window=c('2000-01-01','2009-09-15'))))
+             data.window=c('2000-01-01','2009-09-15'))))
 Tform <- as.formula('T.ind.GSPC ~ .')
 ```
 
@@ -268,21 +267,33 @@ type: sub-section
   
 Feed-forward ANN
 ================
+left:60%
 
 -  Neurons organized in layers.
 -  First layer contains inputs (initially the training observations)
 -  Last layer contains the predictions of the neural network from presented input data.
 -  In between, weights are updated to optimize the predictions according to an error criterion.
 
+***
+
+![Neural network diagram](resources/anndiagram.png)
+
 ANN Example
 ===========
+
+- Low precision means that the model gave wrong signals frequently. Big problem if you want to trade stocks based on this.
+- Low recall means the model missed buy/sell opportunities.
 
 ```{r annexample, echo=FALSE}
 set.seed(1234)
 library(nnet)
 library(nnet)
 norm.data <- scale(Tdata.train)
-nn <- nnet(Tform,norm.data[1:1000,],size=10,decay=0.01,maxit=1000,linout=T,trace=F)
+```
+```{r}
+nn <- nnet(Tform,norm.data[1:1000,], size=10,decay=0.01, maxit=1000, linout=T,trace=F)
+```
+```{r, echo=FALSE}
 norm.preds <- predict(nn,norm.data[1001:2000,])
 preds <- unscale(norm.preds,norm.data)
 sigs.nn <- trading.signals(preds, 0.1, -0.1)
@@ -290,19 +301,21 @@ true.sigs <- trading.signals(Tdata.train[1001:2000,'T.ind.GSPC'],0.1,-0.1)
 sigs.PR(sigs.nn,true.sigs)
 ```
 
-- Low precision mean that the model gave wrong signals frequently. Big problem if you want to trade stocks based on this.
-- Low recall means the model missed buy/sell opportunities.
 
 Application of ANN
 ==================
 
 -  Classification tasks
 
-```{r}
+```{r, echo=FALSE}
 set.seed(1234)
 signals <- trading.signals(Tdata.train[,'T.ind.GSPC'],0.1,-0.1)
 norm.data <- data.frame(signals=signals,scale(Tdata.train[,-1]))
+```
+```{r}
 nn <- nnet(signals ~ .,norm.data[1:1000,],size=10,decay=0.01,maxit=1000,trace=F)
+```
+```{r, echo=FALSE}
 preds <- predict(nn,norm.data[1001:2000,],type='class')
 sigs.PR(preds,norm.data[1001:2000,1])
 ```
@@ -317,7 +330,7 @@ SVM
 ===
 
 -  Modeling tools that can be applied to both regression and classification tasks.
--  Implemented in the package `kernlab` and `e1071` ('svm')
+-  Implemented in the package `kernlab` and `e1071` (`svm`)
 -  Map original data to a high-dimensional space.
 -  Apply linear models to separate the data using hyperplanes.
 -  Mapping of the original data is through *kernal functions*.
@@ -343,7 +356,7 @@ sigs.PR(sigs.svm,true.sigs)
 
 Again using kernlab
 ===================
-```{r}
+```{r, warning=FALSE}
 library(kernlab)
 data <- cbind(signals=signals,Tdata.train[,-1])
 ksv <- ksvm(signals ~ .,data[1:1000,],C=10)
@@ -639,6 +652,11 @@ And the same for policy 2
 ```{r}
 t2 <- trading.simulator(market,sig,'policy.2',
                 list(exp.prof=0.05,bet=0.3))
+```
+
+Evaluation of policy 2
+========
+```{r}
 tradingEvaluation(t2)
 ```
 
@@ -666,6 +684,9 @@ t2 <- trading.simulator(market,sig,'policy.2',list(exp.prof=0.05,bet=0.3))
 summary(t2)
 ```
 
+
+Evaluation
+=======
 ```{r}
 tradingEvaluation(t2)
 ```
