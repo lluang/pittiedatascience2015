@@ -1,7 +1,7 @@
 Time Series Analysis
 ========================================================
 author: IE2064 Data Science
-date: April 2014
+date: April 2015
 
 ```{r loadggplot, echo=FALSE}
 library(lattice)
@@ -245,7 +245,7 @@ Correlation in time series
 Autoregressive Integrated Moving Average (ARIMA) Models
 ========================
 
--  ARIMA models include an explicit 
+-  ARIMA models include an explicit
 -  Defined on a stationary time series.
 -  If there is a trend, you need to take *difference* between successive points until the trend is removed (i.e. the data varies around a common mean)
 -  The number of times you need to take the difference is the *order* of the ARIMA model.
@@ -293,7 +293,7 @@ Auto-correlation
 - Data looks stationary, so look for correlation
 - See where the auto-correlations exceed significance bounds
 ```{r volcanoacf}
-acf(volcanodustseries, lag.max=20) 
+acf(volcanodustseries, lag.max=20)
 #acf(volcanodustseries, lag.max=20, plot=FALSE)
 ```
 
@@ -346,7 +346,7 @@ plot.ts(volcanodustseriesforecasts$residuals)
 ```
 ***
 ```{r}
-plotForecastErrors(volcanodustseriesforecasts$residuals) 
+plotForecastErrors(volcanodustseriesforecasts$residuals)
 ```
 
 Arrival rates
