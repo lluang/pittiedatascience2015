@@ -589,12 +589,12 @@ Two policies
 
 ```
 policy.1 <- function(signals,market,opened.pos,money,
-               bet=0.2,hold.time=10,
-               exp.prof=0.025, max.loss= 0.05
-               )
+   bet=0.2,hold.time=10,
+   exp.prof=0.025, max.loss= 0.05
+   )
 policy.2 <- function(signals,market,opened.pos,money,
-               bet=0.2,exp.prof=0.025, max.loss= 0.05
-              )
+   bet=0.2,exp.prof=0.025, max.loss= 0.05
+   )
 ```
 
 Start the trading simulator

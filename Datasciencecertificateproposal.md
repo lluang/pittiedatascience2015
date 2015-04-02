@@ -1,8 +1,11 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: "02/11/2015"
-output: html_document
+date: 'DRAFT: April 2, 2015'
+output:
+  word_document: default
+  html_document:
+    toc: yes
 ---
 
 Introduction
@@ -118,7 +121,7 @@ The focus in this type of program is doing visualization and business unit speci
 Computational Data Analytics
 ---------------------
 
-Computational data anaytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  
+Computational data analytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  
 
 Tool requirements
 ------------------
@@ -128,7 +131,7 @@ Most of the programs explicitly state R as a tool used in the curriculum.  A num
 Online certificates in data science
 ================================
 
-A number of universities have started offering on-line certificate programs in data science, often on platforms such as Coursera or edX. The standard format is 5-10 modules of 4-6 weeks each.  Illustrative are the courses in Johns Hopkins University Data Science track at Coursera which are 9 4 week modules plus a capstone that is intended to take place over 8 weeks, overlapping the last two courses.
+A number of universities have started offering on-line certificate programs in data science, often on platforms such as Coursera or edX. The standard format is 5-10 modules of 4-6 weeks each.  One example are the courses in Johns Hopkins University Data Science track at Coursera which are 9 4-week modules plus a capstone that is intended to take place over 8 weeks, overlapping the last two courses.
 
 1. The Data Scientist’s Toolbox
 2. R Programming
@@ -143,7 +146,7 @@ A number of universities have started offering on-line certificate programs in d
 
 The 9 courses can be broken up into 5 courses in the practice of data science, R programming, and working with data, 3 courses in statistical methods, and then a overview course that pulls everything together in parallel with the capstone project. Note that this parallels the often repeated observation that the statistical analysis is 20% of a typical data project.
 
-This is in contrast to an online course sequence that is more focused on statistics as opposed to practice, such as University of Illinois data mining certificate on Coursera.
+While the Johns Hopkins track covers both the analytics aspect of data science along with practical aspects of working with data, most online course sequences focus on statistics and methodology as opposed to practical issues, such as University of Illinois data mining certificate on Coursera.  
 
 1. Pattern Discovery in Data Mining
 2. Text Retrieval and Search Engines
@@ -152,7 +155,105 @@ This is in contrast to an online course sequence that is more focused on statist
 5. Data Visualization
 6. Data Mining Capstone
 
+Other online courses focus on the mathematical and statistical underpinnings of the various methods used in machine learning and data mining.
+
+Current offerings at Pitt
+=============
+
+School of Information Sciences - MSIS Big Data Analytics Specialization
+-------------------------
+
+Program requires:
+
+1.  Required, Decision analysis and either Information Storage or Data Mining
+2.  Required Cognitive science - Neural networks or social computing
+3.  Required: Algorithm design, database management (2) , Data Analytics
+4.  2 of 8 courses on topics within information science
+5.  2 electives
+
+Katz Business Analytics Certificate
+-------------------------
+
+The Katz Business Analytics certificate program is designed to provide the academic foundation towards the INFORMS Certified Analytics Professional (CAP) certification.  Note that CAP requires experience in applying Analytics in non-academic settings.
+
+Program requires
+
+1. Pre-requisites:  Statistics analysis, Decision technology (existing MBA courses)
+2. Required:  Data Mining, Competitive Intelligence, Advanced Decision Technologies
+3. 4.5 credits choose from:  Social media analytics, Revenue management and Pricing, Shopper Marketing, Simulation, Process engineering, Forecasting
+
+
 Proposal for a data science certificate in Industrial Engineering
 ====================
+
+-  The differences between the industrial engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core: Queuing, Optimization, Simulation.
+  -  The SIS program appears to be a combination of analytics and computational data analytics
+  -  The Katz program appears to be a combination of analytics and business analytics
+-  The challenge is to integrate the descriptive analytics that form the core of most analytics programs: statistics, data mining, decision modeling.  In many analytics programs, this occurs through modifying quantitive/data analysis courses to use a common platform (R/Python).
+
+Core requirements
+-  IE 2005 Probability and Statistics
+-  IE 2001 Operations research (optimization (and queuing?))
+-  IE 2006 Manufacturing Systems
+
+2 of 4
+-  IE 2003 Engineering management
+-  IE 2004 Database design
+-  IE 2007 Statistics and data analysis
+-  IE 2100 Supply Chain analysis
+
+This leaves 9-11 courses for electives
+
+
+
+1.  Modify IE 2005 and/or IE 2007 to be R based instead of Minitab based
+2.  Allow for substitutions for the 2 of 4.  
+  -  IE 2004 Database design replaced with INFSCI 2140 or 
+  -  IE 2007 Statistics and data analysis with STAT 2131-2132, Applied Statistical Methods 1 and 2
+3.  IE 2064 Data Science as an option for the 2 of 4
+
+Courses that can contribute to an Analytics certificate
+
+
+Core:  TBD
+IE 2064 Data Science
+INFSCI 2160 Data Mining or BQOM 2578 Data Mining
+
+**Analytics**
+
+IE 2064 - Data Science
+IE 2088 - Discrete Systems Simulation
+
+IE 2213 Advanced Applied Regression
+IE 2321 Advanced Applied Time Series
+INFSCI 2160: Data Mining
+BQOM 2578 Data Mining
+INFSCI 2410: Introduction to Neural Networks
+INFSCI 2430: Social Computing
+INFSCI 2591: Algorithm Design
+INFSCI 2725: Data Analytics
+
+**Business Analytics**
+
+IE 2086 - Decision Models
+IE 2108 - Simulation Modeling and Applications
+
+INFSCI 2130: Decision Analysis and Decision Support Systems 
+BQOM 2512 Advanced Decision Technologies
+BSEO  2525 Competitive Intelligence
+BMKT 2551 Digital and Social Media Analytics
+BMKT 2544 Shopper Marketing
+BQOM 2523 Process Engineering
+BQOM 2537 Forecasting
+BQOM  (Proposal attached) Revenue Management & Pricing Analytics
+
+**Computational Data Analytics**
+
+INFSCI 2140: Introduction to Information Storage and Retrieval  
+INFSCI 2710: Database Management
+INFSCI 2711: Advanced Topics in Database Management
+TELCOM 2125: Network Science
+TELCOM 2120: Network Performance
+TELCOM 2321: Computer Networking
 
 
