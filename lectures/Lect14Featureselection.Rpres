@@ -1,0 +1,55 @@
+Feature selection
+========================================================
+author: IE 2064 Data Science
+date: April 2015
+
+Feature selection
+===================
+
+- One aspect of Big Data is Variety - The number of variables (features) that are available for each observation.
+- Choosing which features to use in a predictive model is *feature selection*.
+- *Supervised feature selection* is when the strength or relevance of the predictors is used to filter what should be the inputs in a model.
+- Many predictive modeling methods have *intrinsic* feature selection where the model monitors the increase in performance as predictors are added.
+
+Measuring predictor importance
+==================
+type:section
+
+Predictor importance in numerical outcomes
+===============
+
+-  *Correlation statistic* - Expresses relationship between a candidate predictor and the outcome variable.
+  -  *sample correlation* - For linear associations.
+  -  *Spearman's correlation coefficient* - For nearly linear or curvilinear.
+-  May not be useful for complex relationships.
+
+```{r, echo=FALSE}
+library(AppliedPredictiveModeling)
+library(lattice)
+data(solubility)
+cor(solTrainXtrans$NumCarbon, solTrainY)
+```
+
+Example of more complex relationships
+=====
+```{r, echo=FALSE}
+xyplot(solTrainY ~ solTrainXtrans$NumCarbon,
+         type = c("p", "smooth"),
+         xlab = "# Carbons",
+         ylab = "Solubility")
+```
+***
+```{r, echo=FALSE}
+xyplot(solTrainY ~ solTrainXtrans$SurfaceArea2,
+         type = c("p", "smooth"),
+         xlab = "# Carbons",
+         ylab = "Solubility")
+```
+
+What to do when the relationship is not simple?
+=======
+
+-  Locally weighted regression model (LOESS)
+  - Based on a series of polynomial regressions in small neighborhoods in the data.
+
+
