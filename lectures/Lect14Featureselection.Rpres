@@ -1,0 +1,325 @@
+Feature selection
+========================================================
+author: IE 2064 Data Science
+date: April 2015
+
+Feature selection
+===================
+
+- One aspect of Big Data is Variety - The number of variables (features) that are available for each observation.
+- Choosing which features to use in a predictive model is *feature selection*.
+- *Supervised feature selection* is when the strength or relevance of the predictors is used to filter what should be the inputs in a model.
+- Many predictive modeling methods have *intrinsic* feature selection where the model monitors the increase in performance as predictors are added.
+
+Measuring predictor importance
+==================
+type:section
+
+Data example
+================
+
+- Solubility of a large number of chemical compounds.
+- Includes:
+  -  Presence or absence of one of a large number of chemical *fingerprints*, representing a particular chemical structure.
+  -  Sixteen count descriptors such as number of bonds or count of atoms of a specific element.
+  -  Continuous descriptors (molecular weight or area)
+- 1,267 compounds, split into a training and test set.
+
+
+Predictor importance in numerical outcomes
+===============
+
+-  *Correlation statistic* - Expresses relationship between a candidate predictor and the outcome variable.
+  -  *sample correlation* - For linear associations.
+  -  *Spearman's correlation coefficient* - For nearly linear or curvilinear.
+-  May not be useful for complex relationships.
+
+```{r, echo=FALSE}
+options(digits = 2)
+library(AppliedPredictiveModeling)
+library(caret)
+library(lattice)
+library(CORElearn)
+library(corrplot)
+library(pROC)
+library(minerva)
+```
+```{r}
+data(solubility)
+cor(solTrainXtrans$NumCarbon, solTrainY)
+```
+
+Correlation plots
+==========
+```{r, echo=FALSE}
+notFingerprints <- grep("FP", names(solTrainXtrans))
+
+featurePlot(solTrainXtrans[, -notFingerprints],
+            solTrainY,
+            between = list(x = 1, y = 1),
+            type = c("g", "p", "smooth"),
+            labels = rep("", 2))
+```
+
+Example of more complex relationships
+======
+```{r, echo=FALSE}
+trainData <- solTrainXtrans
+trainData$y <- solTrainY
+
+## keep the continuous predictors and append the outcome to the data frame
+SolContPred <- solTrainXtrans[, !grepl("FP", names(solTrainXtrans))]
+numSolPred <- ncol(SolContPred)
+SolContPred$Sol <- solTrainY
+
+## Get the LOESS smoother and the summary measure
+library(caret)
+smoother <- filterVarImp(x = SolContPred[, -ncol(SolContPred)],
+                         y = solTrainY,
+                         nonpara = TRUE)
+smoother$Predictor <- rownames(smoother)
+names(smoother)[1] <- "Smoother"
+
+## Calculate the correlation matrices and keep the columns with the correlations
+## between the predictors and the outcome
+
+correlations <- cor(SolContPred)[-(numSolPred+1),(numSolPred+1)]
+rankCorrelations <- cor(SolContPred, method = "spearman")[-(numSolPred+1),(numSolPred+1)]
+corrs <- data.frame(Predictor = names(SolContPred)[1:numSolPred],
+                    Correlation = correlations,
+                    RankCorrelation  = rankCorrelations)
+
+## The maximal information coefficient (MIC) values can be obtained from the
+### minerva package:
+
+library(minerva)
+MIC <- mine(x = SolContPred[, 1:numSolPred], y = solTrainY)$MIC
+MIC <- data.frame(Predictor = rownames(MIC),
+                  MIC = MIC[,1])
+
+## The Relief values for regression can be computed using the CORElearn
+## package:
+
+library(CORElearn)
+ReliefF <- attrEval(Sol ~ .,  data = SolContPred,
+                    estimator = "RReliefFequalK")
+ReliefF <- data.frame(Predictor = names(ReliefF),
+                  Relief = ReliefF)
+
+## Combine them all together for a plot
+contDescrScores <- merge(smoother, corrs)
+contDescrScores <- merge(contDescrScores, MIC)
+contDescrScores <- merge(contDescrScores, ReliefF)
+
+rownames(contDescrScores) <- contDescrScores$Predictor
+
+# contDescrScores
+
+contDescrSplomData <- contDescrScores
+contDescrSplomData$Correlation <- abs(contDescrSplomData$Correlation)
+contDescrSplomData$RankCorrelation <- abs(contDescrSplomData$RankCorrelation)
+contDescrSplomData$Group <- "Other"
+contDescrSplomData$Group[grepl("Surface", contDescrSplomData$Predictor)] <- "SA"
+
+featurePlot(solTrainXtrans[, c("NumCarbon", "SurfaceArea2")],
+            solTrainY,
+            between = list(x = 1),
+            type = c("g", "p", "smooth"),
+            df = 3,
+            aspect = 1,
+            labels = c("", "Solubility"))
+```
+
+Look at correlations between variables
+=====
+```{r, echo=FALSE}
+corrplot::corrplot(cor(solTrainXtrans[, -notFingerprints]),
+                   order = "hclust",
+                   tl.cex = .8)
+```
+
+What to do when the relationship is not simple?
+=======
+
+-  Locally weighted regression model (LOESS)
+  - Based on a series of polynomial regressions in small neighborhoods in the data.
+
+LOESS smoothing
+=============
+
+```{r, echo=FALSE}
+xyplot(solTrainY ~ solTrainXtrans$NumCarbon,
+         type = c("p", "smooth"),
+         xlab = "# Carbons",
+         ylab = "Solubility")
+```
+***
+```{r, echo=FALSE}
+xyplot(solTrainY ~ solTrainXtrans$SurfaceArea2,
+         type = c("p", "smooth"),
+         xlab = "# Carbons",
+         ylab = "Solubility")
+```
+
+Comparing numeric predictors
+============
+
+-  Correlation
+-  From LOESS, can calculate a pseudo-$R^2$
+-  Maximal information coefficient
+-  **Issue**: Each of these methods looks at one predictor at a time
+  -  Does not recognize correlation among predictors.
+  -  Does not identify groups of predictors that work together. (interaction between predictors is what is important)
+
+
+Comparison of many predictor importance measures
+========
+```{r, echo=FALSE}
+splom(~contDescrSplomData[,c(3, 4, 2, 5)],
+      groups = contDescrSplomData$Group,
+      varnames = c("Correlation", "Rank\nCorrelation", "LOESS", "MIC"))
+```
+
+
+
+Categorical predictors
+=================
+
+-  Standard method is the $t$ statistics.
+  -  Compares the difference between the groups to a statistics measuring variance.
+
+```{r, echo=FALSE}
+SolCatPred <- solTrainXtrans[, grepl("FP", names(solTrainXtrans))]
+SolCatPred$Sol <- solTrainY
+numSolCatPred <- ncol(SolCatPred) - 1
+
+tests <- apply(SolCatPred[, 1:numSolCatPred], 2,
+                  function(x, y)
+                    {
+                    tStats <- t.test(y ~ x)[c("statistic", "p.value", "estimate")]
+                    unlist(tStats)
+                    },
+               y = solTrainY)
+## The results are a matrix with predictors in columns. We reverse this
+tests <- as.data.frame(t(tests))
+names(tests) <- c("t.Statistic", "t.test_p.value", "mean0", "mean1")
+tests$difference <- tests$mean1 - tests$mean0
+head(tests)
+```
+
+
+Examine a range of t-tests through volcano plot
+=======
+-  The *Volcano plot* looks compares p-value to difference in solubility means (i.e. significance vs. magnitude)
+-  Take the $-log(p-value)$ vs magnitude of difference in multiples of $\sigma$
+- Higher values of the y-axis are indicative of strong statistical significance (i.e., low p-value).
+
+Tornado plot example
+==========
+```{r, echo=FALSE}
+## Create a volcano plot
+
+xyplot(-log10(t.test_p.value) ~ difference,
+       data = tests,
+       xlab = "Mean With Structure - Mean Without Structure",
+       ylab = "-log(p-Value)",
+       type = "p")
+```
+
+Comparing importance of a range of values
+=============
+
+-  To compare candidate predictors to each other, use Analysis of Variance.
+-  ANOVA compares models based on their ability to explain the variation between samples.
+-  e.g. what we did when looking at the amoeba counts in water samples.
+
+Categorical outcomes
+==========
+type:subsection
+
+Categorical outcomes
+================
+
+- Classification  methods.
+- Similar to evaluating methods, we can use area under the ROC curve (AUC) to evaluate predictors being included by a model.
+-  Also *t* statistics can be used to compare different predictors.
+
+Compare classification metrics
+======
+```{r, echo=FALSE}
+data(segmentationData)
+segTrain <- subset(segmentationData, Case == "Train")
+segTrain$Case <- segTrain$Cell <- NULL
+
+segTest <- subset(segmentationData, Case != "Train")
+segTest$Case <- segTest$Cell <- NULL
+
+## Compute the areas under the ROC curve
+aucVals <- filterVarImp(x = segTrain[, -1], y = segTrain$Class)
+aucVals$Predictor <- rownames(aucVals)
+
+## Cacluate the t-tests as before but with x and y switched
+segTests <- apply(segTrain[, -1], 2,
+                  function(x, y)
+                    {
+                    tStats <- t.test(x ~ y)[c("statistic", "p.value", "estimate")]
+                    unlist(tStats)
+                    },
+               y = segTrain$Class)
+segTests <- as.data.frame(t(segTests))
+names(segTests) <- c("t.Statistic", "t.test_p.value", "mean0", "mean1")
+segTests$Predictor <- rownames(segTests)
+
+## Fit a random forest model and get the importance scores
+library(randomForest)
+set.seed(791)
+rfImp <- randomForest(Class ~ ., data = segTrain,
+                      ntree = 2000,
+                      importance = TRUE)
+rfValues <- data.frame(RF = importance(rfImp)[, "MeanDecreaseGini"],
+                       Predictor = rownames(importance(rfImp)))
+
+## Now compute the Relief scores
+set.seed(791)
+
+ReliefValues <- attrEval(Class ~ ., data = segTrain,
+                         estimator="ReliefFequalK", ReliefIterations = 50)
+ReliefValues <- data.frame(Relief = ReliefValues,
+                           Predictor = names(ReliefValues))
+
+## and the MIC statistics
+set.seed(791)
+segMIC <- mine(x = segTrain[, -1],
+               ## Pass the outcome as 0/1
+               y = ifelse(segTrain$Class == "PS", 1, 0))$MIC
+segMIC <- data.frame(Predictor = rownames(segMIC),
+                  MIC = segMIC[,1])
+
+
+rankings <- merge(segMIC, ReliefValues)
+rankings <- merge(rankings, rfValues)
+rankings <- merge(rankings, segTests)
+rankings <- merge(rankings, aucVals)
+head(rankings)
+```
+
+And compare several different classification metrics
+=========
+```{r, echo=FALSE}
+rankings$channel <- "Channel 1"
+rankings$channel[grepl("Ch2$", rankings$Predictor)] <- "Channel 2"
+rankings$channel[grepl("Ch3$", rankings$Predictor)] <- "Channel 3"
+rankings$channel[grepl("Ch4$", rankings$Predictor)] <- "Channel 4"
+rankings$t.Statistic <- abs(rankings$t.Statistic)
+
+splom(~rankings[, c("PS", "t.Statistic", "RF", "MIC")],
+      groups = rankings$channel,
+      varnames = c("ROC\nAUC", "Abs\nt-Stat", "Random\nForest", "MIC"),
+      auto.key = list(columns = 2))
+```
+
+Summary feature selection
+=========
+
+-  Often we have more attributes then can be feasibly explored through EDA.
+-  Feature selection methods can rank and score attributes as a filter prior to using them in a model.
