@@ -223,11 +223,11 @@ INFSCI 2160 Data Mining or BQOM 2578 Data Mining
 
 IE 2064 - Data Science
 IE 2088 - Discrete Systems Simulation
-
-IE 2213 Advanced Applied Regression
-IE 2321 Advanced Applied Time Series
 INFSCI 2160: Data Mining
 BQOM 2578 Data Mining
+
+STAT 2231 Advanced Applied Regression
+STAT 2321 Advanced Applied Time Series
 INFSCI 2410: Introduction to Neural Networks
 INFSCI 2430: Social Computing
 INFSCI 2591: Algorithm Design

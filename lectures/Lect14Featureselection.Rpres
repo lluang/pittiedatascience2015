@@ -1,4 +1,4 @@
-Feature selection
+Predictor importance and feature selection
 ========================================================
 author: IE 2064 Data Science
 date: April 2015
@@ -318,8 +318,144 @@ splom(~rankings[, c("PS", "t.Statistic", "RF", "MIC")],
       auto.key = list(columns = 2))
 ```
 
-Summary feature selection
+Summary
 =========
 
 -  Often we have more attributes then can be feasibly explored through EDA.
 -  Feature selection methods can rank and score attributes as a filter prior to using them in a model.
+
+Feature selection
+===================
+type:section
+
+Why is this needed?
+=================
+
+-  Because we collect and store more information, we have a large amount of data with many pieces of information.
+-  We can create datasets with tens of thousands of predictors.
+-  It is not practical to evaluate all predictors, we need a way to filter predictors to a smaller set before evaluation.
+
+Two classes of methods
+=====================
+
+-  *Unsupervised* - Outcomes are ignored during the elimination of predictors.
+  -  e.g. Principle component analysis, random forests
+  -  Check for high correlations or those with sparse distributions.
+-  *Supervised* - Predictors are specifically selected to reduce the complexity of the model.
+  - Predictor importance methods.
+  
+  
+Effects of using non-informative predictors
+=====================
+
+- Goal of feature selection is to only include predictors that may help in making predictions.
+- Non-informative predictors will actually increase RMSE for most model types.
+  - Some types of models perform feature selection implicitly
+  - Tree and rule based models, MARS, Lasso
+- Having more predictors to perform hypothesis testing increases the probability of identifying significance where there is none.
+
+======
+![http://xkcd.com/882](resources/significant.png)
+
+
+Approaches for reducing the number of predictors
+=====
+
+- *Wrapper methods* - Evaluate multiple models that add or remove predictors to find the optimal combination to optimize model performance.
+- *Filter methods* - evaluate the relevance of predictors, then only model using predictors that pass some criteria.
+
+Wrapper methods
+=============
+type:subsection
+
+-  Conduct a search of predictors in the context of the modeling method to identify the set of predictors with the best results.
+-  Pro: Can look at sets of predictors as a whole.
+-  Con: Many models have to be evaluated, so this is computationally intensive.
+
+Some methods
+==========
+
+-  Forward selection
+-  Backwards selection
+-  Stepwise selection
+
+
+Forward selection
+=================
+
+- Start with a simple model (only intercept)
+- For each predictor not in the current model
+  - Create a candidate by adding the predictor
+  - Estimate statistical significance of new term through hypothesis testing
+- If the smallest p-value is less than the inclusion threshold, add it to the current model.
+- Done when no statistically significant predictors remain outside the model
+
+Issues with forward search
+=====================
+
+1.  Search procedure is *greedy*, so does not reevaluate past solutions.
+2.  Repeated hypothesis testing makes their value lower.
+3.  Maximizing statistical significance is not the same thing as maximizing accuracy.
+
+Better performance measures
+===============
+
+-  We can use measures that focus on predictive performance
+-  RMSE, classification accuracy, AUC (ROC)
+-  Add in criteria that penalize number of predictors
+  - Akaike Information Criterion (AIC)
+  $$AIC = n \quad log\left(\sum_{i=1}^n(y_i - \hat{y}_i)^2\right) + 2P$$
+-  Look for correlations with outcome but week-between predictor correlations
+  $$G = \frac{P R_y}{\sqrt{P + P(P-1)\bar{R}_x}}$$
+  -  $R_x$ is correlation between predictor and outcome
+  -  $R_y$ is average correlation with other predictors in model.
+  
+Backwards selection
+===============
+
+-  Start model with all *P* available predictors.
+-  Remove iteratively those that do not significantly contribute to the model (using AIC or *p* values)
+
+Stepwise selection
+==================
+
+-  Forward selection, but after a term is added to the model, evaluate the model for terms to remove.
+-  May have different *p*-value criteria for adding and removal.
+
+Simulated Annealing
+===============
+
+-  Search procedure based on models of metal cooling
+-  Select an initial random subset of predictors.
+  -  Randomly modify the predictor set
+  -  Evaluate model (training, the calculate performance)
+  -  If this is the best model, take this predictor set as the best
+  -  If not, calculate a probability *p* to accept the current predictor set, then determine random outcome.
+-  Determine which accepted predictor set had the best performance.
+
+Genetic algorithms
+===============
+
+-  Optimization method based on combining existing solutions based on fitness, then generating new solutions using crosses between existing solutions and mutations.
+-  Better current solutions will be more likely to be used as a basis for future solutions.
+-  Mutations allow for searches of the overall solution space (you do not get trapped into a local solution)
+
+
+Filter methods
+============
+type:subsection
+
+
+-  Evaluate predictors prior to developing model.
+-  Pro: Tends to be computationally efficient.
+-  Con: Evaluates each predictor separately so does not account for correlations and interactions.
+
+Why not predictor importance methods?
+============
+
+-  Many are based on hypothesis tests (e.g. *t*-tests)
+-  If many hypothesis tests are made, *multiple comparisons* problem.
+  - If you do 20 tests at *p*=0.05 . . .
+  - Need to adjust *p*-values, usually using *p/M*
+  - But this is too conservative.
+
