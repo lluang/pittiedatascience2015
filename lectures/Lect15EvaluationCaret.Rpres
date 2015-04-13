@@ -1,0 +1,67 @@
+Lect15 Model training and evaluation
+========================================================
+author: IE2064 Data Science
+date:  April 2015
+
+Overview of Data science workflow
+========================================
+
+- CoNVO
+- Data preparation/munging
+- Exploratory data analysis
+- Determine model
+  - Determine modeling parameters
+    - Divide data into train/test data
+      - Process data
+      - Fit model on training data
+      - Test model on test/hold-out data
+    - Evaluate model
+  - Determine optimal parameter set
+- Determine best model
+  - Fit final model using all data
+- Predictions
+
+
+CoNVO
+======================
+incremental: true
+
+-  **Co**ntext
+-  **N**eeds
+-  **V**ision
+-  **O**utcome
+
+Exploratory data analysis
+===================================
+
+-  Reading in data
+-  Data processing
+  - Outliers and missing values
+-  Data manipulation
+-  Data visualization
+
+
+
+Determine  best model
+======
+- Choose a model type
+  - Determine modeling parameters
+    - Divide data into train/test data
+      - Process data
+      - Fit model on training data
+      - Test model on test/hold-out data
+    - Evaluate model
+  - Determine optimal parameter set
+- Determine best model
+
+
+Modeling
+===========
+
+![Branches of Machine Learning](resources/ml_map.png)
+
+Predictions
+=============
+
+- Fit final model using all data
+- Predictions
