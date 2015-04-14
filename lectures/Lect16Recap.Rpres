@@ -120,6 +120,10 @@ Predictions
 -  Given a new observation, how should we react?
 -  How do we use our past observations to inform our reaction to a new observation.
 
+Machine learning
+====================
+type:section
+
 Machine Learning
 ================
 left:40% 
@@ -194,3 +198,15 @@ Dimensionality reduction
 -  Clustering with factors
 -  Random Forests
 -  Principle Component Analysis
+
+
+Model evaluation
+================================
+
+-  Regression
+-  Classification
+
+Model evaluation for regression
+======================================
+==--a========
+====
