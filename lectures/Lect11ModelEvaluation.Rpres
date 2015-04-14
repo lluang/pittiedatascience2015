@@ -366,7 +366,6 @@ Receiver Operating Characteristic (ROC)
 -  Taken from the radio electronics industry.
 -  Can the instrument detect a signal from noise.
 -  Combines Sensitivity and Specificity
-<<<<<<< HEAD:lectures/Lect11ModelEvaluation.Rpres
 -  Plot *1 - Specificity* against *Sensitivity* (FPR vs TPR)
 -  AUC - Area Under ROC curve
 
@@ -415,6 +414,5 @@ cp <- performance(pred, "rec", "rpp")
 plot(cp, main="Cumulative recall chart")
 par(mfrow=c(1,1))
 ```
-=======
->>>>>>> 066fb7439434b64e06ac637b4c23a9acf13198b4:lectures/ModelEvaluation.Rpres
+
 

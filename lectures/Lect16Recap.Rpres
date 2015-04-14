@@ -92,6 +92,8 @@ Application categories
 - Text processing
 - Predictions
 
+
+
 Exploratory data analysis
 ==========================
 
@@ -101,6 +103,11 @@ Exploratory data analysis
 -  Multi-variate visualization
 -  Distributions
 -  Comparisons
+
+Types of visualizations
+=====================
+
+![Types of charts](resources/ChartsuggestionsTosi2009.jpg)
 
 Text processing
 =================
@@ -291,13 +298,19 @@ Results of cross-validation
 Measures of complixity
 ==============
 
--  Measures of complexity differ depending on the model type.
+Measures of complexity differ depending on the model type.
+
 - Regression - Number of parameters/subset size.
-- Tree based models - *cp* complexity parameter
+- Recursive partitioning - *CP* cost complexity parameter
 - *kNN* - Number of neighbors
 - PCA - Number of principle components
 - Lasso - Shrinkage factor
 - Partial Least Squares - Number of directions
+
+Prediction error curves
+====================
+
+![Estimated Prediction Error Curves (ESL)](resources/estimatedpredictionerror.png)
 
 Regression methods
 ===============================
@@ -320,3 +333,114 @@ Distance based metrics
 -  Need to define a distance metric. (e.g. square root of some of squares)
 -  Need to control for the variation that is in the data.
 -  Normalization controls for the variation by dividing the distance by a measure of variation.
+
+Classification methods
+==================
+type: section
+
+Methods for evaluating classifications
+========
+
+-  Confusion matrix
+-  Precision vs Recall
+-  Sensitivity vs Specificity
+-  Receiver operating characteristics
+-  Sensitivity vs Specificity
+-  Lift
+
+
+Tradeoff between identifying all instances and mis-identifying instances
+===============
+
+![ROC curves for classifiers](resources/roccurves.png)
+
+Confusion matrix
+=====================
+
+-  *Precision* - Proportion of event signals created by the model that are correct.
+-  *Recall* - Proportion of events that are signaled by the models.
+-  Confusion matrix
+
+![Confusion matrix](resources/confusionmatrix.png)
+
+Precision and recall
+====================
+
+- Precision
+$$Prec=\frac{n_{s,s} + n_{b,b}}{N_{.,s}+N_{.,b}}$$
+- Recall
+$$Rec=\frac{n_{s,s} + n_{b,b}}{N_{s,.}+N_{b,.}}$$
+- Combine these to form the *F-measure*
+$$F=\frac{\beta^2+1 * Prec * Rec}{\beta^2 * Prec + Rec}$$
+- Where $0\leq \beta \leq 1$
+- *F-measure*  uses $\beta$ to specify the relative importance of recall to precision.
+
+Precision - recall curve example
+=====================
+```{r, echo=FALSE}
+library(ROCR)
+data(ROCR.simple)
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "prec", "rec")
+plot(perf)
+```
+
+
+
+Sensitivity and specificity
+=======================
+
+-  For a two-class problem, a prediction can be evaluated in two ways
+
+1.  The rate that an event is predicted correctly *sensitivity* - or *True positive*
+2.  The rate that non-events are predicted correctly *specificity* - or *True negative*
+  -  1 - *specificity* =  *False positive*
+
+Sensitivity and specificity
+===================
+
+-  Sensitivity
+
+$$\frac{\text{Number Samples with the event AND predicted to have the event}}{\text{Number samples having the event}}$$
+
+-  Specificity
+
+$$\frac{\text{Number Samples without the event AND predicted as nonevents}}{\text{Number samples without the event}}$$
+
+- *J index* combines these
+
+$$J = Sensitivity + Specificity -1$$
+
+Lift charts
+=============
+
+-  Evaluate a model against a complete random selection of samples.
+
+1.  Predict a set of samples that were not used in building the model but have known outcomes.
+2.  Determine the *baseline* event rate, i.e. the percentage of true events in the data set.
+3.  Using the model, order the data by classification probability (i.e. the samples most likely to be events first)
+4.  For each class probability value, calculate the actual percentage of true eents in all samples below the probability value.
+5. Divide the percent of true events for each probability threshold by the baseline event rate.  Fraction is the lift (>1.0)
+
+
+Lift chart example
+============
+
+```{r, echo=FALSE}
+par(mfrow=c(1,2))
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "lift", "rpp")
+plot(perf, main="Lift Chart")
+cp <- performance(pred, "rec", "rpp")
+plot(cp, main="Cumulative recall chart")
+par(mfrow=c(1,1))
+```
+
+Setting the context and telling the story
+======================
+incremental: true
+
+-  **Co**ntext
+-  **N**eeds
+-  **V**ision
+-  **O**utcome
