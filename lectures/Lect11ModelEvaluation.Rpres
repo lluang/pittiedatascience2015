@@ -44,15 +44,15 @@ Simplicity
 -  Use the simplest model that is a reasonable approximation of the complex model
    -  Note: a more complex model should be more accurate, but it may not be more accurate by much.
    -  Tradeoff simplicity for accuracy. If the simpler model is within some measure of error of the more complex one, use the simpler model since there is no significant improvement.
-   
-   
+
+
 Considerations for predictive models
 =============
 
 -  Balance between accuracy and overfitting
   -  The goal of the model is to describe the system, not fit the available data.
--  Balance between identifying all members of a target class and over 
-   
+-  Balance between identifying all members of a target class and overfitting to the data set you happen to have.
+
 Methods for model evaluation
 ===============
 type:section
@@ -78,10 +78,10 @@ Overfitting
 - Our goal is to perform the best prediction on future samples, not the samples we already have.
 - One danger is that our model is overly specific, it matches the data that we happen to have instead of being a good general model.
 - Cross-validation
-  1.  Obtain *k* equally sized and random subsets of the training data. 
-  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets. 
+  1.  Obtain *k* equally sized and random subsets of the training data.
+  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets.
   3.  evaluate this model on the *k*th subset.
-  
+
 Summary
 =======
 
@@ -100,7 +100,7 @@ Model evaluation
 ================
 
 -  We can use statistical methods like Mean Squared Error based methods when the prediction is a value that can be compared to the actual value.
--  Similar to methods used in developing regression models (Least Squared Error) 
+-  Similar to methods used in developing regression models (Least Squared Error)
 
 Model criteria
 ==============
@@ -140,7 +140,7 @@ Scatter plot with prediction
 old.par <- par(mfrow = c(1, 3))
 par(mfrow=c(1,3))
 plot(lm.predictions.a1, clean.algae[, "a1"], main = "Linear Model", xlab = "Predictions", ylab = "True Values")
-abline(0, 1, lty = 2) 
+abline(0, 1, lty = 2)
 plot(rt.predictions.a1, algae[, "a1"],main = "Regression Tree", xlab = "Predictions", ylab = "True Values")
 abline(0, 1, lty = 2)
 plot(rt2.predictions.a1, algae[, "a1"],main = "Regression Tree pruned", xlab = "Predictions", ylab = "True Values")
@@ -187,7 +187,7 @@ NMSE Calculations
 ==========
 
 ```{r}
-(nmse.a1.lm <- mean((lm.predictions.a1-clean.algae[,'a1'])^2)/ 
+(nmse.a1.lm <- mean((lm.predictions.a1-clean.algae[,'a1'])^2)/
    mean((mean(clean.algae[,'a1'])-clean.algae[,'a1'])^2))
 (nmse.a1.rt <- mean((rt.predictions.a1-algae[,'a1'])^2)/
    mean((mean(algae[,'a1'])-algae[,'a1'])^2))
@@ -215,7 +215,7 @@ $$NDTP_p(u)=\frac{|u-\widetilde{U}_p|}{IQR_p}$$
 
 ```{r, echo=FALSE}
 avgNDTP <- function(toInsp,train,stats) {
-  if (missing(train) && missing(stats)) 
+  if (missing(train) && missing(stats))
     stop('Provide either the training data or the product stats')
   if (missing(stats)) {
     notF <- which(train$Insp != 'fraud')
@@ -228,7 +228,7 @@ avgNDTP <- function(toInsp,train,stats) {
     stats <- matrix(unlist(stats),
                     length(stats),2,byrow=T,
                     dimnames=list(names(stats),c('median','iqr')))
-    stats[which(stats[,'iqr']==0),'iqr'] <- 
+    stats[which(stats[,'iqr']==0),'iqr'] <-
         stats[which(stats[,'iqr']==0),'median']
   }
 
@@ -322,7 +322,7 @@ Sensitivity and specificity
 
 1.  The rate that an event is predicted correctly *sensitivity* - or *True positive*
 2.  The rate that non-events are predicted correctly *specificity* - or *True negative*
-  -  1 - *specificity* =  *False positive* 
+  -  1 - *specificity* =  *False positive*
 
 Sensitivity and specificity
 ===================
@@ -348,9 +348,9 @@ Positive and Negative Predictive Value
 Sensitivity and specificity
 ==================
 
-Predicted | Observed |_             
+Predicted | Observed |_
 ----------|----------|------------
-          | **Event**    | **Non-event** 
+          | **Event**    | **Non-event**
 Event     | TP       |  FP
 Non-event | FN       |  TN
 
@@ -401,7 +401,7 @@ Lift charts
 3.  Using the model, order the data by classification probability (i.e. the samples most likely to be events first)
 4.  For each class probability value, calculate the actual percentage of true eents in all samples below the probability value.
 5. Divide the percent of true events for each probability threshold by the baseline event rate.  Fraction is the lift (>1.0)
-- Cumulative recall charts also 
+- Cumulative recall charts also
 
 Lift chart example
 ============

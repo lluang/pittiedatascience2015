@@ -47,8 +47,8 @@ The Data Science Venn Diagram
 =============================
 left:40%
 The primary colors of data
-  - Hacking skills, 
-  - Math and statistics knowledge, and 
+  - Hacking skills,
+  - Math and statistics knowledge, and
   - Substantive expertise.
 
 ***
@@ -124,9 +124,12 @@ Machine learning
 ====================
 type:section
 
+> The purpose of computing is insight, not numbers.
+>       - Richard Hamming
+
 Machine Learning
 ================
-left:40% 
+left:40%
 
 -  Regression
 -  Classification
@@ -200,13 +203,120 @@ Dimensionality reduction
 -  Principle Component Analysis
 
 
+
+Choosing between models
+==================
+
+-  General principles
+-  Comparing predictors
+-  Comparing classifications
+
+
+General principles
+=====================
+
+1. Flexibility of models.
+2. Models that lead to easy interpretation.
+3. Simplicity
+
+Flexibility
+===========
+
+-  Some models are very flexible
+-  e.g. Boosting, Support Vector Machines
+-  Likely to be very accurate emperically
+-  Con: very difficult to interpret and gain understanding from the results
+
+Interpretation
+=============
+
+-  Some model types lend themselves to easy interpretation
+-  e.g. regression methods, naive Bayes, association rules
+-  May be less accurate emperically, but leads to understanding about the system
+-  Very useful if the goal is to inform a person making the decision as opposed to pure machine learning.
+
+Simplicity
+============
+
+-  Use the simplest model that is a reasonable approximation of the complex model
+   -  Note: a more complex model should be more accurate, but it may not be more accurate by much.
+   -  Tradeoff simplicity for accuracy. If the simpler model is within some measure of error of the more complex one, use the simpler model since there is no significant improvement.
+
+
+Considerations for predictive models
+=============
+
+-  Balance between accuracy and overfitting
+  -  The goal of the model is to describe the system, not fit the available data.
+-  Balance between identifying all members of a target class and overfitting the dataset you happen to have.
+
 Model evaluation
 ================================
 
 -  Regression
 -  Classification
 
-Model evaluation for regression
-======================================
-==--a========
-====
+Regression methods
+===============
+
+-  Mean Squared Error based methods
+-  Distance methods
+
+Classification methods
+==================
+
+-  Receiver operating characteristics
+-  Sensitivity vs Specificity
+-  Precision vs Recall
+-  Lift
+
+
+Cross-validation
+============
+
+  1.  Obtain *k* equally sized and random subsets of the training data.
+  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets.
+  3.  Evaluate this model on the *k*th subset.
+  4.  After determining the best model, refit the model using all available data. Apply to new observations for predictive modeling.
+
+Results of cross-validation
+================================
+
+-  For each candidate model (subset size), cross validation will generate a series of estimates of error.
+-  This gives the *estimated prediction error* and standard error bands
+-  Identify the best model.
+-  Take the sum of the mean error plus the standard error (standard deviation of error).
+-  Find the model with lowest level of complexity that is less than this sum. This model balances precision and simplicity.
+
+Measures of complixity
+==============
+
+-  Measures of complexity differ depending on the model type.
+- Regression - Number of parameters/subset size.
+- Tree based models - *cp* complexity parameter
+- *kNN* - Number of neighbors
+- PCA - Number of principle components
+- Lasso - Shrinkage factor
+- Partial Least Squares - Number of directions
+
+Regression methods
+===============================
+
+-  We can use statistical methods like Mean Squared Error based methods when the prediction is a value that can be compared to the actual value.
+-  Similar to methods used in developing regression models (Least Squared Error)
+
+Model criteria
+==============
+
+-  Mean absolute error (MAE) between predictions and real values of the target variables.
+-  Mean squared error (MSE)
+-  Normalized mean squared error (NMSE)
+
+Distance based metrics
+=============
+
+-  Create a metric that looks at the distance between the prediction and actual.
+-  Note: this is context dependent!
+-  Need to define a distance metric. (e.g. square root of some of squares)
+-  Need to control for the variation that is in the data.
+-  Normalization controls for the variation by dividing the distance by a measure of variation.
