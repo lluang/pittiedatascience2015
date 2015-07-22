@@ -1,7 +1,7 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: 'DRAFT: April 2, 2015'
+date: 'DRAFT: July 22, 2015'
 output:
   word_document: default
   html_document:
@@ -121,15 +121,15 @@ The focus in this type of program is doing visualization and business unit speci
 Computational Data Analytics
 ---------------------
 
-Computational data analytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  
+Computational data analytics focuses on the skills and knowledge in managing big data.  The focus here is on applying high performance computing technologies such as parallel clusters or cloud computing to data problems.  Within industry, this is often referred to as Big Data Engineering.
 
 Tool requirements
 ------------------
 
-Most of the programs explicitly state R as a tool used in the curriculum.  A number of them also add Python as a language used for data science.  A few programs also state Java is used (I suspect that these are for those in the Computational Data Analysis type programs as Java is often used in the technologies used for high performance computing in commercial settings (e.g. Hadoop, MapReduce)).
+Most of the programs explicitly state R as a tool used in the curriculum.  A number of them also identify Python as a language used for data science.  A few programs also state Java is used (I suspect that these are for those in the Computational Data Analysis type programs as Java and the JVM platform is often used in the technologies used for high performance computing in commercial settings (e.g. Hadoop, MapReduce, Spark)).
 
 Online certificates in data science
-================================
+-----------------------------------
 
 A number of universities have started offering on-line certificate programs in data science, often on platforms such as Coursera or edX. The standard format is 5-10 modules of 4-6 weeks each.  One example are the courses in Johns Hopkins University Data Science track at Coursera which are 9 4-week modules plus a capstone that is intended to take place over 8 weeks, overlapping the last two courses.
 
@@ -157,39 +157,11 @@ While the Johns Hopkins track covers both the analytics aspect of data science a
 
 Other online courses focus on the mathematical and statistical underpinnings of the various methods used in machine learning and data mining.
 
-Current offerings at Pitt
-=============
-
-School of Information Sciences - MSIS Big Data Analytics Specialization
--------------------------
-
-Program requires:
-
-1.  Required, Decision analysis and either Information Storage or Data Mining
-2.  Required Cognitive science - Neural networks or social computing
-3.  Required: Algorithm design, database management (2) , Data Analytics
-4.  2 of 8 courses on topics within information science
-5.  2 electives
-
-Katz Business Analytics Certificate
--------------------------
-
-The Katz Business Analytics certificate program is designed to provide the academic foundation towards the INFORMS Certified Analytics Professional (CAP) certification.  Note that CAP requires experience in applying Analytics in non-academic settings.
-
-Program requires
-
-1. Pre-requisites:  Statistics analysis, Decision technology (existing MBA courses)
-2. Required:  Data Mining, Competitive Intelligence, Advanced Decision Technologies
-3. 4.5 credits choose from:  Social media analytics, Revenue management and Pricing, Shopper Marketing, Simulation, Process engineering, Forecasting
 
 
-Proposal for a data science certificate in Industrial Engineering
+
+Proposal for a data science certificate as part of the MS in Industrial Engineering
 ====================
-
--  The differences between the industrial engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core: Queuing, Optimization, Simulation.
-  -  The SIS program appears to be a combination of analytics and computational data analytics
-  -  The Katz program appears to be a combination of analytics and business analytics
--  The challenge is to integrate the descriptive analytics that form the core of most analytics programs: statistics, data mining, decision modeling.  In many analytics programs, this occurs through modifying quantitive/data analysis courses to use a common platform (R/Python).
 
 Core requirements
 -  IE 2005 Probability and Statistics
@@ -202,9 +174,7 @@ Core requirements
 -  IE 2007 Statistics and data analysis
 -  IE 2100 Supply Chain analysis
 
-This leaves 9-11 courses for electives
-
-
+Several of the current courses have topics that are similar to what would be needed for a data scientist but are not at the appropriate level of rigor. In particular, the statistics should be based on computational statistics and the database course needs to focus on using information systems in the context of data inquiry.  Some options to modify these requirements for use in a data science curriculum are:
 
 1.  Modify IE 2005 and/or IE 2007 to be R based instead of Minitab based
 2.  Allow for substitutions for the 2 of 4.  
@@ -212,8 +182,11 @@ This leaves 9-11 courses for electives
   -  IE 2007 Statistics and data analysis with STAT 2131-2132, Applied Statistical Methods 1 and 2
 3.  IE 2064 Data Science as an option for the 2 of 4
 
-Courses that can contribute to an Analytics certificate
+Potential new courses that could be in a data science curriculum
 
+1.  Computational statistics. This would be a second course in statistics that is focused on using simulation based methods to teach statistics.  This could replace either the first (IE2005) or second course (IE2007). Curriculum and textbooks exists in many schools using R or Python as a base programming language.  If allowed as an alternative to IE2005, this course would provide a computational foundation that would be used in future courses in IE or SIS. (SIS analytics courses often use R. Pitt Stats courses seem to be SAS based.)
+
+Courses that can contribute to an Analytics certificate
 
 Core:  TBD
 IE 2064 Data Science
@@ -222,7 +195,7 @@ INFSCI 2160 Data Mining or BQOM 2578 Data Mining
 **Analytics**
 
 IE 2064 - Data Science
-IE 2088 - Discrete Systems Simulation
+IE 2088 - Discrete Systems Simulation (needs to be programming based, not standalone)
 INFSCI 2160: Data Mining
 BQOM 2578 Data Mining
 
@@ -245,9 +218,9 @@ BMKT 2551 Digital and Social Media Analytics
 BMKT 2544 Shopper Marketing
 BQOM 2523 Process Engineering
 BQOM 2537 Forecasting
-BQOM  (Proposal attached) Revenue Management & Pricing Analytics
+BQOM  (Proposed course) Revenue Management & Pricing Analytics
 
-**Computational Data Analytics**
+**Computational Data Analytics (big data engineering)**
 
 INFSCI 2140: Introduction to Information Storage and Retrieval  
 INFSCI 2710: Database Management
@@ -255,5 +228,39 @@ INFSCI 2711: Advanced Topics in Database Management
 TELCOM 2125: Network Science
 TELCOM 2120: Network Performance
 TELCOM 2321: Computer Networking
+
+Comparison to current proposals at the University of Pittsburgh
+=============
+
+The following proposals are in development at the University of Pittsburgh.
+
+School of Information Sciences - MSIS Big Data Analytics Specialization
+-------------------------
+
+Program requires:
+
+1.  Required, Decision analysis and either Information Storage or Data Mining
+2.  Required Cognitive science - Neural networks or social computing
+3.  Required: Algorithm design, database management (2) , Data Analytics
+4.  2 of 8 courses on topics within information science
+5.  2 electives
+
+Katz Business Analytics Certificate
+-------------------------
+
+The Katz Business Analytics certificate program is designed to provide the academic foundation towards the INFORMS Certified Analytics Professional (CAP) certification.  Note that CAP requires experience in applying Analytics in non-academic settings and an academic foundation needs to be supplemented by experience applying analytics in a non-academic environment.
+
+Program requires
+
+1. Pre-requisites:  Statistics analysis, Decision technology (existing MBA courses)
+2. Required:  Data Mining, Competitive Intelligence, Advanced Decision Technologies
+3. 4.5 credits choose from:  Social media analytics, Revenue management and Pricing, Shopper Marketing, Simulation, Process engineering, Forecasting
+
+-  The differences between the Industrial Engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core of IE: Queuing, Optimization, Simulation.  This is consistent with the INFORMS CAP understanding of analytics being of three phases, descriptive, predictive, prescriptive.
+-  All three proposals would have a data science foundation of data mining/machine learning. 
+  -  The SIS program appears to be a combination of analytics and computational data analytics. IE offerings in prescriptive analytics are available to SIS students.  Essentially, the SIS and IE proposed program have comparable analytic cores in computational descriptive and predictive analytics, but reverse the emphasis on the data engineering and prescriptive analytics.
+  -  The Katz program appears to be a combination of analytics and business analytics.  The proposed IE program would be geared towards the spectrum of descriptive, predictive, prescriptive analytics in comparison to the Katz program which after the data mining core encourages focus on specific applications areas within the Katz Business school.
+  -  In terms of the Conway Data Science Venn Diagram, the SIS proposal is slightly weighted towards the computer hacking corner, the Katz more focused on the application domain, and the IE proposal more focused on the mathematics/statistics corner.
+  -  The three proposals also map to the three types of data science programs that are in the market. This is exemplified by the Georgia Tech program, which explicitly identifies three paths that are comparable to the three proposals.
 
 
