@@ -1,19 +1,22 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: 'DRAFT: July 22, 2015'
+date: 'DRAFT: July 23, 2015'
 output:
-  word_document: default
   html_document:
     toc: yes
+  word_document: default
 ---
 
 Introduction
 ===============
 
-As information systems grow more ubiquitous and inexpensive, many organizations have experienced a large increase in the amount of data available. The emergence of Big Data has led to situations that could only be analyzed through traditional statistics with a high degree of nuance that is not commonly available. The field of data science (AKA Machine learning, predictive modeling, knowledge discovery and data mining) has emerged to describe the methods and practices related to managing big data, analysis, and interpreting the analysis within a decision making workflow.
+As information systems grow more ubiquitous and inexpensive, many organizations have experienced a large increase in the amount of data available. The emergence of Big Data has led to situations that are not appropriately analyzed through traditional hypothesis testing oriented statistics. The field of data science (AKA Machine learning, predictive modeling, knowledge discovery and data mining) has emerged to describe the methods and practices related to managing big data, analysis, and interpreting the analysis within a decision making workflow.
 
-Because of the need to integrate the data preparation, exploration, modeling, analysis, and presentation of results into a unified workflow, standalone, single function tools that have been used to teach individual courses lead to a siloed understanding of 
+Because of the need to integrate the data preparation, exploration, modeling, analysis, and presentation of results into a unified workflow; standalone, single function tools that have been used to teach individual courses lead to a siloed understanding of quantitative methods that cannot be applied in practice. People with purely analytical skills such as that taught in statistics or engineering departments often do not have the computer skills necessary to allow their skills to be applied or for their solutions to be implemented without substantial assistance, making them a junior partner in an analysis. The data scientist program is intended to give participants:
+
+  1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
+  2.  Computer skills to work with information systems, manipulate large quantities of data, and deliver results in a usable form.
 
 Characteristics of big data
 ---------------------------
@@ -30,7 +33,7 @@ Big data can be characterized by four aspects.
 1.  Volume refers to presence of quantities of data that are beyond the capability of a single analysis sitting at a single computer to analyze.  The knowledge needed to work with high volumes of data include the IT capabilities of remote storage and remote processing (cloud computing) and the understanding of programming concepts needed to take advantage of cloud computing resources (parallel processing, functional programming).
 2.  Velocity refers to the changing nature of data within a short decision cycle. This becomes an issue in cases where decisions have to be made for a specific instance on a small amount of specific data, or when the character of the data changes rapidly.  Working with this requires methods that can integrate within corporate IT systems (databases) and can use the mass of related data to provide insight into a specific observation (machine learning methods and Bayesian based statistics).
 3.  Variety refers to the range of information that is available on a specific observation.  This variety can come from the fact that data may be available on a single subject from a range of sources, or because collecting and storing a range of attributes on a specific observation is easy. It may also result from the range of data storage and transmission types that are commonly encountered in practice. Working with a wide range of data requires knowledge of data handling methods and methods to identify which attributes or combinations of attributes are important (data processing and machine learning).
-4.  Veracity refers to the correct understanding of the meaning of the information available. This includes dealing with missing values, identifying and correcting data errors, and an understanding of the intent of the data collectors.  Skills and knowledge in working with these issues include data munging and data analysis.
+4.  Veracity refers to the correct understanding of the meaning of the information available. This includes dealing with missing values, identifying and correcting data errors, and an understanding of the intent of the data collectors.  Skills and knowledge in working with these issues include data manipulation and exploratory data analysis.
 
 Characteristics of data scientists.
 ------------------------------
@@ -47,26 +50,26 @@ Drew Conway describes data scientists as having a combination of three sets of d
 
 ### Computer programming skills
 
-Computer programming skills are required because data is traded electronically, so data scientists need to be able to manipulate text files, understand vectorized operations to work with data, and to think algorithmically.  Without computer skills means you cannot even get started with using electronic data.  The computer programming skills also link the various steps in the data workflow together from data collection, manipulation, modeling, analysis, then presentation of results. In contrast, single purpose programs typically do not lend themselves to being part of an integrated workflow.
+Computer programming skills are required because data is recorded, stored, and transferred electronically, so data scientists need to be able to manipulate text files, understand vectorized operations to work with data, and to think algorithmically.  Without computer skills means you cannot even get started with using electronic data.  The computer programming skills also link the various steps in the data workflow together from data collection, manipulation, modeling, analysis, then presentation of results. In contrast, single purpose programs typically do not lend themselves to being part of an integrated workflow.
 
 In practice, a set of programming languages have become common in data science. They have the following characteristics:
 
 1.  Built on top of numeric libraries for computation including linear algebra libraries (BLAS/LAPACK)
-2.  Interactive, either through an interpreter or a Read-Evaluate-Print-Loop readily available (no compilation step as methods are modified).
-3.  Have available a large number of topical and subject based technical computation libraries.
-4.  Can operate on vectors and related data types (include functional programming capabilities).
+2.  Can operate on vectors and related data types (include functional programming capabilities).
+3.  Interactive, either through an interpreter or a Read-Evaluate-Print-Loop readily available (no separate compilation step is required as methods are modified).
+4.  Have available a large number of topical and subject based scientific computation libraries.
 5.  Have facilities to manage a range of types of data to include numerical and character based data.
 6.  Have data structures that maintain knowledge of relationship and properties of data elements. (e.g. the data frame type)
 7.  Have good and flexible graphical capabilities.
 8.  Can express data analysis methods in forms corresponding to mathematical and statistical notation.
 
-Popular languages for this are R and Python.  Other languages that share these characteristics include Julia, Clojure, Scala, and F#.  Matlab/Octave is also a close fit, however it does not have good facilities for working with character data nor does it have the equivalent to a data frame type.  Numeric and statistical libraries are often written in C, C++, Java, or Fortran, but they lack interactivity and do not have the expressiveness that corresponds to the forms used to represent problems and algorithms in mathematical or statistical notation which are useful for practicing data science.
+Popular languages for this are R and Python.  Other languages that share these characteristics include Julia, Clojure, Scala, and F#.  Matlab/Octave is also a close fit, however it does not have good facilities for working with character data nor does it have the equivalent to a data frame type.  Numeric and statistical libraries are often written in C, C++, Java, or Fortran, but they lack interactivity and do not have the expressiveness that corresponds to the forms used to represent problems and algorithms in mathematical or statistical notation which are useful for practicing data science. Programming languages used in data science have facilities to easily integrate compiled numerical and statistical libraries.
 
-Another note is that this is not the same as the standard computer science curriculum. While the CS curriculum can provide a good foundation for the programming skills required, in practice what is required is the ability to use computer programming to build the workflow that goes from data exploration to data manipulation to model development and evaluation to presentation of results in forms useful for decision making.  In many cities, programmers in industry have formed groups that focus on teaching the skills required for practical use to both those with university training in programming (e.g. computer science majors) and those with minimal formal education (e.g. high school graduates without any college background). One such group is Code & Supply based in Pittsburgh.
+Another note is that this is not the same as the standard computer science curriculum. While the CS curriculum can provide a good foundation for the programming skills required, in practice what is required is the ability to use computer programming to build the workflow that goes from data exploration to data manipulation to model development and evaluation to presentation of results in forms useful for decision making.  In many cities, programmers in industry have formed groups that focus on teaching the skills required for practical use to both those with university training in programming (e.g. computer science or electrical engineering majors) and those without deep programming background (e.g. most statistics and engineering or non-technical majors). One such group is Code & Supply based in Pittsburgh.
 
 ### Math and Statistics
 
-While computer programming is required in order to even get started in data science, an understanding of the mathematical and statistical principles that underlie the methods is needed to give insight into which methods may be useful for a given problem and to evaluate the quality of models used. In the absence of this understanding, the analyst is essentially feeding data to a computer and taking output but without its meaning may be misunderstood and can lead to danger.
+While computer programming is required in order to even get started in data science, an understanding of the mathematical and statistical principles that underlie the methods is needed to give insight into which methods may be useful for a given problem and to evaluate the quality of models used. In the absence of this understanding, the analyst is essentially feeding data to a computer and taking output but without its meaning may be misunderstood and can lead to poor results.
 
 In particular, one implication of the elements of big data is that standard hypothesis testing based statistical analysis is inappropriate. Because of the volume and variety of data that is available, a large number of hypothesis could be generated and tested, and with high probability there will be hypothesis that will test to be significant, even if in fact there is no such relationship in real life.
 
@@ -164,11 +167,13 @@ Proposal for a data science certificate as part of the MS in Industrial Engineer
 ====================
 
 Core requirements
+
 -  IE 2005 Probability and Statistics
 -  IE 2001 Operations research (optimization (and queuing?))
 -  IE 2006 Manufacturing Systems
 
 2 of 4
+
 -  IE 2003 Engineering management
 -  IE 2004 Database design
 -  IE 2007 Statistics and data analysis
@@ -176,21 +181,16 @@ Core requirements
 
 Several of the current courses have topics that are similar to what would be needed for a data scientist but are not at the appropriate level of rigor. In particular, the statistics should be based on computational statistics and the database course needs to focus on using information systems in the context of data inquiry.  Some options to modify these requirements for use in a data science curriculum are:
 
-1.  Modify IE 2005 and/or IE 2007 to be R based instead of Minitab based
+1.  Modify IE 2005 and/or IE 2007 to be R based instead of Minitab based. Note: There is an optional menu driven interface to R that has been used with several statistics textbooks so IE 2005 could be taught using R without the need to learn programming.
 2.  Allow for substitutions for the 2 of 4.  
   -  IE 2004 Database design replaced with INFSCI 2140 or 
   -  IE 2007 Statistics and data analysis with STAT 2131-2132, Applied Statistical Methods 1 and 2
 3.  IE 2064 Data Science as an option for the 2 of 4
+4.  Add a machine learning course that would go with IE 2064 Data Science to form a two course sequence.  Either this new course or the Data Science course should qualify as a requirement.
 
-Potential new courses that could be in a data science curriculum
+Potential new courses that could be in a data science curriculum:
 
-1.  Computational statistics. This would be a second course in statistics that is focused on using simulation based methods to teach statistics.  This could replace either the first (IE2005) or second course (IE2007). Curriculum and textbooks exists in many schools using R or Python as a base programming language.  If allowed as an alternative to IE2005, this course would provide a computational foundation that would be used in future courses in IE or SIS. (SIS analytics courses often use R. Pitt Stats courses seem to be SAS based.)
-
-Courses that can contribute to an Analytics certificate
-
-Core:  TBD
-IE 2064 Data Science
-INFSCI 2160 Data Mining or BQOM 2578 Data Mining
+1.  Computational statistics. This would be a second course in statistics that is focused on using simulation based methods to teach statistics.  This could replace either the first (IE2005) or second course (IE2007). Curriculum and textbooks exists in many schools using R or Python as a base programming language.  If allowed as an alternative to IE2005, this course would provide a computational foundation that would be used in future courses in IE or SIS. (SIS analytics courses often use R. Pitt Statistics department courses seem to be SAS based.)
 
 **Analytics**
 
@@ -238,9 +238,8 @@ Another option is to offer a data science certificate.  This course would be a f
 
 IE 2005 - Probability and Statistics (R-based)
 IE 2064 - Data Science (working with data, visualization, basic machine learning models, model evaluation)
-IE 2--- - Data Mining/Machine Learning (more mathematically rigorous  treament of machine learning methods)
+IE 2--- - Data Mining/Machine Learning (more mathematically rigorous  treament of machine learning methods. New course)
 INFSCI 2140  Introduction to Information Storage and Retrieval
-
 
 Either a Big data (e.g. Hadoop or Spark from INFSCI) or a prescriptive modeling (operations research or simulation from IE) course.
 
@@ -275,7 +274,7 @@ Program requires
 -  All three proposals would have a data science foundation of data mining/machine learning. 
   -  The SIS program appears to be a combination of analytics and computational data analytics. IE offerings in prescriptive analytics are available to SIS students.  Essentially, the SIS and IE proposed program have comparable analytic cores in computational descriptive and predictive analytics, but reverse the emphasis on the data engineering and prescriptive analytics.
   -  The Katz program appears to be a combination of analytics and business analytics.  The proposed IE program would be geared towards the spectrum of descriptive, predictive, prescriptive analytics in comparison to the Katz program which after the data mining core encourages focus on specific applications areas within the Katz Business school.
-  -  In terms of the Conway Data Science Venn Diagram, the SIS proposal is slightly weighted towards the computer hacking corner, the Katz more focused on the application domain, and the IE proposal more focused on the mathematics/statistics corner.
+  -  In terms of the Conway Data Science Venn Diagram, the SIS proposal is slightly weighted towards the computer hacking corner, the Katz more focused on the application domain (marketing and other business domains), and the IE proposal more focused on the mathematics/statistics corner.
   -  The three proposals also map to the three types of data science programs that are in the market. This is exemplified by the Georgia Tech program, which explicitly identifies three paths that are comparable to the three proposals.
-
+  -  We expect that the three programs will draw from the three types of populations that are attracted to data science.  Those with an IT oriented background will tend to take the SIS certificate program.  Those with a business or non-technical background will gravitate towards the Katz certificate program within the MBA.  Those with a STEM focus will gravitate towards the IE program.
 
