@@ -229,6 +229,21 @@ TELCOM 2125: Network Science
 TELCOM 2120: Network Performance
 TELCOM 2321: Computer Networking
 
+
+Certificate program
+---------------------
+
+
+Another option is to offer a data science certificate.  This course would be a five course curriculum.
+
+IE 2005 - Probability and Statistics (R-based)
+IE 2064 - Data Science (working with data, visualization, basic machine learning models, model evaluation)
+IE 2--- - Data Mining/Machine Learning (more mathematically rigorous  treament of machine learning methods)
+INFSCI 2140  Introduction to Information Storage and Retrieval
+
+
+Either a Big data (e.g. Hadoop or Spark from INFSCI) or a prescriptive modeling (operations research or simulation from IE) course.
+
 Comparison to current proposals at the University of Pittsburgh
 =============
 
