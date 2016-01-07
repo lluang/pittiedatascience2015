@@ -97,13 +97,13 @@ Supplements
 ===========
 
 - (J)  Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, (2013), An Introduction to Statistical Learning with Applications in R, Springer, ISBN: 978-1461471370, available at http://www-bcf.usc.edu/~gareth/ISL/
-- (HT) Trevor Hastie, Roert Tibshirani, Jerome Friedman, (2001), The Elements of Statistical Leraning, Springer, ISBN: 0-387-95284-5
+- (HT) Trevor Hastie, Robert Tibshirani, Jerome Friedman, (2001), The Elements of Statistical Learning, Springer, ISBN: 0-387-95284-5
 
 
 Assignments
 ===========
 
-- Take one data set from APL 1.4 to use in applying methods.
+- Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
 - Three papers/presentations
 - Find a data set and a question
 
@@ -148,7 +148,7 @@ Learning Data Science
 =====================
 
 1.  Treat it as **science**, hypothesis, test, thesis.
-2.  Learn by doing. Do the examples in both Stanton and Torgo. You need to see what they did, not just read about it or watch someone else do it.
+2.  Learn by doing. Do the examples in APL. You need to see what they did, not just read about it or watch someone else do it.
 3.  Try, try, and try again. You are doing experiments. Assume that the first thing you try will not work.
 4.  Talk and listen.
 5.  Class participation. Defined in this course in how much you help others learn.
@@ -331,7 +331,7 @@ Analytical environments
 ========================================================
 
 1.  GUI based spreadsheets.
-  -  Excel, LibreOffice, Gnumeric
+  -  Excel
 2.  GUI based statistical packages.
   -  Minitab, Statistica
 3.  Batch based statistical packages
@@ -340,8 +340,8 @@ Analytical environments
   -  C, C++, C#, Fortran, Java
 5.  Data analysis programming languages (dynamic)
   -  Matlab, Python, R, F#, Clojure, Julia
-6.  GUI interfaces to programming language libaries
-  -  Weka, KMINE, Rattle, Orange
+6.  GUI based tools/interfaces
+  -  Weka, KMINE, Rapidminer
 
 Criteria
 ========================================================
@@ -362,7 +362,7 @@ Read in data
 Handle data of indefinite size
 ========================================================
 
--  Indefinite size implies usinging array or matrix based computation.
+-  Indefinite size implies using array or matrix based computation.
 -  Languages with functional characteristics helpful.
   -  Vectorization makes it easier to read implementations of analytical methods.
   -  No side effects requirement of functional languages leads to thinking of operations on all rows or records rather than one record at a time.
@@ -477,7 +477,7 @@ Benefits of R
 =============
 
 -  Programming language based implementation means very little is hidden.
--  Implementation of all methods as scripts means that analysis is reproducable, even on new data sets.
+-  Implementation of all methods as scripts means that analysis is reproducible, even on new data sets.
 -  Open source means that researchers develop new methods in R and create a new package to disseminate it.
 -  Many visualization and data processing methods have been implemented as R packages.  R packages are indexed on **CRAN**
 -  Able to access code written in Java, C, C++, Fortran, and Python from R.
@@ -487,7 +487,7 @@ Difficulties of R
 
 -  Programming language means that there is a learning curve at the beginning.
 -  Syntax is very different for those who know only Algol based (C/C++/Java/C#) languages.
--  Package interfaces are not consistant, learning to use a new package is often like learning to use a new software tool.
+-  Package interfaces are not consistent, learning to use a new package is often like learning to use a new software tool.
 -  Text based interface means it is often difficult to get started.
 
 Rattle
