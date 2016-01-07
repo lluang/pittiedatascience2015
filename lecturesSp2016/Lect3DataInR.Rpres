@@ -102,6 +102,8 @@ Packages
 
 -  `Packages` are libraries that contain functionality for R
 -  These libraries include the machine learning and text processing methods that we will use.
+-  'ggplot' is a library that implements the *Grammer of Graphics*, plots are built from components.
+  - It is very flexible.
 
 ```{r}
 library(ggplot2)
@@ -127,6 +129,14 @@ library(ggplot2)
 set.seed(1410)
 dsmall = diamonds[sample(nrow(diamonds),200),]
 ```
+
+Introduction to ggplot
+=======================
+
+-  *ggplot* treats plots as a collection of layers.
+-  The layers can be modified independently.
+-  Data, appearance, plot type, and formatting are treated separately.
+-  Allows for 
 
 qplot
 =====
