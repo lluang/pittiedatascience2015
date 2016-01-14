@@ -70,6 +70,7 @@ barplot(table(df.train$Embarked),
 
 # may need vcd package (imported by VIM)
 # look at survival by class using mosaicplot
+require(vcd)
 mosaicplot(df.train$Pclass ~ df.train$Survived, 
            main="Passenger Fate by Traveling Class", shade=FALSE, 
            color=TRUE, xlab="Pclass", ylab="Survived")
@@ -100,6 +101,7 @@ corrgram(corrgram.data[,corrgram.vars], order=FALSE,
 
 # DATA MUNGING
 
+require(plyr)
 # MISSING DATA
 # Given that there is a lot of missing data on Age, is there any way we can guess age?
 # Look at the Age data we have
