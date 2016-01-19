@@ -1,9 +1,9 @@
-Working with data in R
+Data structures and visualization
 ========================================================
 author: Louis Luangkesorn
 date: January 2016
 
-Working with R
+Data structures
 ========================================================
 type: section
 
@@ -186,8 +186,7 @@ Other `smooth` methods
 - We can specify the method used to draw the smoothing line.
 - `lm` linear model (regression)
 ```{r}
-qplot(carat, price, data = dsmall, geom = c("point", "smooth"),
-method = "lm")
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"))
 ```
 
 Boxplots

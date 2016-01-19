@@ -86,6 +86,7 @@ mosaicplot(df.train$Embarked ~ df.train$Survived,
 
 # Now lets look at all correlations
 require(corrgram)
+require(plyr)     # for the revalue function 
 corrgram.data <- df.train
 ## change features of factor type to numeric type for inclusion on correlogram
 corrgram.data$Survived <- as.numeric(corrgram.data$Survived)
@@ -118,10 +119,10 @@ head(df.train$Name, n=15L)
 
 #  Can we use the honorific to help guess age?
 getTitle <- function(data) {
-  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$Name, TRUE)
+  title.dot.start <- regexpr("\\,[A-Z ]{1,20}\\.", data$Name, TRUE)
   title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")-1
-  data$Title <- substr(data$Name, title.dot.start+2, title.comma.end-1)
-  return (data$Title)
+  Title <- substr(data$Name, title.dot.start+2, title.comma.end-1)
+  return (Title)
 }  
 Title <- getTitle(df.train)
 unique(Title) 
@@ -212,7 +213,6 @@ df.train$Title <- changeTitles(df.train, c("Mlle", "Mme"), "Miss")
 df.train$Title <- as.factor(df.train$Title)
 unique(df.train$Title)
 
-require(plyr)     # for the revalue function 
 require(stringr)  # for the str_sub function
 # Lets investigate if the policy of "women and children first" was followed
 # Hypothesis - leads to higher survival rate of women and children because
