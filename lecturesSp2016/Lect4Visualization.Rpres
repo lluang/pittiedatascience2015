@@ -1,0 +1,213 @@
+Visualization
+========================================================
+author: Louis Luangkesorn
+date:  January 2016
+
+Scoping problems
+===================
+type: section
+
+Projects
+========
+
+-  Look at Kaggle for ideas.
+-  If you have a project from another source (another class, project with another professor, thesis topic exploration, etc.) ask me about using it for this project.
+
+Representing data
+=================
+type: section
+
+Snow data
+========
+
+- If you were responsible for winter snow removal preparation, What would you like to know about the coming year's snow forecast?
+
+
+What is visualization for?
+==========================
+
+-  Analysis and exploration
+-  Communicate and present information
+-  Entertainment
+-  Art
+
+Visualizations in data science
+==============================
+
+
+
+How do we represent data?
+=========================
+
+-  Use visual cues to show values.
+-  Shapes, colors, scales, position.
+-  Visualization is how we summarize raw data to communicate meaning.
+-  What makes for a good visualization?
+
+
+Visualization components
+========================
+type: section
+
+Visualization components
+========================
+
+.
+![Visualization components](resources/visualizationcomponents.jpg)
+
+
+Visual cues
+===========
+
+.
+![Visual cues](resources/visualcues.jpg)
+
+Ranking visual cues
+===================
+
+Some visual cues are more clear than others
+
+![Ranking visual cues](resources/visualcuesranked.jpg)
+
+Coordinate systems
+==================
+
+Coordinate systems dictate the dimensions of the visualization.
+
+.
+![Coordinate systems](resources/coordinatesystems.jpg)
+
+Scales
+======
+
+Scales dictate where in the dimensions the data maps to.
+
+.
+![Scales](resources/visualscales.jpg)
+
+Using visualization
+===================
+type:section
+
+
+Data exploration questions to ask?
+==================================
+
+-  What data do you have?
+-  What do you want to know about your data?
+-  Which visualization methods should you use?
+-  What do you see and does it make sense?
+
+Exploring through visualization
+===============================
+
+![Data exploration](resources/visualizationexploration.jpg)
+
+Visualizing categorical data
+============================
+
+.
+![Visualizing categorical data](resources/visualizationcategorical.jpg)
+
+
+
+Time
+====
+
+Time is continuous, but you can also divide it into categories.
+
+![Time](resources/visualizationtime.jpg)
+
+
+Time series
+===========
+
+How does your data change over time?
+
+.
+![Time series](resources/visualizationtimeseries.jpg)
+
+Visualizing spatial data
+========================
+
+.
+![Time series](resources/visualizationspatial.jpg)
+
+Combining components
+====================
+
+By combining components, graphs are richer and can display many relationships at once.
+
+.
+![Combining components](resources/visualcombinations.jpg)
+
+
+Multiple variables
+==================
+
+There is no hard limit to how many variables can be in one visualization
+
+.
+![Multiple views](resources/visualizationmultiple.jpg)
+
+Data distribution
+=================
+
+- Visualization can show how data is distributed in a population
+- Box plots
+- Histograms
+- Density plots
+
+Visualizing distributions
+=========================
+
+.
+![Distributions](resources/visualizationdistributions.jpg)
+
+
+Comparisons
+===========
+
+One thing that visualizations should do is show how things change.
+
+.
+![Comparisons](resources/visualcomparisons.jpg)
+
+Color scales
+============
+
+-  Sequential
+-  Diverging
+-  Qualitative
+
+![Colorscales](resources/visualizationcolorscales.jpg)
+
+
+Highlighting
+============
+
+Emphasize a particular data point or series to place focus
+
+![Highlighting](resources/visualizationhighlighting.jpg)
+
+Annotation
+==========
+
+Give context to data or explain boundary cases.
+
+.
+![Annotation example](resources/visualannotations.jpg)
+
+Making things pretty
+====================
+
+![Making things pretty](resources/visualizationwind.jpg)
+
+Summary
+=======
+
+-  Think in terms of telling a story.
+-  What is the message?
+-  What is the main point?
+-  How to tell it?
+
