@@ -1,7 +1,7 @@
 # Based on https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md
 
 # default give two significant digits for calculations
-options(digits=2)
+options(digits=4)
 # Define a helper function to read in the csv files
 readData <- function(path.name, file.name, column.types, missing.types) {
   read.csv( paste(path.name, file.name, sep="") , 
@@ -115,7 +115,7 @@ boxplot(df.train$Age ~ df.train$Pclass,
            main="Passenger Age by Traveling Class", shade=FALSE, 
            color=TRUE, xlab="Pclass", ylab="Age")
 
-head(df.train$Name, n=15L)
+tail(df.train$Name, n=40L)
 
 #  Can we use the honorific to help guess age?
 getTitle <- function(data) {

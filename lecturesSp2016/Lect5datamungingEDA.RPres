@@ -3,6 +3,15 @@ Data Munging and Exploratory Data Analysis
 author: Louis Luangkesorn
 date: January 2016
 
+- Install the package (DMwR) to follow this lecture
+```{r echo=FALSE}
+library(ggplot2)
+library(gridExtra)
+library(lattice)
+library(DMwR)
+```
+http://www.dcc.fc.up.pt/~ltorgo/DataMiningWithR/datasets.html
+
 Topics
 ========================================================
 
@@ -65,13 +74,7 @@ Sample database - Algae
 Data from a file
 ================
 
-```{r echo=FALSE}
-library(ggplot2)
-library(gridExtra)
-library(lattice)
-library(DMwR)
-```
-<!--http://www.dcc.fc.up.pt/~ltorgo/DataMiningWithR/datasets.html-->
+'data(algae)'
 ```{r}
 algae <- read.table('resources/Analysis.txt',
   header=F,
