@@ -1,0 +1,418 @@
+Model Evaluation Methods
+==============
+author: Louis Luangkesorn
+date: February 2016
+
+General principles for model evaluation
+=============
+type:section
+
+Choosing between models
+==================
+
+-  General principles
+-  Comparing predictors
+-  Comparing classifications
+
+
+General principles
+=====================
+
+1. Flexibility of models.
+2. Models that lead to easy interpretation.
+3. Simplicity
+
+Flexibility
+===========
+
+-  Some models are very flexible
+-  e.g. Boosting, Support Vector Machines
+-  Likely to be very accurate emperically
+-  Con: very difficult to interpret and gain understanding from the results
+
+Interpretation
+=============
+
+-  Some model types lend themselves to easy interpretation
+-  e.g. regression methods, naive Bayes, association rules
+-  May be less accurate emperically, but leads to understanding about the system
+-  Very useful if the goal is to inform a person making the decision as opposed to pure machine learning.
+
+Simplicity
+============
+
+-  Use the simplest model that is a reasonable approximation of the complex model
+   -  Note: a more complex model should be more accurate, but it may not be more accurate by much.
+   -  Tradeoff simplicity for accuracy. If the simpler model is within some measure of error of the more complex one, use the simpler model since there is no significant improvement.
+
+
+Considerations for predictive models
+=============
+
+-  Balance between accuracy and overfitting
+  -  The goal of the model is to describe the system, not fit the available data.
+-  Balance between identifying all members of a target class and overfitting to the data set you happen to have.
+
+Methods for model evaluation
+===============
+type:section
+
+
+Regression methods
+===============
+
+-  Mean Squared Error based methods
+-  Distance methods
+
+Classification methods
+==================
+
+-  Receiver operating characteristics
+-  Sensitivity vs Specificity
+-  Precision vs Recall
+-  Lift
+
+Overfitting
+===========
+
+- Our goal is to perform the best prediction on future samples, not the samples we already have.
+- One danger is that our model is overly specific, it matches the data that we happen to have instead of being a good general model.
+- Cross-validation
+  1.  Obtain *k* equally sized and random subsets of the training data.
+  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets.
+  3.  evaluate this model on the *k*th subset.
+
+Summary
+=======
+
+When facing a predictive task, we have to make the following decisions:
+
+- Select the alternative models to consider (the models can actually be alternative settings of the same algorithm) for the predictive task(s) we want to address.
+- Select the evaluation metrics that will be used to compare the models.
+- Choose the experimental methodology for obtaining reliable estimates
+of these metrics.
+
+Regression methods
+===============================
+type: section
+
+Model evaluation
+================
+
+-  We can use statistical methods like Mean Squared Error based methods when the prediction is a value that can be compared to the actual value.
+-  Similar to methods used in developing regression models (Least Squared Error)
+
+Model criteria
+==============
+
+-  Mean absolute error (MAE) between predictions and real values of the target variables.
+-  Mean squared error (MSE)
+-  Normalized mean squared error (NMSE)
+
+Mean absolute error
+===================
+
+-  We can compare a range of linear regression and recursive partitioning models.
+-  Algae prediction
+  -  Linear regression
+    -  Simple model after using ANOVA to remove factors
+  -  Recursive partitioning
+    -  After pruning
+```{r, echo=FALSE}
+library(DMwR)
+data(algae)
+clean.algae <- knnImputation(algae, k=10)
+lm.a1 <- lm(a1 ~ ., data = clean.algae[,1:12])
+final.lm <- step(lm.a1)
+library(rpart)
+rt.a1 <- rpart(a1 ~ ., data = algae[, 1:12])
+rt2.a1 <- prune(rt.a1, cp = 0.08)
+algae <- algae[-manyNAs(algae), ]
+lm.predictions.a1 <- predict(final.lm, clean.algae)
+rt.predictions.a1 <- predict(rt.a1, algae)
+rt2.predictions.a1 <- predict(rt2.a1, algae)
+```
+
+Scatter plot with prediction
+======================
+
+```{r, echo=FALSE}
+old.par <- par(mfrow = c(1, 3))
+par(mfrow=c(1,3))
+plot(lm.predictions.a1, clean.algae[, "a1"], main = "Linear Model", xlab = "Predictions", ylab = "True Values")
+abline(0, 1, lty = 2)
+plot(rt.predictions.a1, algae[, "a1"],main = "Regression Tree", xlab = "Predictions", ylab = "True Values")
+abline(0, 1, lty = 2)
+plot(rt2.predictions.a1, algae[, "a1"],main = "Regression Tree pruned", xlab = "Predictions", ylab = "True Values")
+abline(0, 1, lty = 2)
+par(old.par)
+par(mfrow= c(1,1))
+```
+
+Absolute error
+====
+
+-  Take the average if the absolute value of difference between prediction and actual value
+
+```{r}
+(mae.a1.lm <- mean(abs(lm.predictions.a1 - clean.algae[, "a1"])))
+(mae.a1.rt <- mean(abs(rt.predictions.a1 - algae[, "a1"])))
+(mae.a1.rt2 <- mean(abs(rt2.predictions.a1 - algae[, "a1"])))
+```
+
+Note that units are the same units as the measurement
+
+Mean squared error
+=================
+
+- Square the errors to penalize distance between prediction and actual.
+- Take average of squared errors.
+
+MSE Calculations
+=============
+```{r}
+(mse.a1.lm <- mean((lm.predictions.a1 - clean.algae[, "a1"])^2))
+(mse.a1.rt <- mean((rt.predictions.a1 - algae[, "a1"])^2))
+(mse.a1.rt2 <- mean((rt2.predictions.a1 - algae[, "a1"])^2))
+```
+
+Normalized mean squared error
+=============================
+
+-  Divide by the square of the difference between observations and the mean.
+-  NMSE controls for the variance in the population so it gives values that are comparable between sample populations.
+-  Result is a ratio.
+
+NMSE Calculations
+==========
+
+```{r}
+(nmse.a1.lm <- mean((lm.predictions.a1-clean.algae[,'a1'])^2)/
+   mean((mean(clean.algae[,'a1'])-clean.algae[,'a1'])^2))
+(nmse.a1.rt <- mean((rt.predictions.a1-algae[,'a1'])^2)/
+   mean((mean(algae[,'a1'])-algae[,'a1'])^2))
+(nmse.a1.rt2 <- mean((rt2.predictions.a1-algae[,'a1'])^2)/
+   mean((mean(algae[,'a1'])-algae[,'a1'])^2))
+```
+
+Distance based metrics
+=============
+
+-  Create a metric that looks at the distance between the prediction and actual.
+-  Note: this is context dependent!
+-  Need to define a distance metric. (e.g. square root of some of squares)
+-  Need to control for the variation that is in the data.
+-  Normalization controls for the variation by dividing the distance by a measure of variation.
+
+Normalized Distance
+=======
+
+-  Look at the distance between a prediction and actual by normalied against the InterQuartile Range (IQR).
+-  NDTP(u) - Normalized distance to typical price
+$$NDTP_p(u)=\frac{|u-\widetilde{U}_p|}{IQR_p}$$
+-  Unit price of observation minus the median of the unit prices of the product divided by the IQR of the unit prices of the product.
+  -  If IQR==0, set $IQR = \widetilde{U_p}$
+
+```{r, echo=FALSE}
+avgNDTP <- function(toInsp,train,stats) {
+  if (missing(train) && missing(stats))
+    stop('Provide either the training data or the product stats')
+  if (missing(stats)) {
+    notF <- which(train$Insp != 'fraud')
+    stats <- tapply(train$Uprice[notF],
+                    list(Prod=train$Prod[notF]),
+                    function(x) {
+                      bp <- boxplot.stats(x)$stats
+                      c(median=bp[3],iqr=bp[4]-bp[2])
+                    })
+    stats <- matrix(unlist(stats),
+                    length(stats),2,byrow=T,
+                    dimnames=list(names(stats),c('median','iqr')))
+    stats[which(stats[,'iqr']==0),'iqr'] <-
+        stats[which(stats[,'iqr']==0),'median']
+  }
+
+  mdtp <- mean(abs(toInsp$Uprice-stats[toInsp$Prod,'median']) /
+               stats[toInsp$Prod,'iqr'])
+  return(mdtp)
+}
+```
+
+Subset selection methods
+==================================
+type: subsection
+
+Subset selection
+===================
+
+-  To evaluate a regression model, we can look at the coefficient of variation of the error.
+-  $CV = \frac{\sigma}{\mu}$
+-  But, in general, more terms lead to lower $\sigma$.
+-  Need to balance lower errors against model complexity
+
+![Residual SS for all possible subsets](resources/subsetselectionrss.png)
+
+Results of cross-validation
+================================
+
+-  For each candidate model (subset size), cross validation will generate a series of estimates of error.
+-  This gives the *estimated prediction error* and standard error bands
+-  Identify the best model.
+-  Take the sum of the mean error plus the standard error (standard deviation of error).
+-  Find the model with the smallest subset size that is less than this sum.
+
+Estimated prediction error curves
+=============================
+
+![Estimated Prediction Error Curves](resources/estimatedpredictionerror.png)
+
+
+Classification methods
+==================
+type: section
+
+Methods for evaluating classifications
+========
+
+-  Confusion matrix
+-  Precision vs Recall
+-  Sensitivity vs Specificity
+-  Receiver operating characteristics
+-  Sensitivity vs Specificity
+-  Lift
+
+
+Confusion matrix
+=====================
+
+-  *Precision* - Proportion of event signals created by the model that are correct.
+-  *Recall* - Proportion of events that are signaled by the models.
+-  Confusion matrix
+
+![Confusion matrix](resources/confusionmatrix.png)
+
+Precision and recall
+====================
+
+- Precision
+$$Prec=\frac{n_{s,s} + n_{b,b}}{N_{.,s}+N_{.,b}}$$
+- Recall
+$$Rec=\frac{n_{s,s} + n_{b,b}}{N_{s,.}+N_{b,.}}$$
+- Combine these to form the *F-measure*
+$$F=\frac{\beta^2+1 * Prec * Rec}{\beta^2 * Prec + Rec}$$
+- Where $0\leq \beta \leq 1$
+- *F-measure*  uses $\beta$ to specify the relative importance of recall to precision.
+
+Precision - recall curve example
+=====================
+```{r}
+library(ROCR)
+data(ROCR.simple)
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "prec", "rec")
+plot(perf)
+```
+
+
+
+Sensitivity and specificity
+=======================
+
+-  For a two-class problem, a prediction can be evaluated in two ways
+
+1.  The rate that an event is predicted correctly *sensitivity* - or *True positive*
+2.  The rate that non-events are predicted correctly *specificity* - or *True negative*
+  -  1 - *specificity* =  *False positive*
+
+Sensitivity and specificity
+===================
+
+-  Sensitivity
+
+$$\frac{\text{\# Samples with the event AND predicted to have the event}}{\text{\# samples having the event}}$$
+
+-  Specificity
+
+$$\frac{\text{\# Samples without the event AND predicted as nonevents}}{\text{\# samples without the event}}$$
+
+- *J index* combines these
+$$J = Sensitivity + Specificity -1$$
+
+Positive and Negative Predictive Value
+=====================
+
+-  PPV - If the prediction method predicts positive, what is the probability of the sample being positive?
+-  NPV - If the prediction method predicts negative, what is the probability of the sample being negative?
+
+
+Sensitivity and specificity
+==================
+
+Predicted | Observed |_
+----------|----------|------------
+          | **Event**    | **Non-event**
+Event     | TP       |  FP
+Non-event | FN       |  TN
+
+
+```{r}
+sensspec <- performance(pred, "sens", "spec")
+plot(sensspec)
+```
+
+Receiver Operating Characteristic (ROC)
+==================
+
+-  Taken from the radio electronics industry.
+-  Can the instrument detect a signal from noise.
+-  Combines Sensitivity and Specificity
+-  Plot *1 - Specificity* against *Sensitivity* (FPR vs TPR)
+-  AUC - Area Under ROC curve
+
+ROC curve
+========
+
+-  Evaluate a model against a continuum of thresholds.
+-  Thresholds are scores used to separate the range of possible observations into two potential classes.
+-  For each threshold, determine the resulting Specificity and Sensitivity.
+-  Plot on ROC chart.
+-  A perfect model has 100% Sensitivity and specificity.
+-  In practice, higher sensitivity leads to lower specificity (being able to identify all representatives of a class leads to also having false positives)
+
+
+True positive rate vs false positive rate
+=====
+
+```{r}
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf, main="ROC Curve")
+```
+
+
+Lift charts
+=============
+
+-  Evaluate a model against a complete random selection of samples.
+
+1.  Predict a set of samples that were not used in building the model but have known outcomes.
+2.  Determine the *baseline* event rate, i.e. the percentage of true events in the data set.
+3.  Using the model, order the data by classification probability (i.e. the samples most likely to be events first)
+4.  For each class probability value, calculate the actual percentage of true eents in all samples below the probability value.
+5. Divide the percent of true events for each probability threshold by the baseline event rate.  Fraction is the lift (>1.0)
+- Cumulative recall charts also
+
+Lift chart example
+============
+
+```{r}
+par(mfrow=c(1,2))
+pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
+perf <- performance(pred, "lift", "rpp")
+plot(perf, main="Lift Chart")
+cp <- performance(pred, "rec", "rpp")
+plot(cp, main="Cumulative recall chart")
+par(mfrow=c(1,1))
+```
+
+
