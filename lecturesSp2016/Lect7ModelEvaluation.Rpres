@@ -92,10 +92,11 @@ When facing a predictive task, we have to make the following decisions:
 - Choose the experimental methodology for obtaining reliable estimates
 of these metrics.
 
-Regression methods
+Regression methods using caret
 ===============================
 type: section
 
+**REPLACE EXAMPLES WITH CARS DATA AND CARET**
 Model evaluation
 ================
 
@@ -238,6 +239,22 @@ avgNDTP <- function(toInsp,train,stats) {
 }
 ```
 
+
+Using cross validation
+=========================
+
+
+
+Regression trees (with caret)
+============================
+
+Repeat model evaluation and comparison between regression trees and linear regression
+===========================================
+
+
+Cross validation 
+==================
+
 Subset selection methods
 ==================================
 type: subsection
@@ -270,6 +287,9 @@ Estimated prediction error curves
 Classification methods
 ==================
 type: section
+
+**REMOVE SECTION ON CLASSIFICATION METHODS**
+**LECTURE 17 USES CARET FOR CLASSIFICATION METHODS**
 
 Methods for evaluating classifications
 ========
