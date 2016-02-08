@@ -134,6 +134,15 @@ rt.predictions.a1 <- predict(rt.a1, algae)
 rt2.predictions.a1 <- predict(rt2.a1, algae)
 ```
 
+```{r, echo=FALSE}
+library(AppliedPredictiveModeling)
+library(caret)
+data(FuelEconomy)
+cars2010predict <- cars2010[,-4]
+fitlmcars <- train(x=cars2010predict, y=cars2010$FE, method = "lm", metric = "RMSE")
+
+
+```
 Scatter plot with prediction
 ======================
 
