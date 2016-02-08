@@ -96,10 +96,52 @@ Regression methods using caret
 ===============================
 type: section
 
-**REPLACE EXAMPLES WITH CARS DATA AND CARET**
-Model evaluation
+The `caret` package enables consistent implementation and evaluation of a range of machine learning models.
+```{r}
+library(AppliedPredictiveModeling)
+library(caret)
+```
+Ordinary Linear Regression
 ================
 
+- Regression requires a function and a data frame as input.
+- Returns parameters and model evaluation statistics.
+
+Linear model implementation
+===========
+- Specify data
+-  Specify outcome variable
+- Later we will split data for cross-evaluations
+
+```{r}
+data(FuelEconomy)
+trainingData <- cars2010
+lmFit1 <- lm(FE ~ . - FE, data = trainingData)
+```
+
+Linear regression output
+========
+```{r, echo=FALSE}
+summary(lmFit1)
+```
+
+Look at R^2 and RMSE
+=========
+
+- To get RMSE, look at predictors
+
+```{r}
+lmFitPred1 <-predict(lmFit1, cars2010[,-4])
+lmFitValues1 <- data.frame(obs=cars2010[,c("FE")], pred=lmFitPred1)
+defaultSummary(lmFitValues1)
+```
+
+Model evaluation
+================
+- Model evaluation is best done through cross-validation
+- Cross validation generates a model using training data
+- Test using holdout data
+- Multiple cross validation using different holdout data sets generate a mean and standard error for model predictive performance.
 -  We can use statistical methods like Mean Squared Error based methods when the prediction is a value that can be compared to the actual value.
 -  Similar to methods used in developing regression models (Least Squared Error)
 
@@ -110,55 +152,22 @@ Model criteria
 -  Mean squared error (MSE)
 -  Normalized mean squared error (NMSE)
 
-Mean absolute error
-===================
-
--  We can compare a range of linear regression and recursive partitioning models.
--  Algae prediction
-  -  Linear regression
-    -  Simple model after using ANOVA to remove factors
-  -  Recursive partitioning
-    -  After pruning
-```{r, echo=FALSE}
-library(DMwR)
-data(algae)
-clean.algae <- knnImputation(algae, k=10)
-lm.a1 <- lm(a1 ~ ., data = clean.algae[,1:12])
-final.lm <- step(lm.a1)
-library(rpart)
-rt.a1 <- rpart(a1 ~ ., data = algae[, 1:12])
-rt2.a1 <- prune(rt.a1, cp = 0.08)
-algae <- algae[-manyNAs(algae), ]
-lm.predictions.a1 <- predict(final.lm, clean.algae)
-rt.predictions.a1 <- predict(rt.a1, algae)
-rt2.predictions.a1 <- predict(rt2.a1, algae)
-```
-
 Scatter plot with prediction
 ======================
 
-```{r, echo=FALSE}
-old.par <- par(mfrow = c(1, 3))
-par(mfrow=c(1,3))
-plot(lm.predictions.a1, clean.algae[, "a1"], main = "Linear Model", xlab = "Predictions", ylab = "True Values")
-abline(0, 1, lty = 2)
-plot(rt.predictions.a1, algae[, "a1"],main = "Regression Tree", xlab = "Predictions", ylab = "True Values")
-abline(0, 1, lty = 2)
-plot(rt2.predictions.a1, algae[, "a1"],main = "Regression Tree pruned", xlab = "Predictions", ylab = "True Values")
-abline(0, 1, lty = 2)
-par(old.par)
-par(mfrow= c(1,1))
+```{r}
+carsplot <- cars2010
+carsplot$Pred1 <- lmFitPred1
+qplot(Pred1, FE, data=carsplot, main = "Linear Model", xlab = "Predictions", ylab = "True Values") + geom_smooth(method="lm")
 ```
 
 Absolute error
 ====
 
--  Take the average if the absolute value of difference between prediction and actual value
+-  Take the average of the absolute value of difference between prediction and actual value
 
 ```{r}
-(mae.a1.lm <- mean(abs(lm.predictions.a1 - clean.algae[, "a1"])))
-(mae.a1.rt <- mean(abs(rt.predictions.a1 - algae[, "a1"])))
-(mae.a1.rt2 <- mean(abs(rt2.predictions.a1 - algae[, "a1"])))
+(mae.a1.lm <- mean(abs(carsplot$Pred1 - cars2010[,"FE"])))
 ```
 
 Note that units are the same units as the measurement
@@ -172,9 +181,7 @@ Mean squared error
 MSE Calculations
 =============
 ```{r}
-(mse.a1.lm <- mean((lm.predictions.a1 - clean.algae[, "a1"])^2))
-(mse.a1.rt <- mean((rt.predictions.a1 - algae[, "a1"])^2))
-(mse.a1.rt2 <- mean((rt2.predictions.a1 - algae[, "a1"])^2))
+(mse.a1.lm <- mean(mean(abs(carsplot$Pred1 - cars2010[,"FE"]))^2))
 ```
 
 Normalized mean squared error
@@ -188,12 +195,8 @@ NMSE Calculations
 ==========
 
 ```{r}
-(nmse.a1.lm <- mean((lm.predictions.a1-clean.algae[,'a1'])^2)/
-   mean((mean(clean.algae[,'a1'])-clean.algae[,'a1'])^2))
-(nmse.a1.rt <- mean((rt.predictions.a1-algae[,'a1'])^2)/
-   mean((mean(algae[,'a1'])-algae[,'a1'])^2))
-(nmse.a1.rt2 <- mean((rt2.predictions.a1-algae[,'a1'])^2)/
-   mean((mean(algae[,'a1'])-algae[,'a1'])^2))
+(nmse.a1.lm <- mean(((carsplot$Pred1 - cars2010[,"FE"]))^2)/
+   mean((mean(cars2010[,"FE"])-cars2010[,"FE"])^2))
 ```
 
 Distance based metrics
@@ -243,7 +246,20 @@ avgNDTP <- function(toInsp,train,stats) {
 Using cross validation
 =========================
 
+- Determine model type (e.g. Linear regression)
+- Determine cross validation methods using `trainControl`
+- Set random number seed
+- Train model using random holdout sets based on cross validation method
 
+Cross validation example
+==========
+```{r}
+ctrl = trainControl(method="cv", number = 10)
+set.seed(100)
+lmFit1 <- train(x = cars2010[,-4], y=cars2010[,4],
+                method="lm", trControl=ctrl)
+lmFit1
+```
 
 Regression trees (with caret)
 ============================
