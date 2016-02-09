@@ -58,6 +58,10 @@ Methods for model evaluation
 type:section
 
 
+Model evaluation process
+=====================
+![Parameter tuning process](resources/parametertuningprocess.jpg)
+
 Regression methods
 ===============
 
@@ -79,7 +83,7 @@ Overfitting
 - One danger is that our model is overly specific, it matches the data that we happen to have instead of being a good general model.
 - Cross-validation
   1.  Obtain *k* equally sized and random subsets of the training data.
-  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets.
+  2.  For each of these *k* subsets, build a model using the remaining *k* - 1 sets.
   3.  evaluate this model on the *k*th subset.
 
 Summary
@@ -264,12 +268,82 @@ lmFit1
 Regression trees (with caret)
 ============================
 
+```{r}
+set.seed(100)
+rtFit1 <- train(x = cars2010[,-4], y=cars2010[,4],
+                method="rpart", trControl=ctrl)
+rtFit1
+```
 Repeat model evaluation and comparison between regression trees and linear regression
 ===========================================
 
+```{r}
+lmFit1$results
+rtFit1$results
+```
 
-Cross validation 
+Cross validation and resampling techniques
 ==================
+
+- Resampling techniques are used to estimate model performance.
+- Use a subset of samples to train (fit) a model.
+- Use a different subset of samples where the results are known to test the model.
+- Repeat multiple times and aggregate and summarize the results (mean, standard error)
+
+Forms of resampling
+=================
+
+-  *k*-fold cross validation
+-  Leave one out cross validation (LOOCV)
+-  Monte Carlo cross validation
+-  Bootstrapping
+
+k-fold Cross- Validation
+========================
+
+-  Divide the data into $k$ subsets
+-  For each of the $k$ subsets, use remaining data to train a model, test on the chosen subset.
+-  *k* can be anything, but is normally set to 5 or 10
+  - Larger values of $k$ give more accurate performance measures, but at the cost of smaller test sets.
+  - Research shows little benefit to $k>10$
+
+![3-fold cross validation](resources/kfoldcrossvalidation.jpg)
+
+Leave one out
+=============
+-  Extreme version of $k$-fold Cross validation.
+-  For each observation, attempt to predict it based on ALL of the other available data.
+-  Lowest bias in performance estimate (most similar to real life)
+-  Computationally intensive
+
+Monte Carlo cross validation 
+============
+
+- Each training/test split is generated randomly.
+  - Note that test data and training data are always separate.
+- Individual samples could be in several different test sets.
+- Can have any number of test sets of any size
+
+![Monte Carlo cross validation](resources/montecarlocrossvalidation.jpg)
+
+Bootstrap cross validation
+=========================
+
+- For each validation sample, sample a number of times equal to the size of the dataset *with replacement* to form the training set. Note there will be repetition.
+- Samples that are not selected become the test set.
+- Lower between set variation because of larger training data sizes, but higher bias because of reuse of data in training set.
+
+![Bootstrap resampling](resources/bootstrapvalidation.jpg)
+
+Model selection
+=================
+
+-  Generally for each model type, pick the tuning parameter that balances predictive error and complexity.
+-  For linear regression, tuning parameter is the size of the subset of available parameters.
+-  Next, compare different model types.
+-  Note that cross-validation will show that accuracy does not necessarily improve as parameters are added (increased model complexity does not add to accuracy.)
+
+![Apparant vs cross validation accuracy](resources/crossvalidationaccuracy.jpg)
 
 Subset selection methods
 ==================================
@@ -282,6 +356,7 @@ Subset selection
 -  $CV = \frac{\sigma}{\mu}$
 -  But, in general, more terms lead to lower $\sigma$.
 -  Need to balance lower errors against model complexity
+-  Chart shows all possible combinations of parameters for a given subset size.
 
 ![Residual SS for all possible subsets](resources/subsetselectionrss.png)
 
@@ -299,156 +374,44 @@ Estimated prediction error curves
 
 ![Estimated Prediction Error Curves](resources/estimatedpredictionerror.png)
 
+Modeling in caret
+================
 
-Classification methods
-==================
-type: section
+- `caret` develops a consistant interface between machine learning methods and model evaluation methods.
+- A *wrapper* around the various machine learning packages which are found in a number of R packages
+-  train command takes data, outcome, method, metric, and type of cross validation method (trControl) and implements cross validation as well as a final model.
 
-**REMOVE SECTION ON CLASSIFICATION METHODS**
-**LECTURE 17 USES CARET FOR CLASSIFICATION METHODS**
-
-Methods for evaluating classifications
-========
-
--  Confusion matrix
--  Precision vs Recall
--  Sensitivity vs Specificity
--  Receiver operating characteristics
--  Sensitivity vs Specificity
--  Lift
-
-
-Confusion matrix
-=====================
-
--  *Precision* - Proportion of event signals created by the model that are correct.
--  *Recall* - Proportion of events that are signaled by the models.
--  Confusion matrix
-
-![Confusion matrix](resources/confusionmatrix.png)
-
-Precision and recall
-====================
-
-- Precision
-$$Prec=\frac{n_{s,s} + n_{b,b}}{N_{.,s}+N_{.,b}}$$
-- Recall
-$$Rec=\frac{n_{s,s} + n_{b,b}}{N_{s,.}+N_{b,.}}$$
-- Combine these to form the *F-measure*
-$$F=\frac{\beta^2+1 * Prec * Rec}{\beta^2 * Prec + Rec}$$
-- Where $0\leq \beta \leq 1$
-- *F-measure*  uses $\beta$ to specify the relative importance of recall to precision.
-
-Precision - recall curve example
-=====================
-```{r}
-library(ROCR)
-data(ROCR.simple)
-pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
-perf <- performance(pred, "prec", "rec")
-plot(perf)
+train function
+=======
+```
+train(x, y, 
+      method = "rf",  
+      preProcess = NULL,
+      ..., 
+      weights = NULL,
+      metric = ifelse(is.factor(y), "Accuracy", "RMSE"),   
+      maximize = ifelse(metric %in% c("RMSE", "logLoss"), FALSE, TRUE),
+      trControl = trainControl(), 
+      tuneGrid = NULL,  tuneLength = 3)
 ```
 
+Specifying method
+======
+-  *method* refers to the machine learning model type
+-  Full list with arguements at https://topepo.github.io/caret/modelList.html
 
+trControl
+==========
 
-Sensitivity and specificity
-=======================
+- `trainControl()` specifies the type of cross validation to be used.
+- boot, boot632, 
+- cv, repeatedcv, LOOCV, LGOCV, 
+- none (only fits one model to the entire training set)
+- others . . .
 
--  For a two-class problem, a prediction can be evaluated in two ways
+More information on caret package
+===========
 
-1.  The rate that an event is predicted correctly *sensitivity* - or *True positive*
-2.  The rate that non-events are predicted correctly *specificity* - or *True negative*
-  -  1 - *specificity* =  *False positive*
-
-Sensitivity and specificity
-===================
-
--  Sensitivity
-
-$$\frac{\text{\# Samples with the event AND predicted to have the event}}{\text{\# samples having the event}}$$
-
--  Specificity
-
-$$\frac{\text{\# Samples without the event AND predicted as nonevents}}{\text{\# samples without the event}}$$
-
-- *J index* combines these
-$$J = Sensitivity + Specificity -1$$
-
-Positive and Negative Predictive Value
-=====================
-
--  PPV - If the prediction method predicts positive, what is the probability of the sample being positive?
--  NPV - If the prediction method predicts negative, what is the probability of the sample being negative?
-
-
-Sensitivity and specificity
-==================
-
-Predicted | Observed |_
-----------|----------|------------
-          | **Event**    | **Non-event**
-Event     | TP       |  FP
-Non-event | FN       |  TN
-
-
-```{r}
-sensspec <- performance(pred, "sens", "spec")
-plot(sensspec)
-```
-
-Receiver Operating Characteristic (ROC)
-==================
-
--  Taken from the radio electronics industry.
--  Can the instrument detect a signal from noise.
--  Combines Sensitivity and Specificity
--  Plot *1 - Specificity* against *Sensitivity* (FPR vs TPR)
--  AUC - Area Under ROC curve
-
-ROC curve
-========
-
--  Evaluate a model against a continuum of thresholds.
--  Thresholds are scores used to separate the range of possible observations into two potential classes.
--  For each threshold, determine the resulting Specificity and Sensitivity.
--  Plot on ROC chart.
--  A perfect model has 100% Sensitivity and specificity.
--  In practice, higher sensitivity leads to lower specificity (being able to identify all representatives of a class leads to also having false positives)
-
-
-True positive rate vs false positive rate
-=====
-
-```{r}
-pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
-perf <- performance(pred, "tpr", "fpr")
-plot(perf, main="ROC Curve")
-```
-
-
-Lift charts
-=============
-
--  Evaluate a model against a complete random selection of samples.
-
-1.  Predict a set of samples that were not used in building the model but have known outcomes.
-2.  Determine the *baseline* event rate, i.e. the percentage of true events in the data set.
-3.  Using the model, order the data by classification probability (i.e. the samples most likely to be events first)
-4.  For each class probability value, calculate the actual percentage of true eents in all samples below the probability value.
-5. Divide the percent of true events for each probability threshold by the baseline event rate.  Fraction is the lift (>1.0)
-- Cumulative recall charts also
-
-Lift chart example
-============
-
-```{r}
-par(mfrow=c(1,2))
-pred <- prediction(ROCR.simple$predictions, ROCR.simple$labels)
-perf <- performance(pred, "lift", "rpp")
-plot(perf, main="Lift Chart")
-cp <- performance(pred, "rec", "rpp")
-plot(cp, main="Cumulative recall chart")
-par(mfrow=c(1,1))
-```
-
+-  *Applied Predictive Modeling* ch 4, 5, 11, App B
+-  Kuhn, 2008, *Building Predictive Models in R Using the caret Package*, **Journal of Statistical Software**, Vol 28, No. 5, http://www.jstatsoft.org/article/view/v028i05
 
