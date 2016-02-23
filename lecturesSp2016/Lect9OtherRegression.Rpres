@@ -1,0 +1,120 @@
+Non-linear Regression Models
+========================================================
+author: Data Science
+date: February 2016
+
+```{r}
+library(AppliedPredictiveModeling)
+data(solubility)
+library(caret)
+set.seed(100)
+indx <- createFolds(solTrainY, returnTrain = TRUE)
+ctrl <- trainControl(method = "cv", index = indx)
+```
+
+Overview
+========
+
+-  Regression trees
+-  Rule based methods
+-  Bagged trees
+-  Random Forests
+-  Boosting
+-  Cubist
+
+Regression Trees
+============
+
+-  Series of splits of the data
+-  Identify the best predictor to split on and the value of the split
+  - 'best' is based on the split that makes the data more homogeneous (reduce sum of squares error)
+  $$SSE = \sum_{i \in S_1}(y_i - \bar{y}_1)^2 + \sum_{i \in S_2} (y_i - \bar{y}_2)^2$$
+  
+Using caret for regression trees
+====
+
+```{r}
+library(rpart)
+### Fit two CART models to show the initial splitting process. rpart 
+### only uses formulas, so we put the predictors and outcome into
+### a common data frame first.
+trainData <- solTrainXtrans
+trainData$y <- solTrainY
+rpStump <- rpart(y ~ ., data = trainData, 
+                 control = rpart.control(maxdepth = 1))
+rpSmall <- rpart(y ~ ., data = trainData, 
+                 control = rpart.control(maxdepth = 2))
+```
+
+
+Tune the model
+====
+```{r}
+library(caret)
+set.seed(100)
+cartTune <- train(x = solTrainXtrans, y = solTrainY,
+                  method = "rpart",
+                  tuneLength = 25,
+                  trControl = ctrl)
+cartTune
+```
+
+Final model
+===
+```{r}
+cartTune$finalModel
+```
+
+
+Plot the tuning results along with complexity parameter
+==================
+```{r}
+plot(cartTune, scales = list(x = list(log = 10)))
+```
+
+Advantages of regression trees
+====
+
+1. Simple and interpretable
+2. Quick and easy to compute
+3. Feature selection is a byproduct
+
+Disadvantages of regression trees
+=========
+
+1. Suboptimal (because each step only picks one predictor at a time)
+2. Number of predicted outcomes is finite (does not offer fine resolution)
+3. Unstable. Small changes in data (or slightly different sample) leads to large changes in the resulting tree.
+4. Selection bias. Predictors with large numbers of distinct values tend to be selected before predictors with more granularity. Continuous more likely to be selected over binary or factor.
+
+Regression Model Trees
+========
+type:section
+
+Limitations of regression trees
+==================
+
+- Only a limited number of outcomes in final prediction
+- Tend to miss on samples that are in the extremes.
+- Regression model trees have a linear model in the end nodes instead of using simple averages.
+
+Model tree approach
+===================
+
+- Split data on best value for best predictor
+- For each potential split, calculate the improvement in error for next split.
+- Errors are associated with linear model for the samples in each end node.
+- Same parameters as Regression tree:  number of levels, minimum number of samples in each end node, minimum improvement (pruning)
+- Final linear models go through a simplification procedure to control complexity in end nodes.
+- Final prediction of new observation is obtained by determining which node the observation falls in, then using the associated linear model to make the prediction.
+
+Regression Model Tree illustrated
+===============
+
+![Regression model tree](resources/regressionmodeltree.jpg)
+
+Smoothing
+=======
+
+-  Smoothing is used to modify linear models so adjacent nodes are close in their prediction at boundary points
+-  Guards against overfitting.
