@@ -1,0 +1,94 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+Classification models
+========================================================
+author: IE2064 Data Science
+date: February 2015
+
+
+Classification models
+=============
+type: section
+
+What are classification models?
+========================================
+
+- Regression models create a prediction along a continuous response.
+- Classification models develop a prediction for a categorical response.
+  - Outcome is one of a set of pre-identified categories.
+- Note: regression models can be applied to classification problems when used correctly.
+- Example of outcomes: True/False, Purchase/no purchase, path taken, product selected.
+
+Predictions in classification models
+====================
+
+-  Classification models produce a continuously varied prediction of a probability.
+  - The predicted class will be the prediction with the highest probability.
+-  R-squared and RMSE not appropriate performance measures, so we need to develop performance measures based on correct/in-correct counts instead of measures based on distance to true answer.
+
+Uses of classification models
+===================================
+
+- Identifying observations for further action. e.g. fraud investigations.
+- Inputs into another model.
+
+Calibration plots
+==================================
+
+- Classification models usually have embedded an estimate of a probability-like value.
+- Calibration of models means relating the model probability-like calculation to actual probabilities.
+- *calibration plot* compares the predicted probabilities to actual probabilities
+  - Compare the predicted probability to the actual probability of observations with similar predictions.
+  
+Setting up two class example
+===============
+  
+```{r}
+library(AppliedPredictiveModeling)
+library(ggplot2)
+set.seed(975)
+training <- quadBoundaryFunc(500)
+testing <- quadBoundaryFunc(1000)
+testing$class2 <- ifelse(testing$class == "Class1", 1, 0)
+testing$ID <- 1:nrow(testing)
+```
+
+Apply random forest to classification problem
+==================
+```{r}
+library(MASS)
+qdaFit <- qda(class ~ X1 + X2, data = training)
+library(randomForest)
+rfFit <- randomForest(class ~ X1 + X2, data = training, ntree = 2000)
+testing$qda <- predict(qdaFit, testing)$posterior[,1]
+testing$rf <- predict(rfFit, testing, type = "prob")[,1]
+```
+
+
+Generate the calibration analysis
+============
+```{r}
+library(caret)
+calData1 <- calibration(class ~ qda + rf, data = testing, cuts = 10)
+ggplot(training, aes(X1, X2, color=class, shape=class))+
+  geom_point() + xlab("X1") + ylab("X2") + ggtitle("Classes and predictors")
+```
+
+Plot the curve
+====
+```{r}
+xyplot(calData1, auto.key = list(columns = 2))
+```
+
+Calibrate model
+==========
+- To calibrate the model, treat the predicted probabilities as inputs into a Model
+```{r}
+trainProbs <- training
+trainProbs$qda <- predict(qdaFit)$posterior[,1]
+```
+  
+
+
+
