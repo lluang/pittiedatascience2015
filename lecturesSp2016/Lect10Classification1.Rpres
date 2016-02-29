@@ -39,10 +39,14 @@ Calibration plots
 - Classification models usually have embedded an estimate of a probability-like value.
 - Calibration of models means relating the model probability-like calculation to actual probabilities.
 - *calibration plot* compares the predicted probabilities to actual probabilities
+  - Bin observations based on their predicted probability.
   - Compare the predicted probability to the actual probability of observations with similar predictions.
   
 Setting up two class example
 ===============
+
+- Generate test and training data where
+$$log\left(\frac{p}{1-p}\right) = -1 - 2 X1 - 0.2 X1^2 + 2 X2^2$$
   
 ```{r}
 library(AppliedPredictiveModeling)
@@ -54,7 +58,7 @@ testing$class2 <- ifelse(testing$class == "Class1", 1, 0)
 testing$ID <- 1:nrow(testing)
 ```
 
-Apply random forest to classification problem
+Apply quadratic discriminant analysis and random forest to classification problem
 ==================
 ```{r}
 library(MASS)
@@ -75,6 +79,13 @@ ggplot(training, aes(X1, X2, color=class, shape=class))+
   geom_point() + xlab("X1") + ylab("X2") + ggtitle("Classes and predictors")
 ```
 
+Presenting class probabilities for two classes
+=================
+
+- Create bins based on predicted probability of one class.
+- For observations in each bin, determine the observed event percentage.
+- Plot curve. Closer to 45 degreee line (observed percentage = bin midpoint) is better
+
 Plot the curve
 ====
 ```{r}
@@ -89,6 +100,126 @@ trainProbs <- training
 trainProbs$qda <- predict(qdaFit)$posterior[,1]
 ```
   
+  
+Recalibrate as if predicting probabilities using Naive Bayes
+============
+```{r}
+library(klaR)
+nbCal <- NaiveBayes(class ~ qda, data = trainProbs, usekernel = TRUE)
+lrCal <- glm(relevel(class, "Class2") ~ qda, data = trainProbs, family = binomial)
+testing$qda2 <- predict(nbCal, testing[, "qda", drop = FALSE])$posterior[,1]
+testing$qda3 <- predict(lrCal, testing[, "qda", drop = FALSE], type = "response")
+```
+
+Apply QDA and RF again
+============
+```{r}
+### Manipulate the data a bit for pretty plotting
+simulatedProbs <- testing[, c("class", "rf", "qda3")]
+names(simulatedProbs) <- c("TrueClass", "RandomForestProb", "QDACalibrated")
+simulatedProbs$RandomForestClass <-  predict(rfFit, testing)
+
+calData2 <- calibration(class ~ qda + qda2 + qda3, data = testing)
+calData2$data$calibModelVar <- as.character(calData2$data$calibModelVar)
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda", 
+                                      "QDA",
+                                      calData2$data$calibModelVar)
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda2", 
+                                      "Bayesian Calibration",
+                                      calData2$data$calibModelVar)
+
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda3", 
+                                      "Sigmoidal Calibration",
+                                      calData2$data$calibModelVar)
+
+calData2$data$calibModelVar <- factor(calData2$data$calibModelVar,
+                                      levels = c("QDA", 
+                                                 "Bayesian Calibration", 
+                                                 "Sigmoidal Calibration"))
+```
+
+Comparison of QDA and RF with recalibrated data
+=====================
+```{r}
+xyplot(calData2, auto.key = list(columns = 1))
+```
 
 
+Evaluating predicted classes
+===================
+type:section
 
+Evaluating predicted classes
+======================
+
+- There are several methods for evaluating classification models based on a confusion matrix
+  -  Kappa statistic
+  -  Sensitivity vs Specificity
+  -  J index
+  -  PPV/NPV
+- Prediction accuracy
+  -  ROC
+  -  Lift charts
+  
+Recreate German Credit data
+=====
+```{r}
+library(caret)
+data(GermanCredit)
+
+## First, remove near-zero variance predictors then get rid of a few predictors 
+## that duplicate values. For example, there are two possible values for the 
+## housing variable: "Rent", "Own" and "ForFree". So that we don't have linear
+## dependencies, we get rid of one of the levels (e.g. "ForFree")
+GermanCredit$Class <- GermanCredit$credit_risk
+GermanCredit <- GermanCredit[, -nearZeroVar(GermanCredit)]
+GermanCredit$CheckingAccountStatus.lt.0 <- NULL
+GermanCredit$SavingsAccountBonds.lt.100 <- NULL
+GermanCredit$EmploymentDuration.lt.1 <- NULL
+GermanCredit$EmploymentDuration.Unemployed <- NULL
+GermanCredit$Personal.Male.Married.Widowed <- NULL
+GermanCredit$Property.Unknown <- NULL
+GermanCredit$Housing.ForFree <- NULL
+
+## Split the data into training (80%) and test sets (20%)
+set.seed(100)
+inTrain <- createDataPartition(GermanCredit$Class, p = .8)[[1]]
+GermanCreditTrain <- GermanCredit[ inTrain, ]
+GermanCreditTest  <- GermanCredit[-inTrain, ]
+
+set.seed(1056)
+logisticReg <- train(Class ~ .,
+                     data = GermanCreditTrain,
+                     method = "glm",
+                     trControl = trainControl(method = "repeatedcv", 
+                                              repeats = 5))
+logisticReg
+```
+
+Predict the test set
+===
+```{r}
+creditResults <- data.frame(obs = GermanCreditTest$Class)
+creditResults$prob <- predict(logisticReg, GermanCreditTest, type = "prob")[, "bad"]
+creditResults$pred <- predict(logisticReg, GermanCreditTest)
+creditResults$Label <- ifelse(creditResults$obs == "Bad", 
+                              "True Outcome: Bad Credit", 
+                              "True Outcome: Good Credit")
+```
+Plot the probability of bad credit
+========
+```{r}
+histogram(~prob|Label,
+          data = creditResults,
+          layout = c(2, 1),
+          nint = 20,
+          xlab = "Probability of Bad Credit",
+          type = "count")
+
+```
+Calculate and plot the calibration curve
+======
+```{r}
+creditCalib <- calibration(obs ~ prob, data = creditResults)
+xyplot(creditCalib)
+```
