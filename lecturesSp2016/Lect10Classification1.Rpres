@@ -160,18 +160,16 @@ Evaluating predicted classes
 - Prediction accuracy
   -  ROC
   -  Lift charts
-  
-Recreate German Credit data
+- Goal is to find the model that offers the best performance
+  - The problem may be inherently difficult to predict.
+
+
+Recreate German Credit data from Chapter 4 (model evaluation)
 =====
 ```{r}
 library(caret)
 data(GermanCredit)
-
-## First, remove near-zero variance predictors then get rid of a few predictors 
-## that duplicate values. For example, there are two possible values for the 
-## housing variable: "Rent", "Own" and "ForFree". So that we don't have linear
-## dependencies, we get rid of one of the levels (e.g. "ForFree")
-GermanCredit$Class <- GermanCredit$credit_risk
+#$GermanCredit$Class <- GermanCredit$credit_risk
 GermanCredit <- GermanCredit[, -nearZeroVar(GermanCredit)]
 GermanCredit$CheckingAccountStatus.lt.0 <- NULL
 GermanCredit$SavingsAccountBonds.lt.100 <- NULL
@@ -183,26 +181,26 @@ GermanCredit$Housing.ForFree <- NULL
 
 ## Split the data into training (80%) and test sets (20%)
 set.seed(100)
-inTrain <- createDataPartition(GermanCredit$Class, p = .8)[[1]]
+inTrain <- createDataPartition(GermanCredit$credit_risk, p = .8)[[1]]
 GermanCreditTrain <- GermanCredit[ inTrain, ]
 GermanCreditTest  <- GermanCredit[-inTrain, ]
 
 set.seed(1056)
-logisticReg <- train(Class ~ .,
+logisticReg <- train(credit_risk ~ .,
                      data = GermanCreditTrain,
                      method = "glm",
                      trControl = trainControl(method = "repeatedcv", 
-                                              repeats = 5))
+                                              repeats = 10))
 logisticReg
 ```
 
 Predict the test set
 ===
 ```{r}
-creditResults <- data.frame(obs = GermanCreditTest$Class)
+creditResults <- data.frame(obs = GermanCreditTest$credit_risk)
 creditResults$prob <- predict(logisticReg, GermanCreditTest, type = "prob")[, "bad"]
 creditResults$pred <- predict(logisticReg, GermanCreditTest)
-creditResults$Label <- ifelse(creditResults$obs == "Bad", 
+creditResults$Label <- ifelse(creditResults$obs == "bad", 
                               "True Outcome: Bad Credit", 
                               "True Outcome: Good Credit")
 ```
@@ -222,4 +220,124 @@ Calculate and plot the calibration curve
 ```{r}
 creditCalib <- calibration(obs ~ prob, data = creditResults)
 xyplot(creditCalib)
+```
+
+
+Confusion matrix
+==============
+```{r}
+### Create the confusion matrix from the test set.
+cm <- confusionMatrix(data = creditResults$pred, 
+                reference = creditResults$obs)
+```
+
+***
+```{r}
+cm$table
+```
+
+   |  Positive  |  Negative 
+---|------------|------------
+True | TP | FN
+False  | FP | TN 
+
+Kappa statistic
+=================
+
+- Compared observed accuracy to the expected accuracy
+$$Kappy = \frac{O-E}{1-E}$$
+- Compare to Brier score
+$$BS = 1 - (x-p)^2$$
+- Can be extended to multi-class predictions by introducing a *weighting* factor to indicate greater errors.
+
+```{r}
+cm$overall[2]
+```
+
+
+Sensitivity and specificity
+====================
+-  *Sensitivity* - samples that were predicted to be true and were true compared to the samples that were true.
+  - Did you identify the true samples?
+-  *Specificity* - samples that were predicted to be false and were falce compared to the total number of samples that were false
+  - Did you correctly exclude the false samples?
+  - *false positive*   1 - *specificity*
+***
+```{r}
+cm$byClass[1:2]
+```
+
+J Index
+========
+
+-  Collapse sensitivity and specificity into a single value
+$$J = Sensitivity + Specificity - 1$$
+```{r}
+cm$byClass[1]+cm$byClass[2] - 1
+```
+
+PPV and NPV
+===========
+
+-  May be interested in measures that are conditional on the *prevalence*
+-  *Positive Predictive Value* If predicted true, fraction that is true
+  $$PPV = \frac{TP}{TP+FP}$$
+-  *Negative Predictive Value* If predict false, fraction that is false
+
+
+Receiver Operating Characteristic
+==============================
+- ROC curve takes a model and allows its paramaters to range through a set of values.
+- Display the tradeoff between sensitivity and specificity.
+- A perfect model will have 100\% sensitivity and specificity.
+- Completely ineffective will follow the 45 degree line (i.e. chance)
+- Summarize using Area Under Curve (AUC)
+  - Note that sometimes not all observations are equally important, and AUC obscures this.
+
+
+Create the confusion matrix from the test set.
+===
+```{r}
+confusionMatrix(data = creditResults$pred, 
+                reference = creditResults$obs)
+library(pROC)
+creditROC <- roc(relevel(creditResults$obs, "good"), creditResults$prob)
+
+coords(creditROC, "all")[,1:3]
+```
+
+Calculate Area under the curve (AUC)
+====
+```{r}
+auc(creditROC)
+ci.auc(creditROC)
+```
+
+Plot ROC curve
+===========
+```{r}
+plot(creditROC, legacy.axes = TRUE)
+```
+
+Lift charts
+================
+
+-  Rank samples by probability of being true
+-  Calculate the cumulative event rate as samples are added.
+-  If close to baseline event rate, there is no gain/lift from the model.
+
+Constructing a lift chart
+=============
+
+1. Predict a set of test samples (not used in bulding the model, but outcomes are known)
+2.  Determine baseline event rate
+3.  Order data by classification probability
+4.  For each value of probability, calculate the percentage of true events of all samples below that probability value.
+5.  Divide percent of true events by baseline.
+
+Plot lift chart
+=======
+```{r}
+creditLift <- lift(obs ~ prob, data = creditResults)
+xyplot(creditLift)
 ```
