@@ -58,7 +58,7 @@ if(cores > 1) {
 ## not convert to proper R variable names, so many will contain dots,
 ## such as "Dept.No" instead of "Dept No"
 raw <- read.csv("unimelb_training.csv")
-raw <- raw[sample(nrow(raw), 4000),]
+#raw <- raw[sample(nrow(raw), 4000),]
 ## In many cases, missing values in categorical data will be converted
 ## to a value of "Unk"
 raw$Sponsor.Code <- as.character(raw$Sponsor.Code)

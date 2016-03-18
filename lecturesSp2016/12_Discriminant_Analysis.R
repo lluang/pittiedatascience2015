@@ -35,7 +35,7 @@ load("grantData.RData")
 
 library(caret)
 library(doMC)
-registerDoMC(12)
+registerDoMC(3)
 library(plyr)
 library(reshape2)
 library(pROC)
