@@ -48,18 +48,39 @@ Nonlinear classification models
 ================
 
 -  Linear classification models work through defining boundaries that were linear functions of the predictors.
--  
+-  In *quadratic discriminant models* the boundaries between classes can be quadratically curvilinear.
+-  More complex boundaries, but may require fewer boundaries (because you do not need as many linear segments to define a class boundary)
+-  Tends not to be useful when many variables are indicator variables (linear boundaries are adequate here)
+
+
+Mechanics
+============
+
+- Use grant application data
+- Use LGOCV (Leave Group Out CV)
+- 
 
 ```
-library(doMC)
-registerDoMC(2)
-
 ctrl <- trainControl(method = "LGOCV",
                      summaryFunction = twoClassSummary,
                      classProbs = TRUE,
                      index = list(TrainSet = pre2008),
                      savePredictions = TRUE)
+```
 
+Mixture Discriminant Analysis
+===================
+
+-  If linear discriminant analysis assumed that each class had a distribution of predictors that were normally distributed.
+-  MDA allows for subclasses that are normally distributed.
+-  Number of subclasses is the level of complexity.
+
+![MDA diagram](./resources/mdadescription.png)
+
+MDA implementation
+==============
+
+```
 set.seed(476)
 mdaFit <- train(x = training[,reducedSet], 
                 y = training$Class,
@@ -70,49 +91,54 @@ mdaFit <- train(x = training[,reducedSet],
                 trControl = ctrl)
 ```
 
+MDA result - confusion matrix
+=============
+
 ```{r mixturediscrimantanalysisoutput}
 mdaFit
-```
 
-```
 mdaFit$results <- mdaFit$results[!is.na(mdaFit$results$ROC),]                
 mdaFit$pred <- merge(mdaFit$pred,  mdaFit$bestTune)
 mdaCM <- confusionMatrix(mdaFit, norm = "none")
 mdaCM
-
+```
 mdaRoc <- roc(response = mdaFit$pred$obs,
               predictor = mdaFit$pred$successful,
               levels = rev(levels(mdaFit$pred$obs)))
 ```
 
+MDA - ROC AUC vs subclasses per class
+=============
 ```{r mdaroc}
 mdaRoc
-
-update(plot(mdaFit,
-            ylab = "ROC AUC (2008 Hold-Out Data)"))
+update(plot(mdaFit, ylab = "ROC AUC (2008 Hold-Out Data)"))
 ```
 
 Neural Networks
 ===========
 
+-  We can represent $C$ potential class outcomes as $C$ binary indicator variables.
+-  Then the neural network will predict $C$ different probabilities as a linear model of a set of hidden factors.
+-  Each hidden factor is a linear model of another combination of hidden units.
+-  The first set of hidden units is a linear model of combinations of observable parameters.
+-  Number of hidden layers is the measure of complexity.
 
 
 Neural network illustration
 ======
 ![Neural networks](./resources/anndiagram.png)
 
-```
-################################################################################
-### Section 13.2 Neural Networks
 
+Implementation
+================
+
+- Tuned by number of units in hidden layer and the weight decay.
+-  Preprocessing will center and scale the data so that each observation variable values are in terms of the mean and standard deviation of that variable.
+
+```
 nnetGrid <- expand.grid(size = 1:10, decay = c(0, .1, 1, 2))
 maxSize <- max(nnetGrid$size)
 
-
-## Four different models are evaluate based on the data pre-processing and 
-## whethera single or multiple models are used
-
-set.seed(476)
 nnetFit <- train(x = training[,reducedSet], 
                  y = training$Class,
                  method = "nnet",
@@ -123,7 +149,12 @@ nnetFit <- train(x = training[,reducedSet],
                  maxit = 2000,
                  MaxNWts = 1*(maxSize * (length(reducedSet) + 1) + maxSize + 1),
                  trControl = ctrl)
-```                 
+```            
+
+Results for model 1 - Simple network model
+===============
+
+
 ```{r nnet1results}
 nnetFit
 ```
@@ -140,6 +171,8 @@ nnetFit2 <- train(x = training[,reducedSet],
                   MaxNWts = 1*(maxSize * (length(reducedSet) + 1) + maxSize + 1),
                   trControl = ctrl)
 ```
+
+Second model - 
 ```{r nnet2}
 nnetFit2
 ```
@@ -221,6 +254,8 @@ nnet4$bag <- NULL
 nnetResults <- rbind(nnet1, nnet2, nnet3, nnet4)
 nnetResults$Model <- factor(as.character(nnetResults$Model),
                             levels = c("Single Model", "Model Averaging"))
+```
+```{r, echo=FALSE}
 library(latticeExtra)
 useOuterStrips(
   xyplot(ROC ~ size|Model*Transform,
@@ -234,23 +269,35 @@ useOuterStrips(
          auto.key = list(columns = 4, 
                          title = "Weight Decay", 
                          cex.title = 1)))
+```
+
+ROC curve
+=========
+```{r}
 
 plot(nnetRoc, type = "s", legacy.axes = TRUE)
 ```
 
-```
-################################################################################
-### Section 13.3 Flexible Discriminant Analysis
 
-set.seed(476)
-fdaFit <- train(x = training[,reducedSet], 
-                y = training$Class,
-                method = "fda",
-                metric = "ROC",
-                tuneGrid = expand.grid(degree = 1, nprune = 2:25),
-                trControl = ctrl)
+Flexible discriminant analysis
+=======================
+
+-  We can modify linear discriminant analysis to use other regression methods to define the class boundaries
+  -  e.g. lasso, ridge regression, MARS
+  
+%```
+%set.seed(476)
+%fdaFit <- train(x = training[,reducedSet], 
+%                y = training$Class,
+%                method = "fda",
+%                metric = "ROC",
+%                tuneGrid = expand.grid(degree = 1, nprune = 2:25),
+%                trControl = ctrl)
+%```
+```{r}
 fdaFit
-
+```
+```
 fdaFit$pred <- merge(fdaFit$pred,  fdaFit$bestTune)
 fdaCM <- confusionMatrix(fdaFit, norm = "none")
 fdaCM
