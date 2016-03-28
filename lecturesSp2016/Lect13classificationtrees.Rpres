@@ -1,0 +1,212 @@
+Classification trees and rule based methods
+=======================
+author: IE 2064 Data Science
+date: March 2016
+
+```{r loadlibraries, echo=FALSE}
+options(digits = 4)
+library(caret)
+library(pROC)
+#library(partykit)
+load("classtree.RData")
+```
+
+
+Recursive partitioning ROC curves
+=====
+``` {r, echo=FALSE, fig=TRUE}
+plot(rpartRoc, type = "s", print.thres = c(.5),
+     print.thres.pch = 3,
+     print.thres.pattern = "",
+     print.thres.cex = 1.2,
+     col = "red", legacy.axes = TRUE,
+     print.thres.col = "red")
+plot(rpartFactorRoc,
+     type = "s",
+     add = TRUE,
+     print.thres = c(.5),
+     print.thres.pch = 16, legacy.axes = TRUE,
+     print.thres.pattern = "",
+     print.thres.cex = 1.2)
+legend(.75, .2,
+       c("Grouped Categories", "Independent Categories"),
+       lwd = c(1, 1),
+       col = c("black", "red"),
+       pch = c(16, 3))
+```
+
+
+Classification tree ROC plots
+=====
+
+```
+{r, plottreeROC, echo=FALSE, fig=TRUE}
+plot(j48FactorRoc, type = "s", print.thres = c(.5), 
+     print.thres.pch = 16, print.thres.pattern = "", 
+     print.thres.cex = 1.2, legacy.axes = TRUE)
+plot(j48Roc, type = "s", print.thres = c(.5), 
+     print.thres.pch = 3, print.thres.pattern = "", 
+     print.thres.cex = 1.2, legacy.axes = TRUE,
+     add = TRUE, col = "red", print.thres.col = "red")
+legend(.75, .2,
+       c("Grouped Categories", "Independent Categories"),
+       lwd = c(1, 1),
+       col = c("black", "red"),
+       pch = c(16, 3))
+#plot(rpartFactorRoc, type = "s", add = TRUE, 
+#     col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+```
+
+Rule based models
+=============
+
+```
+{r, echo=FALSE}
+partFit
+```
+
+Confusion matrix
+==================
+```
+part2008 <- merge(partFit$pred,  partFit$bestTune)
+partCM <- confusionMatrix(partFit, norm = "none")
+```
+```
+{r, echo=FALSE}
+partCM$table
+```
+
+ROC curve
+==========
+
+
+```
+{r, echo=FALSE}
+partRoc
+```
+
+Partitioning
+============
+```
+{r}
+partFactorFit
+```
+
+Confusion matrix
+==============
+```
+{r, cache=TRUE,  echo=FALSE}
+partFactor2008 <- merge(partFactorFit$pred,  partFactorFit$bestTune)
+partFactorCM <- confusionMatrix(partFactorFit, norm = "none")
+partFactorCM$table
+```
+
+ROC
+=====
+```
+{r, cache=TRUE,  echo=FALSE}
+partFactorRoc <- roc(response = partFactorFit$pred$obs,
+                     predictor = partFactorFit$pred$successful,
+                     levels = rev(levels(partFactorFit$pred$obs)))
+partFactorRoc
+```
+
+
+Bagged Trees
+=============
+
+```
+
+set.seed(476)
+treebagFit <- train(x = training[,fullSet], 
+                    y = training$Class,
+                    method = "treebag",
+                    nbagg = 50,
+                    metric = "ROC",
+                    trControl = ctrl)
+```
+```
+{r, cache=TRUE,  echo=FALSE}
+treebagFit
+```
+
+Confusion matrix for bagged trees
+======
+```
+treebag2008 <- merge(treebagFit$pred,  treebagFit$bestTune)
+treebagCM <- confusionMatrix(treebagFit, norm = "none")
+```
+```
+{r, cache=TRUE,  echo=FALSE}
+treebagCM$table
+```
+
+Bagged Tree ROC
+============
+```
+treebagRoc <- roc(response = treebagFit$pred$obs,
+                  predictor = treebagFit$pred$successful,
+                  levels = rev(levels(treebagFit$pred$obs)))
+set.seed(476)
+treebagFactorFit <- train(x = training[,factorPredictors], 
+                          y = training$Class,
+                          method = "treebag",
+                          nbagg = 50,
+                          metric = "ROC",
+                          trControl = ctrl)
+```
+===
+
+```
+{r, cache=TRUE,  echo=FALSE}
+treebagFactorFit
+```
+====
+```
+treebagFactor2008 <- merge(treebagFactorFit$pred,  treebagFactorFit$bestTune)
+treebagFactorCM <- confusionMatrix(treebagFactorFit, norm = "none")
+```
+
+Confusion matrix
+===============
+```
+{r, cache=TRUE,  echo=FALSE}
+treebagFactorCM$table
+```
+
+Bagged tree ROC
+=====
+
+```
+{r, cache=TRUE,  echo=FALSE, fig=TRUE}
+plot(rpartRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), 
+     legacy.axes = TRUE)
+plot(treebagRoc, type = "s", add = TRUE, print.thres = c(.5), 
+     print.thres.pch = 3, legacy.axes = TRUE, print.thres.pattern = "", 
+     print.thres.cex = 1.2,
+     col = "red", print.thres.col = "red")
+plot(treebagFactorRoc, type = "s", add = TRUE, print.thres = c(.5), 
+     print.thres.pch = 16, print.thres.pattern = "", legacy.axes = TRUE, 
+     print.thres.cex = 1.2)
+legend(.75, .2,
+       c("Grouped Categories", "Independent Categories"),
+       lwd = c(1, 1),
+       col = c("black", "red"),
+       pch = c(16, 3))
+```
+
+
+ROC plots
+=======
+```
+{r, echo=FALSE, fig=TRUE}
+plot(treebagRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+plot(rpartRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+legend(.75, .2,
+       c("Grouped Categories", "Independent Categories"),
+       lwd = c(1, 1),
+       col = c("black", "red"),
+       pch = c(16, 3))
+```
