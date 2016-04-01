@@ -1,7 +1,12 @@
 Text Mining
 ========================================================
 author: Louis Luangkesorn
-date: February 2015
+date: April 2016 
+
+Libraries uses
+
+-  tm
+-  wordcloud
 
 Overview
 ===============
