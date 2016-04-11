@@ -66,7 +66,7 @@ plot(as.party(rpartFit$finalModel))
 
 rpart2008 <- merge(rpartFit$pred,  rpartFit$bestTune)
 rpartCM <- confusionMatrix(rpartFit, norm = "none")
-rpartCM
+rpartCM$table
 rpartRoc <- roc(response = rpartFit$pred$obs,
                 predictor = rpartFit$pred$successful,
                 levels = rev(levels(rpartFit$pred$obs)))
@@ -83,7 +83,7 @@ plot(as.party(rpartFactorFit$finalModel))
 
 rpartFactor2008 <- merge(rpartFactorFit$pred,  rpartFactorFit$bestTune)
 rpartFactorCM <- confusionMatrix(rpartFactorFit, norm = "none")
-rpartFactorCM
+rpartFactorCM$table
 
 rpartFactorRoc <- roc(response = rpartFactorFit$pred$obs,
                       predictor = rpartFactorFit$pred$successful,

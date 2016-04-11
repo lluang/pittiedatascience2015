@@ -3,6 +3,14 @@ Predictor importance and feature selection
 author: IE 2064 Data Science
 date: April 2016
 
+```
+library(corrplot)
+library(minerva)
+library(HSAUR3)
+library(TTR)
+library(forecast)
+```
+
 Feature selection
 ===================
 
@@ -14,6 +22,13 @@ Feature selection
 Measuring predictor importance
 ==================
 type:section
+
+Introduction
+===============
+
+- We desire to quantify the strength of the relationship between predictors and outcome.
+- This can be used to determine what predictors should be inputs into a model.
+- Some machine learning methods do this implicitly.
 
 Data example
 ================
@@ -48,6 +63,13 @@ library(minerva)
 data(solubility)
 cor(solTrainXtrans$NumCarbon, solTrainY)
 ```
+
+
+Rank Correlation
+========
+
+- The rank correlation takes the ranks of the observed outcome values (as opposed to their actual numbers) and evaluates how close these are to ranks of the model predictions.
+- *Spearman’s rank correlation* - ranks of the observed and predicted outcomes are obtained and the correlation coefficient between these ranks is calculated.
 
 Correlation plots
 ==========
@@ -120,11 +142,15 @@ contDescrSplomData$Correlation <- abs(contDescrSplomData$Correlation)
 contDescrSplomData$RankCorrelation <- abs(contDescrSplomData$RankCorrelation)
 contDescrSplomData$Group <- "Other"
 contDescrSplomData$Group[grepl("Surface", contDescrSplomData$Predictor)] <- "SA"
-
+```
+-  Compare solubility with the number of Carbon atoms and surface area.
+-  Add smoothing line to illustrate potential trend in plot.
+```{r, echo=FALSE}
 featurePlot(solTrainXtrans[, c("NumCarbon", "SurfaceArea2")],
             solTrainY,
             between = list(x = 1),
             type = c("g", "p", "smooth"),
+            # grid, points, smoother
             df = 3,
             aspect = 1,
             labels = c("", "Solubility"))
@@ -143,6 +169,7 @@ What to do when the relationship is not simple?
 
 -  Locally weighted regression model (LOESS)
   - Based on a series of polynomial regressions in small neighborhoods in the data.
+    - Similar to taking moving average.
 
 LOESS smoothing
 =============
@@ -165,6 +192,7 @@ Comparing numeric predictors
 ============
 
 -  Correlation
+-  Rank correlation
 -  From LOESS, can calculate a pseudo-$R^2$
 -  Maximal information coefficient
 -  **Issue**: Each of these methods looks at one predictor at a time
@@ -459,4 +487,142 @@ Why not predictor importance methods?
   - If you do 20 tests at *p*=0.05 . . .
   - Need to adjust *p*-values, usually using *p/M*
   - But this is too conservative.
+
+Principle Component Analysis
+========
+type: section
+
+Principle Component Analysis (PCA)
+========================================================
+
+- PCA is a procedure which converts a set of possible correlated variables into a set of uncorrelated variables.
+- From $x_1, x_2, \ldots, x_q$ to $y_1, y_2, \ldots, y_m$
+- $y_i$ are uncorrelated with each other.
+- *Orthoganal*
+- Each $y_i$ is a linear combination of the $x_1, x_2, \ldots, x_n$
+
+Goal of PCA
+===========
+
+-  Replace the features $x_i$ with a small set of $y_i$ that accounts for a substantial proportion of the variation in the original variables.
+-  A smaller set of variables may be more informative than the original, large set.
+-  The linear combinations used to construct the first few principle components may give insight into the relationships among the original variables.
+-  Dimensionality reduction.
+
+Method
+======
+
+-  Orthogonal linear transformation into a new coordinate system.
+-  Use eigenvalue decomposition ($\lambda$) of a data co-variance matrix ($\bf{S}$) (after normalizing the data).
+-  First component is the single axis that explains the most variance.
+-  Subsequent components are each the axis that explains the most unexplained variance, given that it is orthogonal to all other existing components.
+$$y_1 = a_{11}x_1 + a_{12}x_2 + \ldots + a{1q}x_q$$
+
+Principle components
+======================
+
+- Each principle component accounts for a proportion $P_j$ of the total variation of the original data.
+$$P_j  = \frac{\lambda_j}{trace(\bf{S})}$$
+- The first $m$ principle components account for
+$$P^{(m)} =\frac{\sum_{j=1}^m \lambda_j}{trace(\bf{S})}$$
+
+Heptathlon example
+===================
+type: section
+
+The Olympic Heptathlon
+=========================
+
+-  Women's counterpart of the decathlon
+  -  Shot put, long jump, 100m hurdles, 200m, high jump, javelin, 800m
+  -  Scores are assigned based on performance in each event. 
+  -  Question:  Which events are correlated in scores?
+
+1988 Olympics
+=========================
+
+-  1988 Seoul Olympics
+-  25 competitors
+
+```{r heptathelondata}
+data(heptathlon, package="HSAUR3")
+heptathlon$hurdles <- max(heptathlon$hurdles)-heptathlon$hurdles
+heptathlon$run200m <- max(heptathlon$run200m) - heptathlon$run200m
+heptathlon$run800m <- max(heptathlon$run800m) - heptathlon$run800m
+score <- which(colnames(heptathlon)=="score")
+```
+
+Look at correlation numerically
+===============================
+```{r}
+round(cor(heptathlon[,-score]),2)
+```
+
+
+And plot the correlations
+=======================================
+```{r}
+plot(heptathlon[,-score])
+```
+
+Outlier
+========
+-  Most of the graphs show one outlier.
+-  Lets remove the outlier.
+
+```{r}
+heptathlon <- heptathlon[-grep("PNG", rownames(heptathlon)),]
+plot(heptathlon[,-score])
+```
+Look at correlation numerically
+===============================
+```{r}
+round(cor(heptathlon[,-score]),2)
+```
+
+Take PCA
+========
+
+```{r}
+heptathlon_pca <- prcomp(heptathlon[,-score], scale=TRUE)
+print(heptathlon_pca)
+```
+
+Summarize PCA results
+===========
+```{r}
+summary(heptathlon_pca)
+```
+
+Variances explained by the principle components
+===================
+```{r}
+plot(heptathlon_pca)
+```
+
+Can we predict final score based on the first principle component?
+===============
+```{r}
+predict(heptathlon_pca)[,1]
+```
+
+Compare this to the final
+=============
+```{r}
+plot(heptathlon$score, heptathlon_pca$x[,1])
+cor(heptathlon$score, heptathlon_pca$x[,1])
+```
+
+Look at first two principle components
+========
+```{r}
+biplot(heptathlon_pca, col=c("black", "gray"))
+```
+
+Summary
+==========
+
+-  PCA looks for linear combinations of original variables to summarize the data set.
+-  Looks for uncorrelated (orthogonal) new variables to describe the data.
+-  Derived variables may help simplify later analysis.
 
