@@ -17,6 +17,39 @@ Because of the need to integrate the data preparation, exploration, modeling, an
 
   1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
   2.  Computer skills to work with information systems, work with data that has the qualities of big data, and deliver results in a usable form.
+  
+
+
+
+Proposal for a data science concentration as part of the MS in Industrial Engineering
+--------------------------
+
+There are three generally recognized broad areas of knowledge required for a career in data science.
+
+1. Mathematics and statistical knowledge
+2. Computer programming (technical computing and data manipulation and presentation)
+3. Subject matter expertise
+
+The requirements outlined beyond the core are intended to both round out the mathematical and statistical knowledge beyond the core requirements, and to provide 
+
+Core requirements
+
+-  IE 2005 Probability and Statistics
+-  IE 2001 Operations research
+-  IE 2006 Manufacturing Systems
+
+Concentration requirements
+
+-  IE 2064 Data Science (covers technical computing, data manipulation, and model evaluation)
+-  IE 2xxx Machine learning (focuses on algorithm development and application)
+-  IE 2007 Statistics and Data Analysis (additional statistics depth)
+-  IE 2088 Simulation (add simulation to analytical toolkit)
+-  Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics.
+
+-  2 approved quantitative application area courses (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing)
+
+Overview of data science and big data
+======================================
 
 Characteristics of big data
 ---------------------------
@@ -160,37 +193,6 @@ While the Johns Hopkins track covers both the analytics aspect of data science a
 
 Other online courses focus on the mathematical and statistical underpinnings of the various methods used in machine learning and data mining.
 
-
-
-
-Proposal for a data science certificate as part of the MS in Industrial Engineering
-====================
-
-Core requirements
-
--  IE 2005 Probability and Statistics
--  IE 2001 Operations research (optimization (and queuing?))
--  IE 2006 Manufacturing Systems
-
-2 of 4
-
--  IE 2003 Engineering management
--  IE 2004 Database design
--  IE 2007 Statistics and data analysis
--  IE 2100 Supply Chain analysis
-
-Several of the current courses have topics that are similar to what would be needed for a data scientist but are not at the appropriate level of rigor. In particular, the statistics should be based on computational statistics and the database course needs to focus on using information systems in the context of data inquiry.  Some options to modify these requirements for use in a data science curriculum are:
-
-1.  Modify IE 2005 and/or IE 2007 to be R based instead of Minitab based. Note: There is an optional menu driven interface to R that has been used with several statistics textbooks so IE 2005 could be taught using R without the need to learn programming.
-2.  Allow for substitutions for the 2 of 4.  
-  -  IE 2004 Database design replaced with INFSCI 2140 or 
-  -  IE 2007 Statistics and data analysis with STAT 2131-2132, Applied Statistical Methods 1 and 2
-3.  IE 2064 Data Science as an option for the 2 of 4
-4.  Add a machine learning course that would go with IE 2064 Data Science to form a two course sequence.  Either this new course or the Data Science course should qualify as a requirement.
-
-Potential new courses that could be in a data science curriculum:
-
-1.  Computational statistics. This would be a second course in statistics that is focused on using simulation based methods to teach statistics.  This could replace either the first (IE2005) or second course (IE2007). Curriculum and textbooks exists in many schools using R or Python as a base programming language.  If allowed as an alternative to IE2005, this course would provide a computational foundation that would be used in future courses in IE or SIS. (SIS analytics courses often use R. Pitt Statistics department courses seem to be SAS based.)
 
 **Analytics**
 
