@@ -18,7 +18,17 @@ Because of the need to integrate the data preparation, exploration, modeling, an
   1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
   2.  Computer skills to work with information systems, work with data that has the qualities of big data, and deliver results in a usable form.
   
+The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, which describes the work of a data science analyst as covering six areas (domains)
 
+1. Business problem framing
+2. Analytics problem framing
+3. Data
+4. Methodology (approach) selection
+5. Model building
+6. Deployment
+7. Model lifecycle management
+
+Both Drew Conway and the INFORMS Analytics section officers observe that most engineering programs focus on mathematical and stastical knowledge (domains 3, 4, 5) and provide very little to help graduates address the business problem (subject matter expertise or domains 1, 2) or actual implementation of the methods in a business setting (informations systems or domains 6 and 7).  The design of the program in this proposal seeks to keep a broad base in the mathematical and statistical methods that are the strength of an industrial engineering program while providing computational skill and sense of the needs of business focused clients.
 
 
 Proposal for a data science concentration as part of the MS in Industrial Engineering
@@ -44,9 +54,10 @@ Concentration requirements
 -  IE 2xxx Machine learning (focuses on algorithm development and application)
 -  IE 2007 Statistics and Data Analysis (additional statistics depth)
 -  IE 2088 Simulation (add simulation to analytical toolkit)
--  Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics.
+-  INFSCI 2710 Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a MySQL centered workflow, which has interfaces that are similar to most other databases used in production. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .)
 
--  2 approved quantitative application area courses (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing)
+
+-  2 quantitative application area courses approved by advisor (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
 
 Overview of data science and big data
 ======================================
@@ -192,58 +203,6 @@ While the Johns Hopkins track covers both the analytics aspect of data science a
 6. Data Mining Capstone
 
 Other online courses focus on the mathematical and statistical underpinnings of the various methods used in machine learning and data mining.
-
-
-**Analytics**
-
-IE 2064 - Data Science
-IE 2088 - Discrete Systems Simulation (needs to be programming based, not standalone)
-INFSCI 2160: Data Mining
-BQOM 2578 Data Mining
-
-STAT 2231 Advanced Applied Regression
-STAT 2321 Advanced Applied Time Series
-INFSCI 2410: Introduction to Neural Networks
-INFSCI 2430: Social Computing
-INFSCI 2591: Algorithm Design
-INFSCI 2725: Data Analytics
-
-**Business Analytics**
-
-IE 2086 - Decision Models
-IE 2108 - Simulation Modeling and Applications
-
-INFSCI 2130: Decision Analysis and Decision Support Systems 
-BQOM 2512 Advanced Decision Technologies
-BSEO  2525 Competitive Intelligence
-BMKT 2551 Digital and Social Media Analytics
-BMKT 2544 Shopper Marketing
-BQOM 2523 Process Engineering
-BQOM 2537 Forecasting
-BQOM  (Proposed course) Revenue Management & Pricing Analytics
-
-**Computational Data Analytics (big data engineering)**
-
-INFSCI 2140: Introduction to Information Storage and Retrieval  
-INFSCI 2710: Database Management
-INFSCI 2711: Advanced Topics in Database Management
-TELCOM 2125: Network Science
-TELCOM 2120: Network Performance
-TELCOM 2321: Computer Networking
-
-
-Certificate program
----------------------
-
-
-Another option is to offer a data science certificate.  This course would be a five course curriculum.
-
-IE 2005 - Probability and Statistics (R-based)
-IE 2064 - Data Science (working with data, visualization, basic machine learning models, model evaluation)
-IE 2--- - Data Mining/Machine Learning (more mathematically rigorous  treament of machine learning methods. New course)
-INFSCI 2140  Introduction to Information Storage and Retrieval
-
-Either a Big data (e.g. Hadoop or Spark from INFSCI) or a prescriptive modeling (operations research or simulation from IE) course.
 
 Comparison to current proposals at the University of Pittsburgh
 =============
