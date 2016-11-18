@@ -1,11 +1,11 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: 'DRAFT: July 23, 2015'
+date: 'DRAFT: November 18, 2016'
 output:
+  word_document: default
   html_document:
     toc: yes
-  word_document: default
 ---
 
 Introduction
@@ -18,7 +18,7 @@ Because of the need to integrate the data preparation, exploration, modeling, an
   1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
   2.  Computer skills to work with information systems, work with data that has the qualities of big data, and deliver results in a usable form.
   
-The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, which describes the work of a data science analyst as covering six areas (domains)
+The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's [^conway2013] (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, whose analytics job task analysis [^nestler2012] describes the work of a data science analyst as covering six areas (domains):
 
 1. Business problem framing
 2. Analytics problem framing
@@ -28,7 +28,7 @@ The design of the data science concentration is based on two descriptions of dat
 6. Deployment
 7. Model lifecycle management
 
-Both Drew Conway and the INFORMS Analytics section officers observe that most engineering programs focus on mathematical and stastical knowledge (domains 3, 4, 5) and provide very little to help graduates address the business problem (subject matter expertise or domains 1, 2) or actual implementation of the methods in a business setting (informations systems or domains 6 and 7).  The design of the program in this proposal seeks to keep a broad base in the mathematical and statistical methods that are the strength of an industrial engineering program while providing computational skill and sense of the needs of business focused clients.
+Both Drew Conway and the INFORMS Analytics section officers observe that most engineering programs focus on mathematical and statistical knowledge (domains 3, 4, 5) and provide very little to help graduates address the business problem (subject matter expertise or domains 1, 2) or actual implementation of the methods in a business setting (information systems or domains 6 and 7).  The design of the program in this proposal seeks to keep a broad base in the mathematical and statistical methods that are the strength of an industrial engineering program while providing computational skill and sense of the needs of business focused clients.
 
 
 Proposal for a data science concentration as part of the MS in Industrial Engineering
@@ -46,7 +46,6 @@ Core requirements
 
 -  IE 2005 Probability and Statistics
 -  IE 2001 Operations research
--  IE 2006 Manufacturing Systems
 
 Concentration requirements
 
@@ -54,10 +53,10 @@ Concentration requirements
 -  IE 2xxx Machine learning (focuses on algorithm development and application)
 -  IE 2007 Statistics and Data Analysis (additional statistics depth)
 -  IE 2088 Simulation (add simulation to analytical toolkit)
--  INFSCI 2710 Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a MySQL centered workflow, which has interfaces that are similar to most other databases used in production. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .)
+-  INFSCI 2710 Database Management course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a MySQL centered workflow, which has interfaces that are similar to most other databases used in production. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .)
 
 
--  2 quantitative application area courses approved by advisor (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
+-  2 quantitative application area courses approved by adviser (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
 
 Overview of data science and big data
 ======================================
@@ -94,7 +93,7 @@ Drew Conway describes data scientists as having a combination of three sets of d
 
 ### Computer programming skills
 
-Computer programming skills are required because data is recorded, stored, and transferred electronically, so data scientists need to be able to manipulate text files, understand vectorized operations to work with data, and to think algorithmically.  Without computer skills means you cannot even get started with using electronic data.  The computer programming skills also link the various steps in the data workflow together from data collection, manipulation, modeling, analysis, then presentation of results. In contrast, single purpose programs typically do not lend themselves to being part of an integrated workflow.
+Computer programming skills are required because data is recorded, stored, and transferred electronically, so data scientists need to be able to manipulate text files, understand factorized operations to work with data, and to think algorithmic ally.  Without computer skills means you cannot even get started with using electronic data.  The computer programming skills also link the various steps in the data workflow together from data collection, manipulation, modeling, analysis, then presentation of results. In contrast, single purpose programs typically do not lend themselves to being part of an integrated workflow.
 
 In practice, a set of programming languages have become common in data science. They have the following characteristics:
 
@@ -133,7 +132,7 @@ In contrast to academic programs in machine learning, data mining, or statistics
 
 Of note is the fact that the data project is not actually a part of any of these four points. The data project lies in between the Need and the Vision, and the modeling and methodology (which is the traditional focus of academic programs) is only one facet of the data project.
 
-Understanding this CoNVO framework drives many of the decisions to be made by the data scientist. First, it helps in identifying outcomes and decision variables, which are based on the Need and Outcome of the organization. Second it helps in model evaluation, for example in making the tradeoffs between Type I and Type II errors (and their counterparts in other model evaluation methods).
+Understanding this CoNVO framework drives many of the decisions to be made by the data scientist. First, it helps in identifying outcomes and decision variables, which are based on the Need and Outcome of the organization.f Second it helps in model evaluation, for example in making the tradeoffs between Type I and Type II errors (and their counterparts in other model evaluation methods).
 
 University programs in Analytics
 ===================================
@@ -239,3 +238,6 @@ Program requires
   -  The three proposals also map to the three types of data science programs that are in the market. This is exemplified by the Georgia Tech program, which explicitly identifies three paths that are comparable to the three proposals.
   -  We expect that the three programs will draw from the three types of populations that are attracted to data science.  Those with an IT oriented background will tend to take the SIS certificate program.  Those with a business or non-technical background will gravitate towards the Katz certificate program within the MBA.  Those with a STEM focus will gravitate towards the IE program.
 
+[^nestler2012]: Scott Nestler, Jack Levis and Bill Klimack, 2012, Certified Analytics Professional, in ORMS Today, Vol 39, No. 5, https://www.informs.org/ORMS-Today/Public-Articles/October-Volume-39-Number-5/Certified-Analytics-Professional.
+
+[^conway2013]: Drew Conway, 2013, The Data Science Venn Diagram, http://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram, accessed November 18, 2016.
