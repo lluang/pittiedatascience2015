@@ -17,7 +17,8 @@ Because of the need to integrate the data preparation, exploration, modeling, an
 
   1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
   2.  Computer skills to work with information systems, work with data that has the qualities of big data, and deliver results in a usable form.
-  
+  3.  Ability to understand the business case and subject area issues and communicate both the problem and the solution to subject matter experts and decision makers.  
+
 The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, which describes the work of a data science analyst as covering six areas (domains)
 
 1. Business problem framing
@@ -46,7 +47,6 @@ Core requirements
 
 -  IE 2005 Probability and Statistics
 -  IE 2001 Operations research
--  IE 2006 Manufacturing Systems
 
 Concentration requirements
 
@@ -56,8 +56,7 @@ Concentration requirements
 -  IE 2088 Simulation (add simulation to analytical toolkit)
 -  INFSCI 2710 Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a MySQL centered workflow, which has interfaces that are similar to most other databases used in production. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .)
 
-
--  2 quantitative application area courses approved by advisor (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
+-  2 approved application area courses with a quantitative component (e.g. Manufacturing, Supply chain, Health systems, Financial engineering, Marketing, energy)
 
 Overview of data science and big data
 ======================================
@@ -78,6 +77,40 @@ Big data can be characterized by four aspects. These aspects drive the data proc
 2.  Velocity refers to the changing nature of data within a short decision cycle. This becomes an issue in cases where decisions have to be made for a specific instance on a small amount of specific data, or when the character of the data changes rapidly.  Working with this requires methods that can integrate within corporate IT systems (databases) and can use the mass of related data to provide insight into a specific observation (machine learning methods and Bayesian based statistics).
 3.  Variety refers to the range of information that is available on a specific observation.  This variety can come from the fact that data may be available on a single subject from a range of sources, or because collecting and storing a range of attributes on a specific observation is easy. It may also result from the range of data storage and transmission types that are commonly encountered in practice. Working with a wide range of data requires knowledge of data handling methods and methods to identify which attributes or combinations of attributes are important (data processing and machine learning).
 4.  Veracity refers to the correct understanding of the meaning of the information available. This includes dealing with missing values, identifying and correcting data errors, and an understanding of the intent of the data collectors.  Skills and knowledge in working with these issues include data manipulation and exploratory data analysis.
+
+INFORMS Analytics Job Task Analysis
+---------------------------------
+
+The INFORMS Analytics Society has conducted a job task analysis for analytics professionals and groups the tasks into six domains.
+
+1. Domain I Business Problem (Question) Framing
+2. Domain II Analytics Problem Framing
+3. Domain III Data
+4. Domain IV Methodology (Approach) Selection
+5. Domain V Model Building
+6. Domain VI Deployment
+
+Of note, the traditional quantitative program in universities (statistics, engineering, business analytics) focuses overwhelmingly on domains 3, 4, and 5.  Domain 6 is usually addressed in an information systems department.  Domain 1 is usually addressed in a business school management department.  But all domains must be understood by an analytics professional.
+
+Industry identified needs
+--------------------
+
+1. Ability to formulate the business problem
+2. Communicate with business managers
+3. Translate a business need to analytics solution
+4. Understand problems of a range of levels of detail (enterprise scale to small details)
+5. Descriptive analytics - visualization of data and visualization of the solution for communication.
+6. Core stastics
+7. Core quantitative modeling
+8. Programming (for many industries, Python/R)
+
+They look for are ability to communicate well and think critically, problem solving, first, analytic methods come later.  50% analyst, 50% consultant.
+
+Not needed, they will train in
+
+1. Specific tools
+2. Specific quantitative methods  
+3. Subject matter expertise
 
 Characteristics of data scientists.
 ------------------------------
@@ -231,7 +264,7 @@ Program requires
 2. Required:  Data Mining, Competitive Intelligence, Advanced Decision Technologies
 3. 4.5 credits choose from:  Social media analytics, Revenue management and Pricing, Shopper Marketing, Simulation, Process engineering, Forecasting
 
--  The differences between the Industrial Engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core of IE: Queuing, Optimization, Simulation.  This is consistent with the INFORMS CAP understanding of analytics being of three phases, descriptive, predictive, prescriptive.
+-  The differences between tinstall.packages("rmarkdown", repos = "https://cran.revolutionanalytics.com")he Industrial Engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core of IE: Queuing, Optimization, Simulation.  This is consistent with the INFORMS CAP understanding of analytics being of three phases, descriptive, predictive, prescriptive.
 -  All three proposals would have a data science foundation of data mining/machine learning. 
   -  The SIS program appears to be a combination of analytics and computational data analytics. IE offerings in prescriptive analytics are available to SIS students.  Essentially, the SIS and IE proposed program have comparable analytic cores in computational descriptive and predictive analytics, but reverse the emphasis on the data engineering and prescriptive analytics.
   -  The Katz program appears to be a combination of analytics and business analytics.  The proposed IE program would be geared towards the spectrum of descriptive, predictive, prescriptive analytics in comparison to the Katz program which after the data mining core encourages focus on specific applications areas within the Katz Business school.
