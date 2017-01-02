@@ -1,0 +1,579 @@
+Getting Started in Data Science
+========================================================
+author: Louis Luangkesorn
+date: January 2017
+
+Notecard
+========
+
+- Name
+-	Program (major/degree/year)
+- Graduate students: What was your undergraduate major/college?
+-	How much statistics have you had?
+- What is your level of programming?
+- What experience do you have with data analysis environments (SAS/SPSS/S-Plus/R/Python/Matlab/F#/Mathematica/Maple)?
+
+Data science course
+===================
+type: section
+
+
+What is data science?
+=====================
+
+- *Data Science refers to an emerging area of work concerned with the collection, preparation, analysis, visualization, management, and preservation of large collections of information.* - Jeffrey Stanton
+
+- *The Analytics Section of INFORMS is focused on promoting the use of data-driven analytics and fact-based decision making in practice. The Section recognizes that analytics is seen as both (i) a complete business problem solving and decision making process, and (ii) a broad set of analytical methodologies that enable the creation of business value.*  -  INFORMS Section on Analytics
+
+Goals
+=====
+
+-  Teach skills required for data science.
+-  Practical skills
+
+Contrast
+========
+incremental: true
+
+-  Computer programming - Teaches a computer language, but not necessarily the specific task of working with data.
+-  Business Intelligence - Focus on displaying data summaries from data found in databases.
+-  Big Data - Methods for working with large databases (large meaning larger than practical for a single machine)
+-  Statistics - Methods of testing hypothesis using observed data.
+
+Some related topics
+===================
+
+-  Machine learning
+  - Focuses on methods for improving knowledge or performance of an intelligent agent.
+  -  Many applied statistics and pattern recognition fields.
+-  Data mining (Knowledge Discovery and Data Mining (KDD))
+  -  More focused on application to data than machine learning
+  -  Includes the entire process of data analytics
+    - Data preparation, model learning, data evaluation, . . .
+
+What is missing from ML and KDD?
+================================
+
+-  How to transform the messy, electronically collected data into a form that can be analyzed.
+-  Working with unstructured, non-numeric, error-prone data.
+-  Focus on the subject matter expertise.
+
+This Course
+===========
+
+1.  Introduction to Data Science
+2.  Data Science tools: R, R Studio, and Git
+3.  About data and data problems
+4.  Data munging: getting and working with data
+5.  Introduction to data visualization
+6.  Model evaluation
+7.  Regression Models
+8.  Classification Models
+9.  Clustering
+10.  Text mining and analysis
+11.  Association rules
+
+Machine Learning
+================
+![Branches of Machine Learning](resources/ml_map.png)
+<!--http://scikit-learn.org/stable/_static/ml_map.png-->
+
+Tools
+=====
+
+1.  R - Environment for Data Analysis
+  -  Rattle - Data Mining in R
+2.  R-Studio - IDE for R
+3.  Git - Source code version control
+
+Textbooks
+=========
+
+1.  (APL) Max Kuhn, Kjell Johnson, (2013), Applied Predictive Modeling, Springer, ISBN: 978-1-4614-6850-9
+3.  (Rattle) Williams, Data Mining with Rattle:  The Art of Excavating Data for Knowledge
+4.  (GGplot) Wickham, ggplot2: Elegant Graphics for Data Analysis 2nd ed (http://ggplot2.org/book/)
+
+Supplements
+===========
+
+- (J)  Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani, (2013), An Introduction to Statistical Learning with Applications in R, Springer, ISBN: 978-1461471370, available at http://www-bcf.usc.edu/~gareth/ISL/
+- (HT) Trevor Hastie, Robert Tibshirani, Jerome Friedman, (2009), The Elements of Statistical Learning 2nd ed, Springer,  Download from https://statweb.stanford.edu/~tibs/ElemStatLearn/
+
+
+Assignments
+===========
+
+- Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
+- Three papers/presentations
+- Find a data set and a question
+
+1.  Exploratory Data Analysis
+2.  Identify a question
+3.  Final project
+
+1. Exploratory Data Analysis
+============================
+-  Identify a data set. Discuss the origin and structure of the data.
+-  Text analysis - What were difficulties faced working with the data?
+-  Data summary
+-  Data visualization
+    -  At least three views of the data (different visual cues)
+    -  The expectation is that at least one may be not useful, but you should have found at least one that tells a story.
+-  **CoNVO** - Context, Need, Vision, Outcome
+
+
+2.  Preliminary Data analysis
+======================
+-  Preliminary analysis.
+  -  An appropriate, complex visualization (at least two visual cues)
+  -  Apply at least 3 types of methods to the data
+  -  The expectation is at least one will prove to be completely inappropriate.
+-  Hypothesis - Question to be answered.
+  -  CoNVO - Context, Need, Vision, Outcome
+-  Plan of work - How will you answer the question
+
+3.  Final project
+=================
+-  Data manipulation - What made working with the data interesting or difficult?
+-  CoNVO - Context, Need, Vision, Outcome
+- Hypothesis from Preliminary Data Analysis
+  - How did hypothesis change?
+-  Data visualization
+-  Analysis
+  -  Methods used
+  -  Results
+-  Conclusions
+
+Learning Data Science
+=====================
+
+1.  Treat it as **science**, hypothesis, test, thesis.
+2.  Learn by doing. Do the examples in APL. You need to see what they did, not just read about it or watch someone else do it.
+3.  Try, try, and try again. You are doing experiments. Assume that the first thing you try will not work.
+4.  Talk and listen.
+5.  Class participation. Defined in this course in how much you help others learn.
+
+
+What is a data scientist?
+=========================
+type: section
+
+Data
+====
+
+-  *Datum* - Latin for *thing given*
+-  *Data is not information, information is not knowledge, knowledge is not understanding, understanding is not wisdom* - Tim Berners-Lee
+-  Our goal is wisdom.
+-  The tools we use are a means to an end.
+
+
+Forms of data
+=============
+
+- Traditional:  Numerical, categorical, or binary.
+- Text:  articles, emails, tweets.
+- Records:  User level, timestamped events, log files.
+- Geo-spatial data
+- Network data
+- Sensor data
+- Images
+
+
+Role of the data scientist
+==========================
+-  Data architecture
+-  Data acquisition
+-  Data analysis
+-  Data archiving
+
+Data architecture
+=================
+
+-  Routing and organization of data to support analysis, visualization, and presentation of data to different groups of people.
+
+Data acquisition
+================
+-  How the data is collected and represented prior to analysis and presentation.
+-  Representation
+-  Transformation
+-  Grouping
+-  Linking
+-  e.g. bar codes at FedEx
+  -  Picture, number, link to package, group in a shipment.
+
+Data analysis
+=============
+
+-  Summarizing data.
+-  Make inferences about the larger context.
+-  Visualization of data.
+-  Analysis is always done in the context of decision makers.
+
+Data archiving
+==============
+
+-  What aspects of the data would be important to know in the future.
+-  e.g. geocoding of Twitter tweets
+
+Data scientist skills
+=====================
+
+-  Learning the application domain
+-  Communicating with end users
+-  Seeing the big picture of a complex system
+-  Knowing how data could be represented
+-  Data transformation and analysis
+-  Data visualization and presentation
+-  Attention to quality
+-  Ethical reasoning
+
+
+Aspects of data science
+=======================
+type: sub-section
+
+The scientific method
+=====================
+
+1. Ask a question.
+2. Do background research.
+3. Construct a hypothesis.
+4. Test your hypothesis by doing an experiment.
+5. Analyze your data and draw a conclusion.
+6. Communicate your results.
+
+The Data Science Venn Diagram
+=============================
+left:40%
+The primary colors of data
+  - Hacking skills,
+  - Math and statistics knowledge, and
+  - Substantive expertise.
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+Data Science:  Computer Hacking skills
+======================================
+left:60%
+
+-  Data is traded electronically, so need to be able to manipulate text files, understanding vectorized operations, thinking algorithmically.
+-  Without computer skills means you cannot even get started with using electronic data.
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+Data Science:  Math and Statistics
+==================================
+left:60%
+-  The next step is to actually extract insight from it.
+-  Apply appropriate math and statistics methods.
+-  Without this, you can produce what looks like meaningful output using a computer, but the output is without meaning.  VERY DANGEROUS.
+- *Lies, damned lies, and statistics*
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+
+Data Science:  Substantive Expertise
+====================================
+left:60%
+-  Science is about discovery and building knowledge, which requires some motivating questions about the world and hypotheses tested with statistical methods.
+-  Most academics (you) have math and statistics.
+
+***
+
+![Drew Conway Data Science](resources/Data_Science_VD.png)
+
+
+Three categories of data science
+=======================================
+
+- Descriptive analytics
+    - Prepares and analyzes historical data
+    - Identifies patterns from samples for reporting of trends
+- Predictive analytics
+    - Predicts future probabilities and trends
+    - Finds relationships in data that may not be readily apparent with descriptive analysis
+- Prescriptive analytics
+    - Evaluates and determines new ways to operate
+    - Targets business objectives
+    - Balances all constraints
+
+Tools for data science
+========================================================
+type: section
+
+Data science requirements
+========================================================
+
+1. Read in data
+2. Handle data of indefinite size
+3. Manipulate data
+4. Mathematical/statistical analysis
+5. Presentation of results
+
+Remember, analysis is never done in isolation
+========================================================
+
+-  Analysis is always part of a larger problem.
+-  When evaluating an analysis platform, think about what it needs to interface with.
+-  Databases, text processing, GUI inputs, Web interfaces, decision support, etc.
+
+Types of analytical environments
+========================================================
+type: section
+
+Analytical environments
+========================================================
+
+1.  GUI based spreadsheets.
+  -  Excel
+2.  GUI based statistical packages.
+  -  Minitab, Statistica
+3.  Batch based statistical packages
+  -  SPSS, SAS
+4.  General systems languages (static)
+  -  C, C++, C#, Fortran, Java
+5.  Data analysis programming languages (dynamic)
+  -  Matlab, Python, R, F#, Clojure, Julia
+6.  GUI based tools/interfaces
+  -  Weka, KMINE, Rapidminer
+
+Criteria
+========================================================
+
+1.  Employer forces a choice of language.
+2.  Libraries available.
+  -  Some fields have many tools
+  -  Libraries mean much of the work has been done for you.
+3.  Ability to customize solutions.
+
+Read in data
+========================================================
+
+-  Generally the domain of languages with easy to use database interfaces.
+-  Sometimes the ability to develop a GUI helpful.
+-  Perl, Python, Ruby, Visual Basic.
+
+Handle data of indefinite size
+========================================================
+
+-  Indefinite size implies using array or matrix based computation.
+-  Languages with functional characteristics helpful.
+  -  Vectorization makes it easier to read implementations of analytical methods.
+  -  No side effects requirement of functional languages leads to thinking of operations on all rows or records rather than one record at a time.
+  -  Principle strength of Excel.
+-  Lisp, Clojure, R, Matlab, Python, Julia
+
+Manipulate data
+========================================================
+
+-  Need ability to work with text as well as numbers.
+-  Regular expressions (mathematical tools for expressing methods for extracting text)
+-  Text processing libraries
+-  Perl, Python, Ruby, Java
+
+Mathematical and statistical analysis
+========================================================
+
+-  Interfaces to Fortran and C based scientific libraries (e.g. LAPACK/BLAS)
+-  Enable vectorized operations
+  -  Map, reduce, apply
+  -  List comprehensions
+-  Matlab, Python, R, IDL, Julia
+
+Presentation of results
+========================================================
+
+-  Graphics and charting libraries.
+-  Excel (not flexible)
+-  Matlab, Python, R, Javascript all have good and flexible libraries.
+-  Libraries exist for Java, C++ but they tend to not be flexible.
+
+
+Tools for data hacking
+==============================
+type: section
+
+Data Hackers
+====================
+
+-  Data is a commodity traded electronically; therefore, in order to be in this market you need to speak hacker (computer programming).
+-  This, however, does not require a background in computer science.
+-  Being able to manipulate text files at the command-line
+-  Understanding vectorized operations
+-  Thinking algorithmically.
+
+Tools for computer programming
+==============================
+
+-  More than just knowing a computer programming language.
+-  Systematic approach to design, development, operation, and maintenance of software.
+-  How to manage your development of analysis methods.
+-  Tools
+  -  Data manipulation, analysis, presentation
+  -  Documentation
+  -  Change management
+
+Data manipulation, analysis, presentation
+=========================================
+
+-  Data manipulation requires ability to
+  -  Read in data
+  -  Clean data - correct errors and make it usable
+  -  Manipulate data into forms suitable for analysis
+-  Data analysis
+
+Documentation
+=========================================
+
+-  Reports *Markdown*
+-  Slide presentations *R Presentation*
+-  Web based documentation *Wiki*
+
+Change management
+=========================================
+
+-  Source code distributed version control
+-  Local and remote repositories maintain record of changes
+-  Master repository maintains history of changes down to the change level
+-  Branches record work to add new features or special versions
+-  Tags identify milestones
+-  Can revert code to the state at any point in time
+
+Tools
+=====
+type: subsection
+
+
+ R
+==============
+type: subsection
+
+Programming and development
+============================
+
+-  R environment for data analysis
+  -  Includes libraries for data manipulation, analysis, and presentation.
+-  *Rattle* - Machine Learning based GUI for R.
+-  R Studio IDE
+  -  Editing code
+  -  Eases installation of libraries
+  -  Supports *Markdown* and *R Presentations*
+
+
+R
+=====
+
+-  Environment for statistical computing
+-  Programming language
+-  Open source - Growth in features is developed by users
+
+Benefits of R
+=============
+
+-  Programming language based implementation means very little is hidden.
+-  Implementation of all methods as scripts means that analysis is reproducible, even on new data sets.
+-  Open source means that researchers develop new methods in R and create a new package to disseminate it.
+-  Many visualization and data processing methods have been implemented as R packages.  R packages are indexed on **CRAN**
+-  Able to access code written in Java, C, C++, Fortran, and Python from R.
+
+Difficulties of R
+=================
+
+-  Programming language means that there is a learning curve at the beginning.
+-  Syntax is very different for those who know only Algol based (C/C++/Java/C#) languages.
+-  Package interfaces are not consistent, learning to use a new package is often like learning to use a new software tool.
+-  Text based interface means it is often difficult to get started.
+
+Rattle
+======
+left:60%
+
+-  Data mining GUI for R.
+-  Importing Rattle automatically imports a range of data mining and data import libraries.
+-  GUI saves your session as R scripts.  Use Rattle to start analysis, then edit the session to modify the analysis.
+
+***
+
+![Rattle CSV import screen](resources/rattle-main-audit.png)
+
+
+R Studio
+=============
+type: subsection
+
+R Studio
+========
+left:60%
+
+- IDE for R
+- Includes editor, console, workspace, plots.
+- Integrates file manager, project manager, version control
+- Code completion, command history
+
+***
+
+![R Studio Workbench](resources/rstudio-workbench.png)
+
+
+
+Documentation
+=============
+
+-  *Markdown*:  Text based representation of document
+  -  Works with version control systems.
+  -  Encourages you to focus on the content and structure of the document, not the appearance.
+  -  Works with LaTeX if you need to tweak the appearance.
+  -  Can embed code and output in with the text.
+-  *R Presentations*:  Markdown based presentations.
+  -  Based on Markdown elements and advantages of text based source and including code and output.
+  -  Creates a browser based presentation (HTML5)
+-  *pandoc*: converts different file formats to and from each other
+  - pdf, LaTeX, Markdown, docx, html
+  
+  Markdown and knitr
+===================
+left:60%
+
+- Markdown and Sweave integrates text and R code.
+- Maintain documentation on the problem, data, methods, and interpretation along with the data processing and implementation of methods.
+- Convert to HTML, PDF, or slides.
+
+***
+
+![R Studio Workbench](resources/rstudio-pdf.png)
+
+Version control
+===============
+
+-  Git - Distributed version control system
+  -  Maintains history of analysis changes.
+  -  Able to revert the code back to any state.
+  -  Allow for branches and risk taking or trying new approaches.
+  -  Commit logs help you remember why you were trying something.
+-  Bitbucket - Remote repository
+  -  Provides a master repository for teams working on a project.
+  -  Provides a Wiki for documentation and an issue log for tracking bugs.
+  
+ Git
+========
+left:60%
+
+- Distributed Version Control System (DVCS).
+- Saves history of changes so you can return to any saved state.
+- Coordinates changes when multiple people are working on the same project.
+
+***
+
+![R Studio VCS](resources/rstudio-vcs_history.png)
+
+ 
+
+
+
+
