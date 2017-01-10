@@ -1,24 +1,28 @@
-Thinking about data
-========================================================
-author: Louis Luangkesorn
-date: January 2017
+---
+title: "Thinking about data"
+author: "Louis Luangkesorn"
+date: "January 2017"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
 
 The Data Science Venn Diagram
 =============================
-left:40%
+
 The primary colors of data
+
   - Hacking skills, 
   - Math and statistics knowledge, and 
   - Substantive expertise.
 
-***
+
 
 ![Drew Conway Data Science](resources/Data_Science_VD.png)
 <!--http://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram-->
 
 Hacking skills
 ==============
-type:section
 
 -  Programming language - *R*
 -  Integrated Development Environment - *R Studio*
@@ -27,7 +31,7 @@ type:section
 
 Math and Statistics
 ===================
-type:section
+
 
 R
 ===
@@ -53,7 +57,7 @@ ggplot
   
 Substantive areas
 =================
-type:section
+
 
 Substantive knowledge
 =====================
@@ -66,11 +70,11 @@ Substantive knowledge
 
 Git: Version control
 ====================
-type: section
+
 
 Version control
 ===============
-left:60%
+
 -  Distributed Version Control Systems (DVCS) enable tracking of changes to text based files (e.g. code files).
 -  By `commit`ing changes at frequent milestones, you can use DVCS to return to a working version of the code at any point in time.
 -  DVCS enable teams to work on the same code base simultaneously, as it assists in reconsiling team members work.
@@ -109,7 +113,7 @@ Tasks that you need to be able to do
 
 Thinking about data
 ===================
-type: section
+
 
 Thinking about data
 ===================
@@ -120,7 +124,7 @@ Thinking about data
 
 Data as storytelling
 ====================
-incremental: true
+
 
 -  Our goal is looking at data is insight.
 -  The alternative to looking at data is _____.
@@ -131,7 +135,7 @@ incremental: true
 
 Scoping a data project
 ======================
-incremental: true
+
 
 -  **Co**ntext
 -  **N**eeds
@@ -140,11 +144,11 @@ incremental: true
 
 Context
 =======
-type: subsection
+
 
 Context
 =======
-incremental: true
+
 
 - Context is the frame that is apart from the particular problem we are trying to solve.
 - *The big picture*
@@ -167,7 +171,7 @@ Example
 
 Needs
 ======
-type: subsection
+
 
 Needs
 ======
@@ -178,7 +182,7 @@ Needs
 
 How can data fill needs
 =======================
-incremental: true
+
 
 -  Create knowledge.
 -  Understand some part of how the world works.
@@ -187,7 +191,7 @@ incremental: true
 
 Learning what the needs are
 ===========================
-incremental: true
+
 
 -  Talking to people.
 -  Ask for stories about what the people involved care about, what they work on, what they are stuck on.
@@ -196,7 +200,7 @@ incremental: true
 
 What makes a good need
 ======================
-incremental: true
+
 
 -  Relates directly to an action that depends on having good information.
 -  Information will inform an action.
@@ -206,7 +210,7 @@ incremental: true
 
 Vision
 ======
-type: section
+
 
 Vision
 ======
@@ -249,7 +253,7 @@ This defines how simple or complext the data analysis needs to be.
 
 Outcome
 =======
-type: subsection
+
 
 Outcome
 =======
