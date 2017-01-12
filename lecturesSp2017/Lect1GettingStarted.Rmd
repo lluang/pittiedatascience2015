@@ -1,7 +1,11 @@
-Getting Started in Data Science
-========================================================
-author: Louis Luangkesorn
-date: January 2017
+---
+title: "Getting Started in Data Science"
+author: "Louis Luangkesorn"
+date: "January 2017"
+output:
+  slidy_presentation: default
+  beamer_presentation: default
+---
 
 Notecard
 ========
@@ -15,7 +19,6 @@ Notecard
 
 Data science course
 ===================
-type: section
 
 
 What is data science?
@@ -33,7 +36,6 @@ Goals
 
 Contrast
 ========
-incremental: true
 
 -  Computer programming - Teaches a computer language, but not necessarily the specific task of working with data.
 -  Business Intelligence - Focus on displaying data summaries from data found in databases.
@@ -168,7 +170,6 @@ Learning Data Science
 
 What is a data scientist?
 =========================
-type: section
 
 Data
 ====
@@ -242,7 +243,6 @@ Data scientist skills
 
 Aspects of data science
 =======================
-type: sub-section
 
 The scientific method
 =====================
@@ -268,31 +268,29 @@ The primary colors of data
 
 Data Science:  Computer Hacking skills
 ======================================
-left:60%
-
 -  Data is traded electronically, so need to be able to manipulate text files, understanding vectorized operations, thinking algorithmically.
 -  Without computer skills means you cannot even get started with using electronic data.
 
-***
+===
 
 ![Drew Conway Data Science](resources/Data_Science_VD.png)
 
 Data Science:  Math and Statistics
 ==================================
-left:60%
+
 -  The next step is to actually extract insight from it.
 -  Apply appropriate math and statistics methods.
 -  Without this, you can produce what looks like meaningful output using a computer, but the output is without meaning.  VERY DANGEROUS.
 - *Lies, damned lies, and statistics*
 
-***
+===
 
 ![Drew Conway Data Science](resources/Data_Science_VD.png)
 
 
 Data Science:  Substantive Expertise
 ====================================
-left:60%
+
 -  Science is about discovery and building knowledge, which requires some motivating questions about the world and hypotheses tested with statistical methods.
 -  Most academics (you) have math and statistics.
 
@@ -317,7 +315,6 @@ Three categories of data science
 
 Tools for data science
 ========================================================
-type: section
 
 Data science requirements
 ========================================================
@@ -337,7 +334,6 @@ Remember, analysis is never done in isolation
 
 Types of analytical environments
 ========================================================
-type: section
 
 Analytical environments
 ========================================================
@@ -409,7 +405,6 @@ Presentation of results
 
 Tools for data hacking
 ==============================
-type: section
 
 Data Hackers
 ====================
@@ -459,12 +454,12 @@ Change management
 
 Tools
 =====
-type: subsection
+
 
 
  R
 ==============
-type: subsection
+
 
 Programming and development
 ============================
@@ -504,7 +499,7 @@ Difficulties of R
 
 Rattle
 ======
-left:60%
+
 
 -  Data mining GUI for R.
 -  Importing Rattle automatically imports a range of data mining and data import libraries.
@@ -517,18 +512,18 @@ left:60%
 
 R Studio
 =============
-type: subsection
+
 
 R Studio
 ========
-left:60%
+
 
 - IDE for R
 - Includes editor, console, workspace, plots.
 - Integrates file manager, project manager, version control
 - Code completion, command history
 
-***
+===
 
 ![R Studio Workbench](resources/rstudio-workbench.png)
 
@@ -550,13 +545,12 @@ Documentation
   
   Markdown and knitr
 ===================
-left:60%
+
 
 - Markdown and Sweave integrates text and R code.
 - Maintain documentation on the problem, data, methods, and interpretation along with the data processing and implementation of methods.
 - Convert to HTML, PDF, or slides.
-
-***
+===
 
 ![R Studio Workbench](resources/rstudio-pdf.png)
 
@@ -574,13 +568,13 @@ Version control
   
  Git
 ========
-left:60%
+
 
 - Distributed Version Control System (DVCS).
 - Saves history of changes so you can return to any saved state.
 - Coordinates changes when multiple people are working on the same project.
 
-***
+===
 
 ![R Studio VCS](resources/rstudio-vcs_history.png)
 

@@ -18,7 +18,7 @@ Because of the need to integrate the data preparation, exploration, modeling, an
   1.  The analytical skills to work with data science/machine learning methods and perform model evaluation.
   2.  Computer skills to work with information systems, work with data that has the qualities of big data, and deliver results in a usable form.
   
-The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, which describes the work of a data science analyst as covering six areas (domains)
+The design of the data science concentration is based on two descriptions of data science analysts. From the point of view of information technology professionals, most descriptions of data science conform to Drew Conway's (CEO, Alluvium, PhD from NYU) description of having competency in a combination of mathematical and statistical knowledge, substantive expertise, and information systems (hacking) skills.  Another viewpoint is provided by the INFORMS Analytics Society, which describes the work of a data science analyst as covering seven areas (domains)
 
 1. Business problem framing
 2. Analytics problem framing
