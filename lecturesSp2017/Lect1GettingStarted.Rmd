@@ -105,13 +105,21 @@ Supplements
 Assignments
 ===========
 
-- Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
-- Three papers/presentations
-- Find a data set and a question
+Homeworks
+  - Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
+  - Data manipulation/visualization
+  - Regression assignment
+  - Classification assignment
 
-1.  Exploratory Data Analysis
-2.  Identify a question
-3.  Final project
+Project
+  
+  - Three papers/presentations
+  - Find a data set and a question
+    - Kaggle.com
+  
+    1.  Exploratory Data Analysis
+    2.  Preliminary Data Analysis
+    3.  Final project
 
 1. Exploratory Data Analysis
 ============================
@@ -132,7 +140,10 @@ Assignments
   -  The expectation is at least one will prove to be completely inappropriate.
 -  Hypothesis - Question to be answered.
   -  CoNVO - Context, Need, Vision, Outcome
--  Plan of work - How will you answer the question
+-  Plan of work 
+  - What type of problem is this? (regression/classification)
+  - How will you answer the question
+
 
 3.  Final project
 =================
@@ -142,7 +153,8 @@ Assignments
   - How did hypothesis change?
 -  Data visualization
 -  Analysis
-  -  Methods used
+  -  Methods used 
+    - Compare at least two methods
   -  Results
 -  Conclusions
 
