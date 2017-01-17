@@ -1,7 +1,12 @@
-Data structures and visualization
-========================================================
-author: Louis Luangkesorn
-date: January 2017
+
+---
+title: "Data structures and visualization"
+author: "Louis Luangkesorn"
+date: "January 2017"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
 
 Data structures
 ========================================================
