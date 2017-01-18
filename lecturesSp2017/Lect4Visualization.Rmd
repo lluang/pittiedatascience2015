@@ -3,8 +3,9 @@ title: "Visualization"
 author: "Louis Luangkesorn"
 date: "January 2017"
 output:
-  slidy_presentation: default
+  beamer_presentation: default
   pdf_document: default
+  slidy_presentation: default
 ---
 
 Scoping problems
