@@ -3,12 +3,13 @@ Data Munging and Exploratory Data Analysis
 author: Louis Luangkesorn
 date: January 2016
 
-- Install the package (DMwR) to follow this lecture
+- Install the package DMwR2 to follow this lecture
 ```{r echo=FALSE}
 library(ggplot2)
 library(gridExtra)
 library(lattice)
-library(DMwR)
+library(tidyr)
+library(DMwR2)
 ```
 http://www.dcc.fc.up.pt/~ltorgo/DataMiningWithR/datasets.html
 
@@ -314,3 +315,252 @@ Filling in missing values using similarities
 -  Take the point with the missing value, then identify several observations that are very similar.
 -  Use a statistic of centrality among those similar observations.
 -  e.g. Use *k-Nearest-Neighbors* to identify similar observations.
+
+Tidy Data
+===========
+
+Introduction to tidy data
+============
+
+- 80% of data analysis is spent on the process of cleaning and preparing data.
+- Tidy data provides a standard way to organize data values within a data set.
+- Standard facilitates initial exploration and analysis of data.
+- Simplifies the development of data analysis tools that work well together.
+  - You do not have to take the output of one tool, then manipulate it into the input of the next.
+- Understanding tidy data should also improve your spreadsheets.
+  - Design your spreadsheets knowing that you will use it as a data source in addition to an analysis tool.
+
+Where data manipulation fits in the workflow
+=======================
+![Data analysis workflow](figures/data-science-communicate.png)
+  
+Relationship to databases
+=========================
+
+- Tidy data is similar to Codd's normal forms in relational algebra and relational databases.
+  - This is covered this in IE 1014 Database design.
+- Presentation is focused on the need to make data analysis tools work together.
+
+
+Definitions
+==================
+
+- Most statistical datasets are rectangular tables made up of *rows* and *columns*.
+- A dataset is a collection of values
+  - Each value belongs to an *observation* and *variable*
+  - A *variable* contains all values that measure the same underlying attribute across observational units.
+  - An *observation* contains all values measured on the same unit.
+- A *tibble*  is an immutable data frame 
+  - *immutable* cannot be changed. This is an aspect of functional (as opposed to procedural or object oriented) programming. You can use a data frame where R4DS says tibble.
+
+Tidy data rules
+==========
+
+1.  Each variable must have its own column.
+2.  Each observation must have its own row.
+3.  Each value must have its own cell.
+
+Implications
+===========
+
+1. Put each dataset has its own data.frame.
+2. Put each variable in a column.
+
+Benefits to tidy data
+=====================
+
+1.  Having one consistent way of storing data leads you to learn a standard set of tools and methods to work with them (i.e. patterns)
+2.  If variables are in columns, then you can use vectorized methods. (vectorized methods are a hallmark of data focused programming environments like R, Matlab, and Python)
+3.  The R packages you will learn this semester (ggplot2, dplyr) are designed to work with tidy data.
+
+Introduction to R
+=================
+
+- R is a data analysis environment.
+- Includes the tools for working with data using data frames.
+- Anything that you can do in a database, you can do with a data frame.
+- Usually, the reason you use a database is to ensure data integrity and availability.
+
+Data types in R
+===============
+
+- R tries to automatically recognize data types, but you can tell R that a data frame variable is of a specific data type.
+- as.integer()
+- as.double()
+- as.character()
+- as.factor()
+- as.ordered()
+
+```{r, echo=FALSE}
+library(tidyverse)
+```
+
+Three versions of a table, what makes it not tidy?
+- Country, year, population, cases
+
+Version 1
+===========
+```{r, echo=FALSE}
+table2
+```
+
+Version 2
+==========
+```{r, echo=FALSE}
+table3
+```
+
+Version 3
+==========
+```{r, echo=FALSE}
+table4a
+```
+```{r, echo=FALSE}
+table4b
+```
+
+Version 4
+=========
+```{r, echo=FALSE}
+table1
+```
+
+Benefits - Vectorized operations %>% operator
+=================================
+
+- %>% (pipe) operator works on each row of a data frame.
+- Take something on the left side and perform the function on the right side to each element.
+- Alternative - ???
+
+```{r}
+table1 %>% 
+  mutate(rate = cases / population * 10000)
+```
+
+Why may data be provided in other forms?
+===========================
+
+- Data may be organized for another purpose? e.g. making collection easy.
+- People who do not work with data may not appreciate the need to make it easy.
+
+Ways data may be badly organized
+============================
+
+- There may be a variable spread among multiple columns (e.g. class1, class2, class3)
+- One observation may be spread among multiple rows.
+
+Basic operations to correct this
+=================================
+
+- *gather* - Column names are actually values not variables, need to break them into rows of individual values.
+- *spread* - One observation is on multiple rows, collect rows and use columns to hold variables.
+- use the package `tidyr` (part of `tidyverse`)
+
+Gather
+===========
+
+- Take a table where values are spread over two columns
+- Create rows that give a year and number of cases.
+- Columns should be: Country, year, cases
+```{r}
+table4a
+```
+
+gather()
+========
+```{r}
+help(gather)
+```
+
+
+using gather
+===========
+```{r}
+ head(gather(table4a, `1999`, `2000`, key = "year", value = "cases"),6)
+```
+
+Same thing using pipes
+============
+```{r}
+table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+```
+
+Do the same thing with the population table and save the results
+=================
+
+```{r}
+tidy4a <- table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+tidy4b <- table4b %>% gather(`1999`, `2000`, key = "year", value = "population")
+```
+```{r}
+tidy4b %>% head(4)
+```
+
+With tidy data, now other operations become easier
+================
+
+- We will cover relational operations in the next lecture.
+
+```{r}
+tidy4 <- left_join(tidy4a, tidy4b, by=c('country', 'year'))
+head(tidy4, 4)
+```
+
+Spread
+=======
+
+- Data on a single observation is spread on two rows.
+- Often used to make data readable on a single sheet of paper.
+- You need to combine rows for a single observation into a single row.
+
+Example
+=====
+
+- For each country and year, have cases and population.
+- Then you can easily calculate a rate or proportion of population.
+```{r}
+table2%>% head(4)
+```
+
+Using spread
+==========
+
+- Key is the column with the variable names (which were split into different rows)
+- Value is the column with the value of the variable for that observation.
+
+```{r}
+help(spread)
+```
+
+spread
+========
+```{r}
+tidy2 <- table2 %>% spread(key=type, value=count)
+tidy2 %>% head(4)
+```
+
+Separate
+========
+
+- Separate is when two values are kept in a single column.
+- Often seen in Excel spreadsheets where 2 values are put in a single cell to mimic a table.
+- `separate` will split on a non-alpha numeric character
+
+```{r}
+help(separate)
+```
+
+Separate example
+========
+
+
+```{r}
+table3 %>% head(2)
+```
+
+===========
+```{r}
+tidy3 <- table3 %>% separate(col='rate', into=c('cases', 'population'), sep='/')
+head(tidy3, 4)
+```
+
