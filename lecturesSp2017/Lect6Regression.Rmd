@@ -3,10 +3,10 @@ title: "Regression"
 author: "IE 2064 Data Science"
 date: "January 2017"
 output:
-  word_document: default
   pdf_document: default
-  slidy_presentation: default
   html_document: default
+  slidy_presentation: default
+  word_document: default
 ---
 
 
@@ -478,6 +478,7 @@ Pruning
 =======
 
 - Prune using the chosen tree, use the `cp` value of what is chosen
+
 ```{r}
 rt2.a1 <- prune(rt.a1, cp = 0.08)
 print(rt2.a1)
@@ -542,22 +543,22 @@ abline(0, 1, lty = 2)
 par(old.par)
 ```
 
+
 Overfitting
 ===========
 
-- Our goal is to perform the best prediction on future samples, not the samples we already have.
-- One danger is that our model is overly specific, it matches the data that we happen to have instead of being a good general model.
-- Cross-validation
-  1.  Obtain *k* equally sized and random subsets of the training data. 
-  2.  For each of these *k* subsets, build a model using the remaining *k−1* sets. 
-  3.  evaluate this model on the *k*th subset.
+-  Our goal is to perform the best prediction on future samples, not the samples we already have.
+-  One danger is that our model is overly specific, it matches the data that we happen to have instead of being a good general model.
+-  Cross-validation
+  1.  Divide data into $k$ equally sized and random subsets of the training data. 
+  2.  For each of these subsets, build a model using the remaining $k-1$ sets. 
+  3.  Evaluate this model on the original subset.
   
 Summary
 =======
 
 When facing a predictive task, we have to make the following decisions:
 
-- Select the alternative models to consider (the models can actually be alternative settings of the same algorithm) for the predictive task(s) we want to address.
-- Select the evaluation metrics that will be used to compare the models.
-- Choose the experimental methodology for obtaining reliable estimates
-of these metrics.
+-  Select the alternative models to consider (the models can actually be alternative settings of the same algorithm) for the predictive task(s) we want to address.
+-  Select the evaluation metrics that will be used to compare the models.
+-  Choose the experimental methodology for obtaining reliable estimates of these metrics.
