@@ -4,36 +4,36 @@ output: pdf_document
 Assignments for IE 2064 Data Science
 ====================================
 
-The goal of this course is to gain practical skills, knowledge, and understanding in the analysis of data to make data driven decisions.  The grading in this course is built around three presentations on a single topic, where the presentations demonstrate increasing understanding of the data, the problem domain, and the application of methods for processing, analyzing, and presenting the data, question, and results.
+The goal of this course is to gain practical skills, knowledge, and understanding in the analysis of data to make data driven decisions.  The grading in this course is built around three presentations on a single topic, where the presentations demonstrate increasing understanding of the data, the problem domain, and the application of methods for processing, analyzing, and presenting the data, question, and results.  The project may be done individually or a group of 2.
 
-Each assignment consists of a short paper and a presentation. The paper should be written in R Markdown format (delivered as a pdf) and the presentation should be written in R Presentation format (delivered as HTML)
+Each assignment for the project consists of a short paper and a presentation. The paper should be written in R Markdown format (delivered as a pdf) and the presentation should be written in R Presentation format (delivered as HTML or PDF)
 
-For assignment 1 and 2, the paper should be no more than 4 pages (not counting figures), the presentation should be 5-8 minutes.
+For parts 1 and 2, the paper should be around 4-5 pages (not counting figures), the presentation should be 5-8 minutes.
 
-For the final project, the paper should be no more than 8 pages (not counting figures), the presentation should be 10-12 minutes.
+For the final project, the paper should be around 8-10 pages (not counting figures), the presentation should be 10-12 minutes.
 
-The requirements for the assignment are below, so the data set you choose should be rich enough so that these tasks can be done.  However, if you have a data analysis that needs to be done for some other purpose (work data, thesis, research project) see me and we can adapt the project so that it contributes to your other work.
+The requirements for the project are below, so the data set you choose should be rich enough so that these tasks can be done.  However, if you have a data analysis that needs to be done for some other purpose (work data, thesis, research project) see me and we can adapt the project so that it contributes to your other work.
 
 The ultimate goal of this project is to have a paper and presentation that you can show to potential employers as proof of the knowledge and capabilities you have learned in this class!
 
 Collaboration
 =============
 
-Collaboration is encouraged. However, the question that you will explore in the final project must be unique. In the case where two people propose substantially similar final projects we will discuss this after the second presentation.  That said, you may partner with one other person do the first two presentations and reports if you are using the same dataset. For the second presentation, you will have a two part final section where you will propose your final project.
+Collaboration is encouraged. However, the question that you will explore in the final project must be unique. In the case where two groups propose substantially similar final projects we will discuss this after the second presentation.  That said, you may partner with one other person do the first two presentations and reports if you are using the same dataset. For the second presentation, you will have a two part final section where you will propose your final project.
 
 In addition, you are encourage to discuss and assist with each other's projects. However, if you receive such assistance, you should acknowledge that assistance in and acknowledgments section in the report and presentation.
 
 Project description
 ===================
 
-1.  Exploratory data analysis (February 3)
-2.  Preliminary data analysis (March 3)
+1.  Exploratory data analysis (February 14)
+2.  Preliminary data analysis (March 14)
 3.  Final report and presentation (Final week)
 
 1. Exploratory Data Analysis
 ============================
 
-- Due February 3
+- Due February 14
 
 From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the following:
 
@@ -54,7 +54,7 @@ The first assignment
 2.  Preliminary data analysis
 =============================
 
-Due March 3
+Due March 14
 
 1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
 2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
