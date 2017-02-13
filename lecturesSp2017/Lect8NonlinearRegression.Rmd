@@ -48,11 +48,7 @@ Sample data
 ===================
 ```{r, echo=FALSE }
 options(width=80, digits=2, scipen=8)
-<<<<<<< HEAD
 library(DMwR)
-=======
-library(DMwR2)
->>>>>>> 3e066532fb829828b638341ef2efa17437a9c0ec
 library(xts)
 library(quantmod)
 data(GSPC)

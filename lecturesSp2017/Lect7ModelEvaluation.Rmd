@@ -1,10 +1,10 @@
 ---
 title: "Model Evaluation Methods"
 author: "IE 2064"
-date: February 2017
+date: "February 2017"
 output:
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
 ---
 
 General principles for model evaluation
@@ -280,6 +280,8 @@ Repeat model evaluation and comparison between regression trees and linear regre
 
 ```{r}
 lmFit1$results
+```
+```{r}
 rtFit1$results
 ```
 
