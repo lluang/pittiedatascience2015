@@ -1,0 +1,259 @@
+---
+Author: IE 2064 Data Science
+Date: February 2017
+Title: Variations on linear regression
+---
+```{r}
+
+## Section 6.1 Case Study: Quantitative Structure- Activity
+## Relationship Modeling
+
+library(AppliedPredictiveModeling)
+data(solubility)
+library(caret)
+library(lattice)
+load("regression_cousins.Rdata")
+```
+##  Case study: Quantitative structure-activity relationship modeling
+
+- Data set of 1267 chemical compounds
+-  208 binary "fingerprints" that indicate the presence of a specific chemical substructure
+-  16 count descriptors (e.g. number of bonds or number of a specific type of atom)
+-  FOur continuous descriptors (e.g. molecular weight or surface area)
+
+
+
+
+## Some initial plots of the data - Molecular weight vs Solubility
+
+```{r}
+xyplot(solTrainY ~ solTrainX$MolWeight, type = c("p", "g"),
+       ylab = "Solubility (log)",
+       main = "(a)",
+       xlab = "Molecular Weight")
+```
+
+## Some initial plots of the data - Number of bonds vs Solubility
+
+```{r}
+xyplot(solTrainY ~ solTrainX$NumRotBonds, type = c("p", "g"),
+       ylab = "Solubility (log)",
+       xlab = "Number of Rotatable Bonds")
+```
+
+## Some initial plots of the data - Structure vs Solubility
+
+```{r}
+
+bwplot(solTrainY ~ ifelse(solTrainX[,100] == 1, 
+                          "structure present", 
+                          "structure absent"),
+       ylab = "Solubility (log)",
+       main = "(b)",
+       horizontal = FALSE)
+```
+
+
+##  Feature plot for fingerprints
+
+```{r, warning=FALSE}
+notFingerprints <- grep("FP", names(solTrainXtrans))
+featurePlot(solTrainXtrans[, -notFingerprints],
+            solTrainY,
+            between = list(x = 1, y = 1),
+            type = c("g", "p", "smooth"),
+            labels = rep("", 2))
+```
+
+
+## Correlation plots for fingerprints
+
+
+```{r}
+library(corrplot)
+corrplot::corrplot(cor(solTrainXtrans[, -notFingerprints]), 
+                   order = "hclust", 
+                   tl.cex = .8)
+```
+## Linear regression
+
+- Ordinary least squares regression.
+- Minimize the sum of squared errors (SSE) between observed and predicted.
+
+## Set up Cross validation
+
+```{r}
+set.seed(100)
+indx <- createFolds(solTrainY, returnTrain = TRUE)
+ctrl <- trainControl(method = "cv", index = indx)
+```
+
+## Linear regression with all predictors
+
+```
+set.seed(100)
+lmTune0 <- train(x = solTrainXtrans, y = solTrainY,
+                 method = "lm",
+                 trControl = ctrl)
+```
+```{r}
+lmTune0                 
+```
+
+## Remove predictors with correlations that are too high
+```
+tooHigh <- findCorrelation(cor(solTrainXtrans), .9)
+trainXfiltered <- solTrainXtrans[, -tooHigh]
+testXfiltered  <-  solTestXtrans[, -tooHigh]
+
+set.seed(100)
+lmTune <- train(x = trainXfiltered, y = solTrainY,
+                method = "lm",
+                trControl = ctrl)
+```
+```{r}
+lmTune
+testResults <- data.frame(obs = solTestY,
+                          Linear_Regression = predict(lmTune, testXfiltered))
+```
+
+## Principle Component Analysis and Regression
+
+-  If there are a large number of predictors, another alternative to removing high correlation variables is to use Principle Component Analysis on the predictos.
+-  Resulting principle components are uncorrelated (by definition)
+
+## Partial Least Squares
+
+- Used when there are correlated predictors.
+-  Method finds underlyikng relationships among the predictors that are correlated with the response.
+  -  Relationship between predictos and response is the *direction* **W**
+-  Predictor data is projected onto the direction to generate *scores* **t**
+-  Scores are used to generate loadings **p**
+-  **W, t, p** are used to predict new samples
+
+```
+set.seed(100)
+plsTune <- train(x = solTrainXtrans, y = solTrainY,
+                 method = "pls",
+                 tuneGrid = expand.grid(ncomp = 1:20),
+                 trControl = ctrl)
+
+testResults$PLS <- predict(plsTune, solTestXtrans)
+
+set.seed(100)
+pcrTune <- train(x = solTrainXtrans, y = solTrainY,
+                 method = "pcr",
+                 tuneGrid = expand.grid(ncomp = 1:35),
+                 trControl = ctrl)
+```
+
+## Partial least squares results
+
+-  Cross validation chooses 10 components as the optimal model with smallest value.
+```{r}
+plsTune
+```
+
+## Partial least squares importnce scores
+
+```{r}
+plsImp <- varImp(plsTune, scale = FALSE)
+plot(plsImp, top = 25, scales = list(y = list(cex = .95)))
+```
+
+
+## Principle Component Regression results
+-  Cross validation chooses 35 components as the optimal model with smallest value.
+
+```{r}
+pcrTune                  
+```
+
+## Plot PLS and PCR against each other
+```{r, echo=FALSE, fig=TRUE}
+plsResamples <- plsTune$results
+plsResamples$Model <- "PLS"
+pcrResamples <- pcrTune$results
+pcrResamples$Model <- "PCR"
+plsPlotData <- rbind(plsResamples, pcrResamples)
+
+xyplot(RMSE ~ ncomp,
+       data = plsPlotData,
+       #aspect = 1,
+       xlab = "# Components",
+       ylab = "RMSE (Cross-Validation)",
+       auto.key = list(columns = 2),
+       groups = Model,
+       type = c("o", "g"))
+```
+
+
+######################################################
+##  Penalized Models
+
+## Ridge regression
+
+-  For SSE, add a penalty to the sum of the squared regression parameters
+
+$$SSE_{L2} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^P \beta_j^2$$
+-  Compare to the use of adjusted $R^2$ to penalize the number of terms in the regression model.
+
+$$R^2_{adf} = 1 - \frac{(1-R^2)(n-1)}{n-k-1}$$
+
+```
+ridgeGrid <- expand.grid(lambda = seq(0, .1, length = 15))
+
+set.seed(100)
+ridgeTune <- train(x = solTrainXtrans, y = solTrainY,
+                   method = "ridge",
+                   tuneGrid = ridgeGrid,
+                   trControl = ctrl,
+                   preProc = c("center", "scale"))
+ridgeTune
+```
+
+## Cross validation results using Ridge Regression
+
+```{r}
+print(update(plot(ridgeTune), xlab = "Penalty"))
+```
+
+
+## Lasso (elastic net)
+
+-  Least Absolute Shrinkage and Selection Operator model
+-  Uses another penalty function, simlar to ridge regression
+
+$$SSE_{L1} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^P |\beta_j|$$
+- Both ridge regression and Lasso penalizes positive parameters
+  - Effect is to force the parameters to zero
+  
+
+
+```
+
+enetGrid <- expand.grid(lambda = c(0, 0.01, .1), 
+                        fraction = seq(.05, 1, length = 20))
+set.seed(100)
+enetTune <- train(x = solTrainXtrans, y = solTrainY,
+                  method = "enet",
+                  tuneGrid = enetGrid,
+                  trControl = ctrl,
+                  preProc = c("center", "scale"))
+enetTune
+```
+
+## Cross validation profiles for Lasso (elastic net) with different values of decay $\lambda$
+
+```{r}
+plot(enetTune)
+```
+
+```{r}
+testResults$Enet <- predict(enetTune, solTestXtrans)
+```
+
+```{r, echo=FALSE}
+save.image("regression_cousins.Rdata")
+```
+

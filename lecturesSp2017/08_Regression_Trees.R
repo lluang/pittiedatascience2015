@@ -263,4 +263,4 @@ cbImp
 
 sessionInfo()
 
-save.image(file="classtree.RData")
+save.image(file="regressionTrees.RData")

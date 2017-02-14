@@ -161,7 +161,7 @@ Implementation
 ===============
 
 Note: set multicore (`doMC`) for parallelization
-```{r}
+```
 library(doMC)
 registerDoMC(2)
 set.seed(100)
