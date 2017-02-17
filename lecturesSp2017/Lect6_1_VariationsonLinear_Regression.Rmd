@@ -2,7 +2,6 @@
 Author: IE 2064 Data Science
 Date: February 2017
 Title: Variations on linear regression
-output: pdf_document
 ---
 ```{r}
 

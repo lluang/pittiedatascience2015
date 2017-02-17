@@ -1,7 +1,7 @@
 ---
-title: Lecture 10: Classification models
-author: IE2064 Data Science
-date: February 2017
+title: "Lecture 10: Classification models"
+author: "IE2064 Data Science"
+date: "February 2017"
 output:
   slidy_presentation: default
 ---
@@ -185,12 +185,12 @@ GermanCredit$Housing.ForFree <- NULL
 
 ## Split the data into training (80%) and test sets (20%)
 set.seed(100)
-inTrain <- createDataPartition(GermanCredit$credit_risk, p = .8)[[1]]
+inTrain <- createDataPartition(GermanCredit$Class, p = .8)[[1]]
 GermanCreditTrain <- GermanCredit[ inTrain, ]
 GermanCreditTest  <- GermanCredit[-inTrain, ]
 
 set.seed(1056)
-logisticReg <- train(credit_risk ~ .,
+logisticReg <- train(Class ~ .,
                      data = GermanCreditTrain,
                      method = "glm",
                      trControl = trainControl(method = "repeatedcv",
@@ -201,10 +201,10 @@ logisticReg
 Predict the test set
 ===
 ```{r}
-creditResults <- data.frame(obs = GermanCreditTest$credit_risk)
-creditResults$prob <- predict(logisticReg, GermanCreditTest, type = "prob")[, "bad"]
+creditResults <- data.frame(obs = GermanCreditTest$Class)
+creditResults$prob <- predict(logisticReg, GermanCreditTest, type = "prob")[, "Bad"]
 creditResults$pred <- predict(logisticReg, GermanCreditTest)
-creditResults$Label <- ifelse(creditResults$obs == "bad",
+creditResults$Label <- ifelse(creditResults$obs == "Bad",
                               "True Outcome: Bad Credit",
                               "True Outcome: Good Credit")
 ```
@@ -305,7 +305,7 @@ Create the confusion matrix from the test set.
 library(pROC)
 confusionMatrix(data = creditResults$pred,
                 reference = creditResults$obs)
-creditROC <- roc(relevel(creditResults$obs, "good"), creditResults$prob)
+creditROC <- roc(relevel(creditResults$obs, "Good"), creditResults$prob)
 
 coords(creditROC, "all")[,1:3]
 ```
