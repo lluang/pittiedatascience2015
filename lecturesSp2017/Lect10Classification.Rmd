@@ -1,8 +1,9 @@
 ---
-title: "Lecture 10: Classification models"
+title: 'Lecture 10: Classification models'
 author: "IE2064 Data Science"
 date: "February 2017"
 output:
+  pdf_document: default
   slidy_presentation: default
 ---
 
@@ -36,6 +37,33 @@ Uses of classification models
 - Identifying observations for further action. e.g. fraud investigations.
 - Inputs into another model.
 
+How classification models work
+===================
+
+- Classification models produce a continuous valued prediction in a form that has many properties of probability.
+  - Values are between 0 and 1
+  - Sum of all possible outcomes sum to 1
+  - Note that for some methods these are not true probability predictions, but they are close estimates.
+- Choose the class with the highest value.
+  - Prediction provides a measure of confidence.
+  
+Transforms into probabilities
+============
+
+- Some models produce predictions that do not fit the definition of probability.
+- Transform the predictions into a *probability-like* value that can be interpreted similarly to probabilities for classification.
+
+Softmax transformation
+=======================
+
+- $l$ is the $l$th class.
+- $\hat{y}_l$ is the numeric model prediction for the $l$th class.
+- $\hat{p}^*_l$ is the transformed value that is probability-like between 0 and 1.
+
+$$\hat{p}^*_l = \frac{e^{\hat{y}_l}}{\sum_{l=1}^C e^{\hat{y}_l}}$$
+
+
+
 Calibration plots
 ==================================
 
@@ -52,7 +80,7 @@ Setting up two class example
 
 $$log\left(\frac{p}{1-p}\right) = -1 - 2 X1 - 0.2 X1^2 + 2 X2^2$$
 
-```{r}
+```{r, warning=FALSE}
 library(AppliedPredictiveModeling)
 library(klaR)
 library(e1071)
@@ -68,7 +96,7 @@ testing$ID <- 1:nrow(testing)
 
 Apply quadratic discriminant analysis and random forest to classification problem
 ==================
-```{r}
+```{r, warning=FALSE}
 qdaFit <- qda(class ~ X1 + X2, data = training)
 library(randomForest)
 rfFit <- randomForest(class ~ X1 + X2, data = training, ntree = 2000)
@@ -76,9 +104,20 @@ testing$qda <- predict(qdaFit, testing)$posterior[,1]
 testing$rf <- predict(rfFit, testing, type = "prob")[,1]
 ```
 
+Evaluating the accuracy of models
+============
+
+- Each method generates a probability of an observation being a member of a class.
+- Need a method to determine if the predicted odds are correct.
+- It should be probabilistic in nature, and penalize both predicting an event too conservatively and too aggressively.
+- Perfect does not meet perfect predictions. The best score should imply that if you exam all observations where the method estimated a probability of (example) 20%, 20% of the time, the event should have occurred.
+
 
 Generate the calibration analysis
 ============
+
+- Look at the relationship between two predictors and the classes.
+
 ```{r}
 calData1 <- calibration(class ~ qda + rf, data = testing, cuts = 10)
 ggplot(training, aes(X1, X2, color=class, shape=class))+
@@ -89,18 +128,24 @@ Presenting class probabilities for two classes
 =================
 
 - Create bins based on predicted probability of one class.
-- For observations in each bin, determine the observed event percentage.
-- Plot curve. Closer to 45 degreee line (observed percentage = bin midpoint) is better
+- For observations in each bin, determine the observed event percentage and compare it to the predicted probability.
+- Plot curve. Closer to 45 degree line (observed percentage = bin midpoint) is better.
+- Higher than 45 indicates the model underestimated the probability of the event. Lower than 45 indicates the model overestimated.
 
-Plot the curve
+
+Plot the calibration curve
 ====
+
+-  For a given value of model probability output, was was the actual probability of the event occurring.
+
 ```{r}
 xyplot(calData1, auto.key = list(columns = 2))
 ```
 
 Calibrate model
 ==========
-- To calibrate the model, treat the predicted probabilities as inputs into a Model
+- To calibrate the model, treat the predicted probabilities as inputs into a Model.
+
 ```{r}
 trainProbs <- training
 trainProbs$qda <- predict(qdaFit)$posterior[,1]
@@ -152,7 +197,6 @@ xyplot(calData2, auto.key = list(columns = 1))
 
 Evaluating predicted classes
 ===================
-type:section
 
 Evaluating predicted classes
 ======================
@@ -165,8 +209,8 @@ Evaluating predicted classes
 - Prediction accuracy
   -  ROC
   -  Lift charts
-- Goal is to find the model that offers the best performance
-  - The problem may be inherently difficult to predict.
+- Goal is to find the model that offers the best performance, i.e. best calibration.
+  - The problem may be inherently difficult to predict so we evaluate based on the predicted probabilities, not if the model is right or not.
 
 
 Recreate German Credit data from Chapter 4 (model evaluation)
@@ -235,7 +279,6 @@ cm <- confusionMatrix(data = creditResults$pred,
                 reference = creditResults$obs)
 ```
 
-***
 ```{r}
 cm$table
 ```
@@ -263,7 +306,7 @@ Sensitivity and specificity
 ====================
 -  *Sensitivity* - samples that were predicted to be true and were true compared to the samples that were true.
   - Did you identify the true samples?
--  *Specificity* - samples that were predicted to be false and were falce compared to the total number of samples that were false
+-  *Specificity* - samples that were predicted to be false and were false compared to the total number of samples that were false
   - Did you correctly exclude the false samples?
   - *false positive*   1 - *specificity*
 ***
@@ -291,7 +334,7 @@ PPV and NPV
 
 Receiver Operating Characteristic
 ==============================
-- ROC curve takes a model and allows its paramaters to range through a set of values.
+- ROC curve takes a model and allows its parameters to range through a set of values.
 - Display the tradeoff between sensitivity and specificity.
 - A perfect model will have 100\% sensitivity and specificity.
 - Completely ineffective will follow the 45 degree line (i.e. chance)
@@ -301,7 +344,7 @@ Receiver Operating Characteristic
 
 Create the confusion matrix from the test set.
 ===
-```{r}
+```{r, warning=FALSE}
 library(pROC)
 confusionMatrix(data = creditResults$pred,
                 reference = creditResults$obs)
@@ -329,11 +372,12 @@ Lift charts
 -  Rank samples by probability of being true
 -  Calculate the cumulative event rate as samples are added.
 -  If close to baseline event rate, there is no gain/lift from the model.
+  - Baseline event rate: what you would guess given no information.
 
 Constructing a lift chart
 =============
 
-1. Predict a set of test samples (not used in bulding the model, but outcomes are known)
+1. Predict a set of test samples (not used in building the model, but outcomes are known)
 2.  Determine baseline event rate
 3.  Order data by classification probability
 4.  For each value of probability, calculate the percentage of true events of all samples below that probability value.

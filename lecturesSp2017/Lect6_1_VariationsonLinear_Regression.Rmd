@@ -2,6 +2,9 @@
 Author: IE 2064 Data Science
 Date: February 2017
 Title: Variations on linear regression
+output:
+  beamer_presentation: default
+  slidy_presentation: default
 ---
 ```{r}
 
@@ -19,8 +22,8 @@ load("regression_cousins.Rdata")
 - Data set of 1267 chemical compounds
 -  208 binary "fingerprints" that indicate the presence of a specific chemical substructure
 -  16 count descriptors (e.g. number of bonds or number of a specific type of atom)
--  FOur continuous descriptors (e.g. molecular weight or surface area)
-
+-  Four continuous descriptors (e.g. molecular weight or surface area)
+- Target: solubility values
 
 
 
@@ -154,7 +157,7 @@ pcrTune <- train(x = solTrainXtrans, y = solTrainY,
 plsTune
 ```
 
-## Partial least squares importnce scores
+## Partial least squares importance scores
 
 ```{r}
 plsImp <- varImp(plsTune, scale = FALSE)
@@ -253,7 +256,5 @@ plot(enetTune)
 testResults$Enet <- predict(enetTune, solTestXtrans)
 ```
 
-```{r, echo=FALSE}
 save.image("regression_cousins.Rdata")
-```
 

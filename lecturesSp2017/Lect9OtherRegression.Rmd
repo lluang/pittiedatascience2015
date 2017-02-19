@@ -3,16 +3,18 @@ title: "Other Regression Models"
 author: "IE 2064 Data Science"
 date: "February 2017"
 output:
-  slidy_presentation: default
+  beamer_presentation: default
   pdf_document: default
+  slidy_presentation: default
 ---
 
-Note: this presentation takes a long time to render. I ran the entire file, then I commented out the r code by removing the `{r}` at the beginning of the code blocks that ran calculations.  The final result was saved using the command:
+```{r, echo=FALSE}
+#Note: this presentation takes a long time to render. I ran the entire file, then I commented out the r code by removing the `{r}` at the beginning of the code blocks that ran calculations.  The final result was saved using the command:
 
-`save.image("regressionTree.Rdata")`
+#`save.image("regressionTree.Rdata")`
 
-which saves all datasets and variables that currently existed in the data set.  Then I reload the data in the following code chunk.
-
+#which saves all datasets and variables that currently existed in the data set.  Then I reload the data in the following code chunk.
+```
 ```{r}
 library(AppliedPredictiveModeling)
 library(caret)
@@ -31,6 +33,16 @@ Overview
 -  Random Forests
 -  Boosting
 -  Cubist
+
+Case study: Quantitative structure-activity relationship modeling
+==============
+
+- Data set of 1267 chemical compounds
+-  208 binary "fingerprints" that indicate the presence of a specific chemical substructure
+-  16 count descriptors (e.g. number of bonds or number of a specific type of atom)
+-  Four continuous descriptors (e.g. molecular weight or surface area)
+- Target: solubility values
+
 
 Implement cross validation for all models
 =================
