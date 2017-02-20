@@ -1,7 +1,11 @@
 ---
-title: "Lecture 11: Linear Classification Methods"
+title: 'Lecture 11: Linear Classification Methods'
 author: "IE 2064 Data Science"
 date: "February 2017"
+output:
+  html_document: default
+  pdf_document: default
+  slidy_presentation: default
 ---
 
 Classification overview
@@ -39,12 +43,13 @@ Grant application example
 -  Test data
   - 2176 applications from 2009 - 2010
 
-```{r}
+```{r, warning=FALSE}
 library(ggplot2)
 library(AppliedPredictiveModeling)
 library(caret)
 library(pROC)
-load("12DescrimantAnalysis.Rdata")
+load("Lect11ClassificationMethods.Rdata")
+#load("12DescrimantAnalysis.Rdata")
 ```
 
 Some preprocessing
@@ -109,7 +114,7 @@ This is known as the $sigmoidal$ function.  Values of $p$ will be between 0 and 
 
 Implementation
 ================
--`glm` (general linear model)
+- `glm` (general linear model)
 ```{r}
 modelfit <- glm(Class ~ Day,
                data = training[pre2008,],
@@ -128,10 +133,12 @@ Generate prediction
 
 - `glm` uses the second factor (*unsuccessful*) as the event of interest, so this the prediction of rate of non-success.
 
-```{r}
+```
 successProb <- 1 - predict(modelfit,
                            newdata = data.frame(Day=c(10, 150, 300, 350)),
                            type="response")
+```
+```{r}
 successProb
 ```
 
@@ -175,6 +182,8 @@ plot(dayProfile, ylab="Log Odds")
 lrm can also work with lists of predictors
 ==================
 
+- Setup LGOCV
+
 ```{r}
 trainingDay2 <- training$Day^2
 fullSet <- c(fullSet, "Day2")
@@ -188,7 +197,7 @@ ctrl <- trainControl(method = "LGOCV",
 
 Fit model with full predictor set
 ==============
-```
+```{r}
 set.seed(476)
 lrFull <- train(training[, c(fullSet)],
                y=training$Class,
@@ -205,7 +214,7 @@ lrFull
 
 Smaller predictor set
 ======
-```
+```{r}
 set.seed(476)
 lrReduced <- train(training[, reducedSet],
                y=training$Class,
@@ -290,9 +299,14 @@ sclaed2008HoldOut <- predict(grantPreProcess,
 ldaModel <- lda(x=scaledPre2008,
                 grouping = training$Class[pre2008])
 ```
+```{r}
+ldaModel
+```
 
 Make prediction
 ==========
+
+- Using linear discriminant analysis
 ```
 set.seed(476)
 ldaFit1 <- train(x = training[, reducedSet],
@@ -303,6 +317,8 @@ ldaFit1 <- train(x = training[, reducedSet],
                  trControl = ctrl)
 lda1Confusion <- confusionMatrix(data = ldaFit1$pred$pred,
 reference = ldaFit1$pred$obs)
+```
+```{r}
 lda1Confusion
 ```
 
