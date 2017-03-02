@@ -47,8 +47,8 @@ library(pROC)
 ### estimate the memory usage (VSIZE = total memory size) to be 
 ### 2700M/core.
 
-library(doMC)
-registerDoMC(2)
+#library(doMC)
+#registerDoMC(2)
 
 ## This control object will be used across multiple models so that the
 ## data splitting is consistent
@@ -362,7 +362,7 @@ plot(knnRoc, type = "s", add = TRUE, legacy.axes = TRUE)
 
 factors <- c("SponsorCode", "ContractValueBand", "Month", "Weekday")
 nbPredictors <- factorPredictors[factorPredictors %in% reducedSet]
-nbPredictors <- c(nbPredictors, factors)
+#nbPredictors <- c(nbPredictors, factors)
 nbPredictors <- nbPredictors[nbPredictors != "SponsorUnk"]
 
 nbTraining <- training[, c("Class", nbPredictors)]
@@ -382,7 +382,7 @@ nBayesFit <- train(x = nbTraining[,nbPredictors],
                    y = nbTraining$Class,
                    method = "nb",
                    metric = "ROC",
-                   tuneGrid = data.frame(usekernel = c(TRUE, FALSE), fL = 2),
+                   tuneGrid = data.frame(usekernel = c(TRUE, FALSE), fL = 2, adjust = 1),
                    trControl = ctrl)
 nBayesFit
 
@@ -394,7 +394,7 @@ nBayesRoc <- roc(response = nBayesFit$pred$obs,
                  levels = rev(levels(nBayesFit$pred$obs)))
 nBayesRoc
 
-
+save.image("13_Non-Linear_Class.Rdata")
 sessionInfo()
 
 q("no")

@@ -3,9 +3,9 @@ title: 'Lecture 11: Linear Classification Methods'
 author: "IE 2064 Data Science"
 date: "February 2017"
 output:
-  html_document: default
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
+  html_document: default
 ---
 
 Classification overview
