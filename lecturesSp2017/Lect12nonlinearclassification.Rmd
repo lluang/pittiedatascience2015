@@ -1,8 +1,9 @@
 ---
 title: "Non-linear classification methods"
 author: "IE 2064 Data Science"
-date: "February 2017"
+date: "March 2017"
 output:
+  pdf_document: default
   slidy_presentation: default
 ---
 ```{r loadlibraries, echo=FALSE}
@@ -56,6 +57,17 @@ Nonlinear classification models
 -  More complex boundaries, but may require fewer boundaries (because you do not need as many linear segments to define a class boundary)
 -  Tends not to be useful when many variables are indicator variables (linear boundaries are adequate here)
 
+Tradeoff
+========
+
+- Non-linear methods tends to be more difficult to interpret.
+- The tend to be more accurate, especially when there are more potential features.
+  -  The methods can internally identify more relationships between variables.
+  -  But they cannot be inspected from the output.
+- Use these when accuracy is more important that interpretability.
+  -  When building decision maker intuition is not important.
+  -  When the machine learning output is used as a pointer to further investigation.
+  -  Note: It is unethical to make irrevocable decisions based on the output of machine learning methods that are not understood. That is a role for human judgement.
 
 Mechanics
 ============
@@ -71,17 +83,73 @@ ctrl <- trainControl(method = "LGOCV",
              savePredictions = TRUE)
 ```
 
+QDA, RDA, MDA
+============
+
+
+Quadratic and regularized discriminant analysis
+=============
+
+-  In LDA, trained model minimized the total probability of misclassification.
+- Predictors share a common covariatnce structure.
+- Class boundaries were linear functions of the predictors.
+-  For QDA, covariance structure can be class specific.
+-  Class boundaries can be curvilinear.
+
+![Bayes vs LDA vs QDA](./resources/BayesVsLDAVsQDA.png)
+
+Requirements for QDA
+===============
+
+-  Class specific covariances increases the quantity of available data.
+  - Must determine a covariance structure and boundary for every class boundary.
+  - Covariance matrices must be invertable.
+  - Number of predictors must be less than the number of cases within each class.
+  - Predictors must not have pthological levels of collinearity (must be independendent).
+  - If predictors are indicators for discrete categories, they can only be modeled as linear functions.
+  
+  
+Regularized Discriminant Analysis
+==========
+
+- Maybe the best way to separate class boundaries is a structure between linear and quadratic surface
+
+-  The tuning parameter, $\lambda$ flexes the covariance model between LDA ($\lambda=0$) and QDA ($\lambda=1$).
+
+$$\tilde{\Sigma}_l(\lambda) = \lambda \Sigma_l + (1-\lambda)\Sigma$$
+
+- The pooled covariance matrix can be varied from as observed to acting as if independent using the coefficient $\gamma$.
+
+$$\Sigma(\gamma) = \gamma \Sigma + (1-\gamma) \sigma^2I$$
+
+-  $\lambda$ and $\gamma$ can be tuned to determine how much you can break the LDA assumption of a common covariance structure and linear boundaries.
+
 Mixture Discriminant Analysis
 ===================
 
--  If linear discriminant analysis assumed that each class had a distribution of predictors that were normally distributed.
+-  Linear discriminant analysis assumed that each class had a distribution of predictors that were normally distributed.
 -  MDA allows for subclasses that are normally distributed.
 -  Number of subclasses is the level of complexity.
+-  Like LDA, assume that they have the same covariance structure.
+- E.g. three classes with three normal distributions with different means but same variance.
 
 ![MDA diagram](./resources/mdadescription.png)
 
+MDA tuning
+=========
+
+-  Number of different subclasses per class needed.
+-  MDA modifies $P(X|Y = C_l)$ by creating a per class mixture
+
+$$D_l(x) \inf \sum_{k=1}^{L_l} \phi_{lk}D_{lk}(x)$$
+
+- $L_l$ is the number of distributions for the $l$th class and $\phi_{lk}$ are the mixing proportions that are estimated during training.
+- Tune using the number of distributions per class.
+
 MDA implementation
 ==============
+
+- 'mda' package included with caret.
 
 ```{r}
 set.seed(476)
@@ -118,6 +186,13 @@ mdaRoc
 update(plot(mdaFit, ylab = "ROC AUC (2008 Hold-Out Data)"))
 ```
 
+
+Neural networks
+=========
+
+- We have used neural networks in regression where a single response (prediction) was generated.
+- We can also use the neural network to make multiple outputs (e.g. a probability like output for each of $C$ classes).
+
 Neural Networks
 ===========
 
@@ -136,9 +211,31 @@ Neural Network mechanics
 -  Create hidden units based on the observed predictors, then do the final prediction based on the hidden units.
 -  There can be multiple layers of hidden units. When taken to an extreme it results in the Google inception art project.
 
+
+Neural network steps
+===========
+
+- Two stage model with $K$ units at the end.
+- In between the predictors and the classes are the hidden units that are linear combinations of the predictors.
+- Each class is predicted by a linear combination of the hidden units that have been transformed to be between zero and one by the sigmoid function
+
+$$\sigma(v) = 1/(1+e^{-v})$$
+
+- The softmax transformation can be used so that the resulting output is probability-like (all units between 0 and 1, sum adds up to 1)
+
+$$\hat{p}^*_l = \frac{e^{\hat{y}_l}}{\sum_{l=1}^C e^{\hat{y}_l}}$$
+
 Neural network illustration
 ======
-![Neural networks](./resources/anndiagram.png)
+![Neural networks](./resources/neural_c.png)
+
+Overfitting in neural networks
+==============================
+
+- Neural networks for classification have a significant potential for overfitting.
+- Example: Google used neural networks with many layers on image data and was able to generate images out of white noise *inceptionism*
+
+https://research.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html
 
 
 Implementation
@@ -167,6 +264,7 @@ nnetFit <- train(x = training[,reducedSet],
 Results for model 1 - Simple network model
 ===============
 
+- Grant model
 
 ```{r nnet1results, echo=FALSE}
 nnetFit
@@ -312,8 +410,19 @@ Flexible discriminant analysis
 
 -  We can modify linear discriminant analysis to use other regression methods to define the class boundaries
   -  e.g. lasso, ridge regression, MARS
+- Result can be used to create more complex boundaries
+- E.g. FDA with MARS and four terms.
+
+![LDA vs FDA (with MARS)](./resources/LDAVsFDA.png)
+
+
+Application of FDA to grant model
+====================
+
 -  Tuning based the type of linear model. (e.g. retained terms for lasso or MARS)
+-  Result
   
+
 ```
 set.seed(476)
 fdaFit <- train(x = training[,reducedSet], 
@@ -350,14 +459,19 @@ plot(nnetRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
 
 Support Vector Machines
 =======
-left: 60%
+
 - Similar to the regression version, generate boundaries to define classes.
 - Define planes that represent the best boundaries between classes
-  - recognizing there are no perfect boundaries.
-  - Planes are scored by distance from boundary to points (greater is better) and penalized for points on wrong side or too close to boundary (within the margin)
-***
+- If data is seperable, maximize the buffer between the boundary and the data.
 
 ![SVM plane diagram](./resources/svmplane.png)
+
+Creating a support vector
+=============
+
+- Often, the data set is not completely separable.
+  - Recognize there are no perfect boundaries.
+  - Planes are scored by distance from boundary to points (greater is better) and penalized for points on wrong side or too close to boundary (within the margin)
 
 ```
 library(kernlab)
@@ -503,6 +617,38 @@ K-Nearest Neighbors
 -  'nearest' needs to be defined. Usually use Euclidean metrics (square root of the sum of the squares of differences in predictors)
 -  Typically, you would center and scale predictors first.
 
+
+Metrics
+========
+
+-  *Nearest* is defined by some metric.
+-  Euclidean
+
+$$\left(\sum_{j=1}^P (x_{aj} - x_{bj})^2)\right)^{1/2}$$
+
+- Minkowiski - A generalization of the Euclidean geometry for $q>0$.
+
+$$\left(\sum_{j=1}^P |x_{aj} - x_{bj}|^q\right)^{1/q}$$
+
+- Manhattan distance - Minkowski distance with $q=1$.
+
+$$\left(\sum_{j=1}^P |x_{aj} - x_{bj}|\right)$$
+
+- Other metrics can be used depending on the setting.
+
+- With categorical features, treat like values of having a difference of 0, and unlike values of having a difference of 1.
+
+
+kNN quality
+============
+
+- Can be poor when the local predictor structure is not relevant to the response.
+- If some predictors are irrelevent or noisy.
+  - Pre-processing can remove irrelevent predictors.
+- May need weighing of predictors or of samples used to predict the response.
+Implementation of kNN
+=========
+
 ```
 set.seed(476)
 knnFit <- train(x = training[,reducedSet], 
@@ -549,6 +695,7 @@ plot(svmPRoc, type = "s", add = TRUE, col = rgb(.2, .2, .8, .2), legacy.axes = T
 plot(knnRoc, type = "s", add = TRUE, legacy.axes = TRUE)
 ```
 
+
 Naive Bayes
 =====
 
@@ -571,16 +718,9 @@ $$P(X|Y=C_l) = \Pi_{j=1}^P P(X_j|Y=C_l)$$
 -  So instead of calculating joint probabilities, multiply conditionals.
 -  Assumption is false, but is often close enough for a good predictor.
 -  We need to make a check along the way for issues such as conditional observed frequencies = 0
+- Can introduce a *Laplace  correction factor* between 1 and 2 in the training data in each class to the numerator and denominator.
 
 
-```{r, echo=FALSE}
-factors <- c("Sponsor.Code", "ContractValueBand", "Month", "Weekday")
-
-nbPredictors <- factorPredictors[factorPredictors %in% reducedSet]
-nbPredictors <- factorPredictors[]
-#nbPredictors <- c(nbPredictors, factors)
-nbPredictors <- nbPredictors[nbPredictors != "SponsorUnk"]
-```
 ```
 nbTraining <- training[, c("Class", nbPredictors)]
 nbTesting <- testing[, c("Class", nbPredictors)]
@@ -623,13 +763,14 @@ nBayesRoc <- roc(response = nBayesFit$pred$obs,
                  predictor = nBayesFit$pred$successful,
                  levels = rev(levels(nBayesFit$pred$obs)))
 ```
+
 Neural Net vs. Naive Bayes ROC
 =====
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
+par(mfrow=c(2,1))
 plot(nnetRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE, print.auc=TRUE )
-```
-***
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
 plot(nBayesRoc, type = "s", legacy.axes = TRUE, print.auc=TRUE)
+par(mfrow=c(1,1))
 ```
 
