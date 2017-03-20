@@ -1,20 +1,113 @@
-Classification trees and rule based methods
-=======================
-author: IE 2064 Data Science
-date: March 2017
+---
+Title: "Classification trees and rule based methods"
+author: "IE 2064 Data Science"
+date: "March 2017"
+---
+
 
 ```{r loadlibraries, echo=FALSE}
 options(digits = 4)
 library(caret)
 library(pROC)
 #library(partykit)
-load("classtree.RData")
+#load("classtree.RData")
+#load("14_Class_Trees.RData")
+```
+
+Classification trees and rule based methods
+=====================
+
+Preliminaries
+==============
+
+Set up leave group out cross validation methods
+
+```{r, echo=FALSE}
+load("grantData.RData")
+set.seed(100)
+numpre2008 = length(pre2008)
+trainingrows = sort(sample(nrow(training), size=1000, replace=FALSE))
+
+training = training[trainingrows,]
+pre2008 = pre2008[trainingrows[trainingrows<=numpre2008]]
+ctrl <- trainControl(method = "LGOCV",
+                     summaryFunction = twoClassSummary,
+                     classProbs = TRUE,
+                     index = list(TrainSet = pre2008),
+                     savePredictions = TRUE)
+```
+
+Recursive partitioning
+=========================
+
+```{r, echo=FALSE}
+set.seed(476)
+rpartFit <- train(x = training[,fullSet], 
+                   y = training$Class,
+                   method = "rpart",
+                   tuneLength = 30,
+                   metric = "ROC",
+                   trControl = ctrl)
+rpartFit
+```
+
+
+```{r, echo=FALSE}
+set.seed(476)
+rpartFit <- train(x = training[,fullSet], 
+                 y = training$Class,
+                 method = "rpart",
+                 tuneLength = 30,
+                 metric = "ROC",
+                 trControl = ctrl)
+rpartFit
+rpartRoc <- roc(response = rpartFit$pred$obs,
+                predictor = rpartFit$pred$successful,
+                levels = rev(levels(rpartFit$pred$obs)))
+
+```
+===
+```{r}
+library(partykit)
+plot(as.party(rpartFit$finalModel))
+
+rpart2008 <- merge(rpartFit$pred,  rpartFit$bestTune)
+rpartCM <- confusionMatrix(rpartFit, norm = "none")
+```
+```{r}
+rpartCM$table
+```
+===
+```{r}
+set.seed(476)
+rpartFactorFit <- train(x = training[,factorPredictors], 
+                        y = training$Class,
+                        method = "rpart",
+                        tuneLength = 30,
+                        metric = "ROC",
+                        trControl = ctrl)
+rpartFactorFit 
+rpartFactorRoc <- roc(response = rpartFactorFit$pred$obs,
+                      predictor = rpartFactorFit$pred$successful,
+                      levels = rev(levels(rpartFactorFit$pred$obs)))
+
+```
+===
+```{r}
+plot(as.party(rpartFactorFit$finalModel))
+```
+===
+```{r}
+rpartFactor2008 <- merge(rpartFactorFit$pred,  rpartFactorFit$bestTune)
+rpartFactorCM <- confusionMatrix(rpartFactorFit, norm = "none")
+rpartFactorCM$table
 ```
 
 
 Recursive partitioning ROC curves
 =====
 ``` {r, echo=FALSE, fig=TRUE}
+
 plot(rpartRoc, type = "s", print.thres = c(.5),
      print.thres.pch = 3,
      print.thres.pattern = "",
@@ -35,15 +128,58 @@ legend(.75, .2,
        pch = c(16, 3))
 ```
 
+Classification trees
+===========
+
+```{r, echo=FALSE}
+set.seed(476)
+j48FactorFit <- train(x = training[,factorPredictors], 
+                      y = training$Class,
+                      method = "J48",
+                      metric = "ROC",
+                      trControl = ctrl)
+j48FactorFit
+```
+===
+```{r}
+j48Factor2008 <- merge(j48FactorFit$pred,  j48FactorFit$bestTune)
+j48FactorCM <- confusionMatrix(j48FactorFit, norm = "none")
+j48FactorCM
+```
+===
+```{r}
+j48FactorRoc <- roc(response = j48FactorFit$pred$obs,
+                    predictor = j48FactorFit$pred$successful,
+                    levels = rev(levels(j48FactorFit$pred$obs)))
+```
+===
+```{r}
+set.seed(476)
+j48Fit <- train(x = training[,fullSet], 
+                y = training$Class,
+                method = "J48",
+                metric = "ROC",
+                trControl = ctrl)
+
+j482008 <- merge(j48Fit$pred,  j48Fit$bestTune)
+j48CM <- confusionMatrix(j48Fit, norm = "none")
+j48CM
+```
+===
+```{r}
+j48Roc <- roc(response = j48Fit$pred$obs,
+              predictor = j48Fit$pred$successful,
+              levels = rev(levels(j48Fit$pred$obs)))
+```
 
 Classification tree ROC plots
 =====
 
-```
-{r, plottreeROC, echo=FALSE, fig=TRUE}
+```{r, plottreeROC, echo=FALSE, fig=TRUE}
 plot(j48FactorRoc, type = "s", print.thres = c(.5), 
      print.thres.pch = 16, print.thres.pattern = "", 
      print.thres.cex = 1.2, legacy.axes = TRUE)
+
 plot(j48Roc, type = "s", print.thres = c(.5), 
      print.thres.pch = 3, print.thres.pattern = "", 
      print.thres.cex = 1.2, legacy.axes = TRUE,
@@ -60,19 +196,24 @@ legend(.75, .2,
 Rule based models
 =============
 
-```
-{r, echo=FALSE}
+```{r, echo=FALSE}
+set.seed(476)
+partFit <- train(x = training[,fullSet], 
+                 y = training$Class,
+                 method = "PART",
+                 metric = "ROC",
+                 trControl = ctrl)
 partFit
 ```
 
 Confusion matrix
 ==================
-```
+```{r}
 part2008 <- merge(partFit$pred,  partFit$bestTune)
 partCM <- confusionMatrix(partFit, norm = "none")
+partCM
 ```
-```
-{r, echo=FALSE}
+```{r, echo=FALSE}
 partCM$table
 ```
 
@@ -80,22 +221,27 @@ ROC curve
 ==========
 
 
-```
-{r, echo=FALSE}
+```{r, echo=FALSE}
+partRoc <- roc(response = partFit$pred$obs,
+               predictor = partFit$pred$successful,
+               levels = rev(levels(partFit$pred$obs)))
 partRoc
 ```
 
 Partitioning
 ============
-```
-{r}
+```{r}
+set.seed(476)
+partFactorFit <- train(training[,factorPredictors], training$Class,
+                       method = "PART",
+                       metric = "ROC",
+                       trControl = ctrl)
 partFactorFit
 ```
 
 Confusion matrix
 ==============
-```
-{r, cache=TRUE,  echo=FALSE}
+```{r, cache=TRUE,  echo=FALSE}
 partFactor2008 <- merge(partFactorFit$pred,  partFactorFit$bestTune)
 partFactorCM <- confusionMatrix(partFactorFit, norm = "none")
 partFactorCM$table
@@ -103,8 +249,7 @@ partFactorCM$table
 
 ROC
 =====
-```
-{r, cache=TRUE,  echo=FALSE}
+```{r, cache=TRUE,  echo=FALSE}
 partFactorRoc <- roc(response = partFactorFit$pred$obs,
                      predictor = partFactorFit$pred$successful,
                      levels = rev(levels(partFactorFit$pred$obs)))
@@ -115,8 +260,7 @@ partFactorRoc
 Bagged Trees
 =============
 
-```
-
+```{r}
 set.seed(476)
 treebagFit <- train(x = training[,fullSet], 
                     y = training$Class,
@@ -125,25 +269,24 @@ treebagFit <- train(x = training[,fullSet],
                     metric = "ROC",
                     trControl = ctrl)
 ```
-```
-{r, cache=TRUE,  echo=FALSE}
+```{r, cache=TRUE,  echo=FALSE}
 treebagFit
 ```
 
 Confusion matrix for bagged trees
 ======
-```
+```{r}
 treebag2008 <- merge(treebagFit$pred,  treebagFit$bestTune)
 treebagCM <- confusionMatrix(treebagFit, norm = "none")
+treebagCM
 ```
-```
-{r, cache=TRUE,  echo=FALSE}
+```{r, cache=TRUE,  echo=FALSE}
 treebagCM$table
 ```
 
 Bagged Tree ROC
 ============
-```
+```{r}
 treebagRoc <- roc(response = treebagFit$pred$obs,
                   predictor = treebagFit$pred$successful,
                   levels = rev(levels(treebagFit$pred$obs)))
@@ -154,31 +297,29 @@ treebagFactorFit <- train(x = training[,factorPredictors],
                           nbagg = 50,
                           metric = "ROC",
                           trControl = ctrl)
-```
-===
-
-```
-{r, cache=TRUE,  echo=FALSE}
 treebagFactorFit
 ```
+
 ====
-```
+
+```{r}
 treebagFactor2008 <- merge(treebagFactorFit$pred,  treebagFactorFit$bestTune)
 treebagFactorCM <- confusionMatrix(treebagFactorFit, norm = "none")
+treebagFactorRoc <- roc(response = treebagFactorFit$pred$obs,
+                        predictor = treebagFactorFit$pred$successful,
+                        levels = rev(levels(treebagFactorFit$pred$obs)))
 ```
 
 Confusion matrix
 ===============
-```
-{r, cache=TRUE,  echo=FALSE}
+```{r, cache=TRUE,  echo=FALSE}
 treebagFactorCM$table
 ```
 
 Bagged tree ROC
 =====
 
-```
-{r, cache=TRUE,  echo=FALSE, fig=TRUE}
+```{r, cache=TRUE,  echo=FALSE, fig=TRUE}
 plot(rpartRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
 plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), 
      legacy.axes = TRUE)
@@ -199,8 +340,7 @@ legend(.75, .2,
 
 ROC plots
 =======
-```
-{r, echo=FALSE, fig=TRUE}
+```{r, echo=FALSE, fig=TRUE}
 plot(treebagRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
 plot(rpartRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
 plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
