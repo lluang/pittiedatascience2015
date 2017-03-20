@@ -59,11 +59,12 @@ Some preprocessing
 -  Create dummy variables to represent unknown values.
 -  Remove zero variance variables (all grant proposals had the same value)
 -  Remove calculated variables (e.g. *allPub* is the sum of (*AstarTotal*, *ATotal*, *BTotal*, ad *CTotal*))
+
 Simple models for classification
 =================
 
 1. ZeroR - Rule based on no predictors
-2. OneR - Rule based on on e predictor
+2. OneR - Rule based on one predictor
 3. Logistic regression
 
 ZeroR
