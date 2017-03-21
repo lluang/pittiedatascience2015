@@ -1,7 +1,10 @@
 ---
-Title: "Classification trees and rule based methods"
+Title: Classification trees and rule based methods
 author: "IE 2064 Data Science"
 date: "March 2017"
+output: 
+  pdf_document: default
+  slidy_presentation: default
 ---
 
 
@@ -17,12 +20,68 @@ library(pROC)
 Classification trees and rule based methods
 =====================
 
+Classification trees
+=========
+
+- Classification trees fall with the family of tree-based models.
+- Consisted of nested `if-then` statements
+  - Similar to regression trees.
+- Tree is used to classify an observation.
+  - Each classification has a prediction/class, and the appropriate class is applied to the new observation.
+
+Types of methods
+============
+
+- Similarly with regression models, many other models are built on classification trees.
+-  Random forests, boosting, and other ensemble methods.
+
+Basic classification trees
+===========
+
+- The aim of classification trees is to partition the data into smaller, more homogenous groups.
+
+![Classification by regions in tree-based model](./resources/classificationtree.png)
+
+Homogeneity in classifications
+========
+
+- *Homogeneity* means that the nodes of the split are more pure (larger proportion of one class in each node).
+- Purity is defined by maximiizing accuracy or minimizing misclassifications.
+
+Measuring purity - Gini Index
+===============
+
+- Gini index
+
+$$p_1(1-p_1) + p_2(1-p_2)$$
+
+  - Minimized when either of the class probabilities is driven toward zero.
+  - Maximized if $p_1=p_2$
+- Can calculate Gini index before and after splits.
+
+Stopping point criteria
+==============
+
+- Two criteria: Minimum number of samples in a node or maximum tree depth.
+- Trees that are very deep or have small number of samples in a node tend to over-fit the training data.
+- An indirect criteria is *cost-complexity*, which is a function of the total number of nodes on a tree. (covered in regression trees)
+- Cost-complexity is applied by pruning a tree after the stopping criteria are met.
+  - Pruning involves removing nodes from a tree to reduce the danger of over-fitting.
+
+Choosing splits
+===================
+
+- Several algorithms are available for classification trees.
+- Classification and Regression Trees (CART)
+- C4.5
+- J48 (updated version of C4.5 found in Weka)
+
 Preliminaries
 ==============
 
 Set up leave group out cross validation methods
 
-```{r, echo=FALSE}
+```{r}
 load("grantData.RData")
 set.seed(100)
 numpre2008 = length(pre2008)
@@ -40,7 +99,10 @@ ctrl <- trainControl(method = "LGOCV",
 Recursive partitioning
 =========================
 
-```{r, echo=FALSE}
+- `rpart` applies CART
+- Splitting based on maximizing the Gini coefficient.
+
+```{r}
 set.seed(476)
 rpartFit <- train(x = training[,fullSet], 
                    y = training$Class,
@@ -53,30 +115,29 @@ rpartFit
 
 
 ```{r, echo=FALSE}
-set.seed(476)
-rpartFit <- train(x = training[,fullSet], 
-                 y = training$Class,
-                 method = "rpart",
-                 tuneLength = 30,
-                 metric = "ROC",
-                 trControl = ctrl)
-rpartFit
 rpartRoc <- roc(response = rpartFit$pred$obs,
                 predictor = rpartFit$pred$successful,
                 levels = rev(levels(rpartFit$pred$obs)))
 
 ```
+
+rpart final tree
 ===
-```{r}
+```{r, echo=FALSE}
 library(partykit)
 plot(as.party(rpartFit$finalModel))
 
 rpart2008 <- merge(rpartFit$pred,  rpartFit$bestTune)
 rpartCM <- confusionMatrix(rpartFit, norm = "none")
 ```
-```{r}
+
+rpart Confusion matrix
+========
+```{r, echo=FALSE}
 rpartCM$table
 ```
+
+rpart with reduced set of predictors
 ===
 ```{r}
 set.seed(476)
@@ -92,10 +153,13 @@ rpartFactorRoc <- roc(response = rpartFactorFit$pred$obs,
                       levels = rev(levels(rpartFactorFit$pred$obs)))
 
 ```
+Plot tree with reduced set of predictors
 ===
 ```{r}
 plot(as.party(rpartFactorFit$finalModel))
 ```
+
+Confusion matrix with reduced set of predictors. 
 ===
 ```{r}
 rpartFactor2008 <- merge(rpartFactorFit$pred,  rpartFactorFit$bestTune)
@@ -104,7 +168,7 @@ rpartFactorCM$table
 ```
 
 
-Recursive partitioning ROC curves
+Recursive partitioning ROC curves with full vs partial set of predictors
 =====
 ``` {r, echo=FALSE, fig=TRUE}
 
@@ -131,27 +195,42 @@ legend(.75, .2,
 Classification trees
 ===========
 
-```{r, echo=FALSE}
+- J48 method from WEKA implements a variation of C4.5
+- Differs from CART based on the pruning method.
+- Two strategies for pruning
+  1. Simple elimination of a subtree
+  2.  Raising a subtree so that it replaces a node further up the tree.
+- Pessimistic pruning focussing on an upper bound on the number of classification errors.
+- Implementation is in J48 from Weka.
+```{r}
 set.seed(476)
 j48FactorFit <- train(x = training[,factorPredictors], 
                       y = training$Class,
                       method = "J48",
                       metric = "ROC",
                       trControl = ctrl)
+```
+J48 output with reduced set of predictors
+======
+```{r}
 j48FactorFit
 ```
+
+J48 Confusion matrix
 ===
 ```{r}
 j48Factor2008 <- merge(j48FactorFit$pred,  j48FactorFit$bestTune)
 j48FactorCM <- confusionMatrix(j48FactorFit, norm = "none")
-j48FactorCM
+j48FactorCM$table
 ```
-===
-```{r}
+
+```{r, echo=FALSE}
 j48FactorRoc <- roc(response = j48FactorFit$pred$obs,
                     predictor = j48FactorFit$pred$successful,
                     levels = rev(levels(j48FactorFit$pred$obs)))
 ```
+
+J48 with full set of predictors
 ===
 ```{r}
 set.seed(476)
@@ -163,8 +242,10 @@ j48Fit <- train(x = training[,fullSet],
 
 j482008 <- merge(j48Fit$pred,  j48Fit$bestTune)
 j48CM <- confusionMatrix(j48Fit, norm = "none")
-j48CM
+j48CM$table
 ```
+
+J48 ROC calculation 
 ===
 ```{r}
 j48Roc <- roc(response = j48Fit$pred$obs,
@@ -172,7 +253,7 @@ j48Roc <- roc(response = j48Fit$pred$obs,
               levels = rev(levels(j48Fit$pred$obs)))
 ```
 
-Classification tree ROC plots
+J48 Classification tree ROC plots of partial and full set of predictors
 =====
 
 ```{r, plottreeROC, echo=FALSE, fig=TRUE}
@@ -196,6 +277,7 @@ legend(.75, .2,
 Rule based models
 =============
 
+- `PART` is a rule based classifier from Weka.
 ```{r, echo=FALSE}
 set.seed(476)
 partFit <- train(x = training[,fullSet], 
@@ -206,18 +288,15 @@ partFit <- train(x = training[,fullSet],
 partFit
 ```
 
-Confusion matrix
+Confusion matrix for rule based model and full set of predictors
 ==================
 ```{r}
 part2008 <- merge(partFit$pred,  partFit$bestTune)
 partCM <- confusionMatrix(partFit, norm = "none")
-partCM
-```
-```{r, echo=FALSE}
 partCM$table
 ```
 
-ROC curve
+ROC curve for rule-based classifier
 ==========
 
 
@@ -228,8 +307,10 @@ partRoc <- roc(response = partFit$pred$obs,
 partRoc
 ```
 
-Partitioning
+Partitioning with reduced set of predictors
 ============
+
+- PART rule based model. 
 ```{r}
 set.seed(476)
 partFactorFit <- train(training[,factorPredictors], training$Class,
@@ -239,7 +320,7 @@ partFactorFit <- train(training[,factorPredictors], training$Class,
 partFactorFit
 ```
 
-Confusion matrix
+Confusion matrix for PART with reduced set of predictors
 ==============
 ```{r, cache=TRUE,  echo=FALSE}
 partFactor2008 <- merge(partFactorFit$pred,  partFactorFit$bestTune)
@@ -247,7 +328,7 @@ partFactorCM <- confusionMatrix(partFactorFit, norm = "none")
 partFactorCM$table
 ```
 
-ROC
+ROC calculation for PART
 =====
 ```{r, cache=TRUE,  echo=FALSE}
 partFactorRoc <- roc(response = partFactorFit$pred$obs,
@@ -256,6 +337,15 @@ partFactorRoc <- roc(response = partFactorFit$pred$obs,
 partFactorRoc
 ```
 
+Bagging
+=======
+
+- Bagging for classification 
+- *B*ootstrap *Agg*regation
+- Using bootstrapping with a classification method
+  - Each iteration uses a bootstrapped sample of the original data which is fit with a classification tree.
+  - Each model in the resulting ensemble is used to predict a new observation.
+  - Highest vote getter wins.
 
 Bagged Trees
 =============
@@ -300,8 +390,6 @@ treebagFactorFit <- train(x = training[,factorPredictors],
 treebagFactorFit
 ```
 
-====
-
 ```{r}
 treebagFactor2008 <- merge(treebagFactorFit$pred,  treebagFactorFit$bestTune)
 treebagFactorCM <- confusionMatrix(treebagFactorFit, norm = "none")
@@ -310,13 +398,13 @@ treebagFactorRoc <- roc(response = treebagFactorFit$pred$obs,
                         levels = rev(levels(treebagFactorFit$pred$obs)))
 ```
 
-Confusion matrix
+Confusion matrix for bagged trees
 ===============
 ```{r, cache=TRUE,  echo=FALSE}
 treebagFactorCM$table
 ```
 
-Bagged tree ROC
+Bagged tree ROC plots vs recursive partitioning and J48 - reduced predictors
 =====
 
 ```{r, cache=TRUE,  echo=FALSE, fig=TRUE}
@@ -350,3 +438,15 @@ legend(.75, .2,
        col = c("black", "red"),
        pch = c(16, 3))
 ```
+
+Random Forest
+=======
+
+- Instead of the regression tree for every iteration of random forest, a classfication tree is used.
+- Tuning parameter is the number of randomly selected predictors to choose from.
+
+Boosting
+=========
+
+-  AdaBoost generates a sequence of weak classifiers.
+-  At every interaction, samples that are incorrectly classified are given more weight, so subsequent models that are part of the ensemble are better at samples that were incorrectly classified earlier.

@@ -3,8 +3,8 @@ title: "Non-linear classification methods"
 author: "IE 2064 Data Science"
 date: "March 2017"
 output:
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
 ---
 ```{r loadlibraries, echo=FALSE}
 ################################################################################
@@ -244,6 +244,9 @@ Implementation
 - Tuned by number of units in hidden layer and the weight decay.
 -  Preprocessing will center and scale the data so that each observation variable values are in terms of the mean and standard deviation of that variable. 
 -  SpatialSign - projection of vector onto a unit length circle (1 1-norm)
+
+=====
+
 ```
 nnetGrid <- expand.grid(size = 1:10, decay = c(0, .1, 1, 2))
 maxSize <- max(nnetGrid$size)
@@ -269,6 +272,7 @@ Results for model 1 - Simple network model
 ```{r nnet1results, echo=FALSE}
 nnetFit
 ```
+
 ```
 set.seed(476)
 nnetFit2 <- train(x = training[,reducedSet], 
