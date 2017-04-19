@@ -160,7 +160,8 @@ Tuning grid
 ```{r}
 gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9),
                         n.trees = (1:30)*50,
-                        shrinkage = 0.1)
+                        shrinkage = 0.1,
+                        n.minobsinnode=10)
 set.seed(825)
 gbmFit2 <- train(Class ~ ., data = training,
                  method = "gbm",
@@ -255,7 +256,8 @@ gbmFit4 <- train(Class ~ ., data = training,
                  ## function when no resampling is used:
                  tuneGrid = data.frame(interaction.depth = 4,
                                        n.trees = 100,
-                                       shrinkage = .1),
+                                       shrinkage = .1,
+                                      n.minobsinnode=10),
                  metric = "ROC")
 gbmFit4
 ```

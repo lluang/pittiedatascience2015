@@ -1,11 +1,11 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: 'DRAFT: July 23, 2015'
+date: 'DRAFT: April 2017'
 output:
+  word_document: default
   html_document:
     toc: yes
-  word_document: default
 ---
 
 Introduction
@@ -30,6 +30,7 @@ The design of the data science concentration is based on two descriptions of dat
 
 Both Drew Conway and the INFORMS Analytics section officers observe that most engineering programs focus on mathematical and stastical knowledge (domains 3, 4, 5) and provide very little to help graduates address the business problem (subject matter expertise or domains 1, 2) or actual implementation of the methods in a business setting (informations systems or domains 6 and 7).  The design of the program in this proposal seeks to keep a broad base in the mathematical and statistical methods that are the strength of an industrial engineering program while providing computational skill and sense of the needs of business focused clients.
 
+The data science proposal is intended to prepare students for the Associated Certified Analytics Professional (aCAP) certification offered by INFORMS.  The academic background required to cover the topics is intended to correspond to a technical MS program. Most comparable programs are also at the MS level (at various universities, these are offered by statistics, industrial engineering, business schools, information systems, or combinations of these host departments.)
 
 Proposal for a data science concentration as part of the MS in Industrial Engineering
 --------------------------
@@ -46,19 +47,25 @@ Core requirements
 
 -  IE 2005 Probability and Statistics
 -  IE 2001 Operations research
--  IE 2006 Manufacturing Systems
-
 
 Concentration requirements
 
--  IE 2064 Data Science (covers technical computing, data manipulation, and model evaluation)
+-  IE 2064 Data Science (covers technical computing, data manipulation, application of machine learning libraries, and model evaluation)
 -  IE 2xxx Machine learning (focuses on algorithm development and application)
 -  IE 2007 Statistics and Data Analysis (additional statistics depth)
 -  IE 2088 Simulation (add simulation to analytical toolkit)
--  INFSCI 2710 Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a MySQL centered workflow, which has interfaces that are similar to most other databases used in production. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .)
+-  INFSCI 2710 Database course that includes accessing database from a data analysis program. Potentially it could introduce students to cloud computing platforms in common use in data science and analytics. Note that it is considerably more rigorous than IE 1014/2004: Database Design.  In particular, students will use a client-server database (MySQL) centered workflow, which has interfaces that are similar to most other databases used in production environments. In contrast to MS Access, which does not support ODBC in the latest version or any other standard methods for embedding databases into analytics applications (e.g. from R, Python, Java, . . .).
+
+Note that IE 2064 ,IE 2xxx, IE 2088, INFSCI 2710 all require use of programming for data manipulation and data analysis. While these classes will help students learn programming, students will be told that they will need to learn this on their own and will be pointed to resources to help them do so if they did not effectively learn programming as undergraduates.
 
 
--  2 quantitative application area courses approved by advisor (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
+-  2 graduate level quantitative application area courses approved by advisor (e.g. Mfg, Supply chain, Health systems, Financial engineering, Marketing).  This course provides exposure to subject area analytics issues.
+
+Differences between proposal and MS IE
+---------------------------------------
+
+1.  Of the concentration requirements, only one class is currently listed as part of "at least 2 of following 4 courses".  This is IE 2007-Statistics and Data Analysis.  There is a database course (IE 2004 - Database Design), but it is not rigorous enough for the needs of a data science program, in particular, IE 2004 does not support the use of a database as a data store for an analytics workflow that includes predictive or prescriptive analytics as covered in the rest of the IE curriculum.
+2.  Instead of IE 2006-Introduction to manufacturing systems, the requirement presented is for two graduate level quantitatie application area courses.  While those who are in manufacturing could choose IE 2006 and IE 2100 - Supply Chain Analysis, many people who would take a data science program have other subject area interests (e.g. health care, marketing).  This proposal requires a subject matter focus based on general agreement on what is required from data science staff, and this is validated in numerous employer forums at INFORMS conferences (employers state that math and IE skill are not usually an issue with data science hires, but lack of ability to translate these skills into an industry is a recurrent issue.)
 
 Overview of data science and big data
 ======================================
@@ -83,7 +90,7 @@ Big data can be characterized by four aspects. These aspects drive the data proc
 Characteristics of data scientists.
 ------------------------------
 
-Drew Conway describes data scientists as having a combination of three sets of disparate skills:
+Drew Conway (NYU) describes data scientists as having a combination of three sets of disparate skills:
 
 - computer programming/hacking skills,
 - math and statistics knowledge, and
@@ -91,7 +98,7 @@ Drew Conway describes data scientists as having a combination of three sets of d
 
 
 
-![Drew Conway Data Science](lectures/resources/Data_Science_VD.png)
+![Data Science Venn diagram by Drew Conway](lectures/resources/Data_Science_VD.png)
 
 ### Computer programming skills
 
@@ -235,14 +242,12 @@ Program requires
 -  The differences between the Industrial Engineering department and the offerings at the SIS or Katz is the base provided by the predictive and prescriptive analytics core of IE: Queuing, Optimization, Simulation.  This is consistent with the INFORMS CAP understanding of analytics being of three phases, descriptive, predictive, prescriptive.
 -  All three proposals would have a data science foundation of data mining/machine learning. 
   -  The SIS program appears to be a combination of analytics and computational data analytics. IE offerings in prescriptive analytics are available to SIS students.  Essentially, the SIS and IE proposed program have comparable analytic cores in computational descriptive and predictive analytics, but reverse the emphasis on the data engineering and prescriptive analytics.
-  -  The Katz program appears to be a combination of analytics and business analytics.  The proposed IE program would be geared towards the spectrum of descriptive, predictive, prescriptive analytics in comparison to the Katz program which after the data mining core encourages focus on specific applications areas within the Katz Business school.
+  -  The Katz program appears to be a combination of analytics and business analytics, where the intent is for MBA students are educated consumers and secondary producers of analytics.  The proposed IE program would be geared towards application of the the spectrum of descriptive, predictive, prescriptive analytics in comparison to the Katz program which after the data mining core encourages focus on specific applications areas within the Katz Business school.
   -  In terms of the Conway Data Science Venn Diagram, the SIS proposal is slightly weighted towards the computer hacking corner, the Katz more focused on the application domain (marketing and other business domains), and the IE proposal more focused on the mathematics/statistics corner.
-  -  The three proposals also map to the three types of data science programs that are in the market. This is exemplified by the Georgia Tech program, which explicitly identifies three paths that are comparable to the three proposals.
+  -  The three proposals also map to the three types of data science programs that are in the market. This is exemplified by the Georgia Tech program, which explicitly identifies three paths that are comparable to the three types of programs.
   -  We expect that the three programs will draw from the three types of populations that are attracted to data science.  Those with an IT oriented background will tend to take the SIS certificate program.  Those with a business or non-technical background will gravitate towards the Katz certificate program within the MBA.  Those with a STEM focus will gravitate towards the IE program.
 
-<<<<<<< HEAD
+
 [^nestler2012]: Scott Nestler, Jack Levis and Bill Klimack, 2012, Certified Analytics Professional, in ORMS Today, Vol 39, No. 5, https://www.informs.org/ORMS-Today/Public-Articles/October-Volume-39-Number-5/Certified-Analytics-Professional.
 
 [^conway2013]: Drew Conway, 2013, The Data Science Venn Diagram, http://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram, accessed November 18, 2016.
-=======
->>>>>>> parent of 9fc2ded... Added citations to data science certificate proposal
