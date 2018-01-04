@@ -3,8 +3,8 @@ title: "Getting Started in Data Science"
 author: "Louis Luangkesorn"
 date: "January 2018"
 output:
-  beamer_presentation: default
   slidy_presentation: default
+  beamer_presentation: default
 ---
 
 Notecard
@@ -91,9 +91,28 @@ Tools
 Textbooks
 =========
 
-1.  (APL) Max Kuhn, Kjell Johnson, (2013), Applied Predictive Modeling, Springer, ISBN: 978-1-4614-6850-9
-3.  (Rattle) Williams, Data Mining with Rattle:  The Art of Excavating Data for Knowledge
-4.  (GGplot) Wickham, ggplot2: Elegant Graphics for Data Analysis 2nd ed (http://ggplot2.org/book/)
+Textbooks
+----------------------
+
+1. (APL) Max Kuhn, Kjell Johnson, (2013), Applied Predictive Modeling, Springer, ISBN: 978-1-4614-6850-9
+2. (Moderndive) Chester Ismay and Albert Y. Kim (2017), ModernDive: An Introduction to Statistical and Data Sciences via R, http://moderndive.com/index.html, A basic introduction to working with R, data manipulation, and using R for computational statistics.
+
+Supplements
+----------------------
+
+1. (W) Graham Williams, (2011), Data Mining with Rattle and R: The Art of Excavating Data for Knowledge Discovery, UseR Series, Springer, ISBN: 978-1-4419-9889-7 Available at Pitt Library as an ebook.
+2. (HT) Trevor Hastie, Roert Tibshirani, Jerome Friedman, (2001), The Elements of Statistical Learning 2nd ed, Springer, available at https://statweb.stanford.edu/~tibs/ElemStatLearn/. One of the standard reference textbooks for Machine learning.
+3. (R) Bill Venables, David Smith, and the R Core Team, (2013), An Introduction to R - Notes on R: A Programming Environment for Data Analysis and Graphics, available at http://cran.r-project.org/manuals.html and distributed along with R
+
+
+Some useful references
+----------------------
+
+1. (ggplot) Hadley Wickham, (2016),  Introduction to ggplot 2nd ed, Springer, available in epub or PDF from the Pitt Library
+2.  Introductory Statistics with Randomization and Simulation, https://www.openintro.org/stat/?stat_book=isrs. This is a different look at introductory statistics than the standard intro to statistics course. We will use it for simulation near the end of the course. In addition, the labs in the website has code that can help you implement statistical methods.
+3.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
+4. (Pro Git) Scott Chacon and Ben Straub, Pro Git, Apress, free e-book at https://git-scm.com/book/en/v2
+
 
 Supplements
 ===========
@@ -105,14 +124,13 @@ Supplements
 Assignments
 ===========
 
-## Homeworks
-
+Homeworks
   - Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
   - Data manipulation/visualization
   - Regression assignment
   - Classification assignment
 
-## Project
+Project
   
   - Three papers/presentations
   - Find a data set and a question
@@ -257,7 +275,7 @@ The scientific method
 
 The Data Science Venn Diagram
 =============================
-
+left:40%
 The primary colors of data
   - Hacking skills,
   - Math and statistics knowledge, and
@@ -578,9 +596,3 @@ Version control
 ===
 
 ![R Studio VCS](resources/rstudio-vcs_history.png)
-
- 
-
-
-
-
