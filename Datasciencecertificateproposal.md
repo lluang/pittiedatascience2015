@@ -1,7 +1,7 @@
 ---
 title: "Proposal for Graduate Certificate in Data Science"
 author: "Louis Luangkesorn"
-date: 'DRAFT: April 2017'
+date: 'DRAFT: June 2017'
 output:
   word_document: default
   html_document:
