@@ -1,10 +1,10 @@
 ---
 title: "Getting Started in Data Science"
 author: "Louis Luangkesorn"
-date: "January 2018"
+date: "January 2017"
 output:
-  beamer_presentation: default
   slidy_presentation: default
+  beamer_presentation: default
 ---
 
 Notecard
@@ -105,14 +105,13 @@ Supplements
 Assignments
 ===========
 
-## Homeworks
-
+Homeworks
   - Take one data set from APL 1.4 to use in applying methods throughout the course. We will set aside class time to both do and discuss this.
   - Data manipulation/visualization
   - Regression assignment
   - Classification assignment
 
-## Project
+Project
   
   - Three papers/presentations
   - Find a data set and a question
@@ -257,7 +256,7 @@ The scientific method
 
 The Data Science Venn Diagram
 =============================
-
+left:40%
 The primary colors of data
   - Hacking skills,
   - Math and statistics knowledge, and
