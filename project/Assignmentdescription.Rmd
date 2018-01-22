@@ -1,7 +1,11 @@
 ---
-output: pdf_document
+title: IE 2064 Data Science Project Description
+date: Spring 2018
+output:
+  pdf_document: default
+  html_document: default
 ---
-Assignments for IE 2064 Data Science
+Course project for IE 2064 Data Science
 ====================================
 
 The goal of this course is to gain practical skills, knowledge, and understanding in the analysis of data to make data driven decisions.  The grading in this course is built around three presentations on a single topic, where the presentations demonstrate increasing understanding of the data, the problem domain, and the application of methods for processing, analyzing, and presenting the data, question, and results.  The project may be done individually or a group of 2.
@@ -28,9 +32,10 @@ Project description
 
 1.  Exploratory data analysis (February 14)
 2.  Preliminary data analysis (March 14)
-3.  Final report and presentation (Final week)
+3.  Final report and presentation (April 25)
 
-1. Exploratory Data Analysis
+
+Exploratory Data Analysis
 ============================
 
 - Due February 14
@@ -42,16 +47,15 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 -    Support the selection of appropriate statistical tools and techniques.
 -    Provide a basis for further data collection through surveys or experiments.
 
-The first assignment
 
 1.  Identify a data set. Discuss the collection of the data. Who organized the collection, who actually performed the collection, for what purposes.
 2.  Discuss types of questions that users of the data may be interested in using the Context, Needs, Vision, Outcome framework.
 3.  Data summary. Discuss element present in the context of the elements of big data: Volume, Velocity, Variety, Veracity. Provide useful statistical summaries.
 4.  Data visualization
 5.  Text analysis - What were difficulties faced doing the analysis?
-  
-  
-2.  Preliminary data analysis
+
+
+Preliminary data analysis
 =============================
 
 Due March 14
@@ -59,15 +63,19 @@ Due March 14
 1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
 2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
 3.  Preliminary analysis including data visualization.
-4.  Hypothesis(es) to be tested for the final project.
-5.  Plan of work.
-  
-3.  Final project
+4.  First application of an applicable machine learning method for the problem.
+5.  Hypothesis(es) to be tested for the final project.
+6.  Plan of work.
+
+
+Final project
 =================
+
+April 25
 
 1.  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected? What makes it interesting (Think in terms of the dimensions of big data: velocity, volume, variety)
 2.  Discuss problem being studied in terms of CoNVO.
 3.  What were obstacles you faced while analysing the data? How did you deal with data that you would have wanted but was not available?
 4.  Hypothesis.  What is the believed real world relationship between the predictors and outcome (or the counterparts as applicable to your project)
-4.  Analysis - Methodology. How it relates predictors to outcomes
-5.  Conclusions - Note: It is not necessary for there to be a 'successful' application of data mining methods that 'solves' the problem. But you should explain how the methodology you applied failed. (i.e. it may imply that the relationship hypothesized does not exist, although if you say this, you should probably have tried either additional methodologies or an additional hypothesis before reaching this conclusion)
+5.  Analysis - Methodology. How it relates predictors to outcomes. Compare several predictive analytics methods from different families and discuss how they preform?  Why do some methods work better than others?
+6.  Conclusions - Note: It is not necessary for there to be a 'successful' application of data mining methods that 'solves' the problem. But you should explain how the methodology you applied failed. (i.e. it may imply that the relationship hypothesized does not exist, although if you say this, you should probably have tried either additional methodologies or an additional hypothesis before reaching this conclusion)
