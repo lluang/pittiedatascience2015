@@ -1,0 +1,294 @@
+
+---
+title: "Data structures and visualization"
+author: "Louis Luangkesorn"
+date: "January 2017"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
+
+Data structures
+========================================================
+type: section
+
+Features of R
+=============
+
+-  an effective data handling and storage facility,
+-  a suite of operators for calculations on arrays, in particular matrices,
+-  a large, coherent, integrated collection of intermediate tools for data analysis,
+-  graphical facilities for data analysis and display either directly at the computer or on hardcopy, and
+-  a well developed, simple and effective programming language (called ‘S’) which includes conditionals, loops, user defined recursive functions and input and output facilities.
+
+Working with R
+==============
+
+- R is an computational environment and a programming language.
+- The benefit of a programming language is that analysis is reproducable, just change the data set.
+- The benefit of a computational environment is that you can inspect the options you have available while you are performing the analysis.
+
+Getting help
+============
+
+-  R-Studio help is typically in the lower left.
+  -  Manuals (An Introduction to R)
+  -  Installed packages
+  -  Search capability
+-  Type `help(function)` in the Console
+
+```{r, echo=TRUE}
+help(solve)
+```
+
+Data
+=============
+type: section
+
+Working with data 
+=================
+
+-  R generally uses dynamic typing, you do not declare your variables.
+-  A variable can have text, integers, or numbers.
+-  Typing in a variable name gives the contents of the variable (also available in the `Environment` window in the upper right of R Studio)
+-  Typing in a function name with no parenthesis shows the source code of the function.
+
+Vectors
+=======
+
+-  The base unit of data that can be analyzed is the *vector*
+-  Operations on a vector are performed on all members
+-  Many mathematical functions also work on vectors.
+
+```{r}
+x <- c(10.4, 5.6, 3.1, 6.4, 21.7)
+print(1/x)
+print(c(mean(x), sd(x)))
+```
+
+Logical vectors
+===============
+
+-  If you use an `if -> else` statement on a vector, you get a vector of `TRUE/FALSE` values
+```{r}
+x > 5
+```
+
+
+Representing data
+=================
+
+-  We often represent data as rows and columns.
+-  Usually, a row is a record, each column contains information about that record.
+-  We could put them in a matrix, but sometimes the columns are not numbers.
+-  A `data.frame` can recognize that each column is of a different type and will treat it correctly.
+
+Data frames
+===========
+
+- *Data frames* are the key data structure you will use.
+- Composed of vectors, factors, matrices, lists, or other data frames.
+- Think of them as a list of records, where each record contains many different types of information.
+- Create a data frame by using `data.frame` with a list of the columns and the variables that contain the data for each column.
+
+```
+> accountants <- data.frame(home=statef, loot=incomes, shot=incomef)
+```
+
+
+
+Plotting with ggplot2
+=======================
+type: section
+
+
+Packages
+========
+
+-  `Packages` are libraries that contain functionality for R
+-  These libraries include the machine learning and text processing methods that we will use.
+-  'ggplot' is a library that implements the *Grammer of Graphics*, plots are built from components.
+  - It is very flexible.
+
+```{r}
+library(ggplot2)
+```
+
+Random numbers
+==============
+
+-  We use random numbers to sample from data (smaller datasets are often more manageable) or to create data to test methods on or for simulation.
+```{r}
+set.seed(1234)
+runif(n=4, 0, 1)
+```
+
+Some examples
+=============
+
+-  Take some samples from the `diamonds` dataset that comes with `ggplot2`
+-  Note the `,` which indicates that you are getting all of the columns.
+
+```{r}
+library(ggplot2)
+set.seed(1410)
+dsmall = diamonds[sample(nrow(diamonds),200),]
+```
+
+Introduction to ggplot
+=======================
+
+-  *ggplot* treats plots as a collection of layers.
+-  The layers can be modified independently.
+-  Data, appearance, plot type, and formatting are treated separately.
+-  Allows for quick replacement of data using same parameters or exploring different representations of the same data.
+
+Introduction to ggplot
+=====
+
+-  Compents of a ggplot
+  - data
+  - aesthetic mapping between data variables and visual properties
+  - a layer which describes how to render each observation
+  
+```{r}
+ggplot(dsmall, aes(x=carat, y=price)) + geom_point()
+```
+
+plotting transforms
+===================
+
+-  You can transform the data using calculations
+```{r}
+ggplot(dsmall, aes(x=log(carat), y=log(price))) + geom_point()
+```
+
+Aesthetics - appearance
+=======================
+
+- Change the appearance of data elements using aesthetics.
+- Color, shape, size, transparancy (alpha), etc.
+- Each aesthetic displays an additional aspect of the data.
+
+```{r}
+ggplot(dsmall, aes(x=carat, y=price, shape=cut, colour=color)) + geom_point()
+```
+
+geom - plot type
+================
+
+- The type of plot is set using `geom`
+- `geom_point()` - Scatterplots, 
+- `geom_path()` and `geom_line()` connect points.
+- `geom_smooth()` - draw a smoother to the data
+- `geom_histogram()`, `geom_boxplot()`, `geom_density()`, `geom_bar()`
+- Alternatively, the `stat` family of functions
+
+```{r}
+ggplot(dsmall, aes(x=carat, y=price)) + geom_point() +geom_smooth()
+```
+
+
+
+Boxplots
+========
+
+```{r}
+ggplot(dsmall, aes(x=color, y=price/carat)) + geom_boxplot()
+```
+
+Jitter
+======
+
+- `jitter` shifts data points that would otherwise be on top of each other.
+```{r}
+ggplot(dsmall, aes(x=color, y=price/carat)) + geom_point()
+```
+```{r}
+ggplot(dsmall, aes(x=color, y=price/carat)) + geom_jitter()
+```
+
+alpha
+======
+
+- `alpha` adjusts the transparancy, so it is more apparent that multiple data points overlap.
+```{r}
+ggplot(dsmall, aes(x=color, y=price/carat)) + geom_point(alpha = 1/5)
+```
+
+Histograms
+==========
+
+-  Histograms and density show distributions.
+
+```{r}
+ggplot(dsmall, aes(x=carat)) + geom_histogram()
+```
+
+Density plot
+============
+
+-  Histograms and density show distributions.
+
+```{r}
+ggplot(dsmall, aes(x=carat)) + geom_density()
+```
+
+
+Plots and aesthetics
+====================
+
+-  Aesthetics can be used to create subplots
+
+```{r}
+ggplot(dsmall, aes(x=carat, colour=color)) + geom_density()
+```
+
+Barcharts and aesthetics
+========================
+
+```{r}
+ggplot(dsmall, aes(x=color, weight=carat)) + geom_bar()+ scale_y_continuous("carat")
+```
+
+
+Time series
+===========
+
+-  Look at time series with a new dataset
+```{r}
+data(economics)
+ggplot(economics, aes(date, unemploy/pop)) + geom_line()
+```
+
+Time series path plot
+=======================
+
+-  We can put multiple time series on the same plot.
+
+```{r}
+year <- function(x) as.POSIXlt(x)$year + 1900
+ggplot(economics, aes(unemploy/pop, uempmed, colour=year(date))) + geom_path()+ scale_size_area()
+```
+
+
+Faceting
+========
+
+-  `facets` creates a series of side by side plots where categories of data each get their own plot
+```{r}
+data(diamonds)
+ggplot(diamonds, aes(carat)) + geom_histogram(binwidth = 0.1) + facet_wrap(~color) + xlim(c(0,3))
+```
+
+ggplot2 summary
+===============
+
+A plot is composed of:
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+
+More can be found in *ggplot2: Elegant graphics for data analysis*
+
