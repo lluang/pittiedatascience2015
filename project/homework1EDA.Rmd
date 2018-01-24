@@ -1,27 +1,23 @@
 ---
 title: 'Homework 1: Exploratory Data Analysis'
 author: "IE 2064 Data Science"
-date: "January 31, 2017"
-output:
-  pdf_document: default
-  slidy_presentation: default
----
+date: "January 31, 2018"
 output:
   pdf_document: default
   html_document: default
 ---
 
-**Due Tuesday January 31, 2017**
+**Due Wednesday February 7, 2018**
 
 1.  Identify a data set from Applied Predictive Models (APM) Chapter 1.4.
 2.  Using R, read in the data.  Note where you need to transform data and how you did this (e.g. declare it to be factor, ordered, normalize data, etc.). You may have to complete question 3 before you can completely answer this.
 3.  Describe all of the fields in the data set. Note: you may group fields if it makes sense.
-  i. Name
-  ii. Short, one sentence description
-  iii. Description of potential values (include data type and units)
-  iv. mean, median, quartiles, range if applicable
-  v. histogram/density plot
-  vi. Is this an outcome or a potential predictor? (dependent or independent variable)
+    i. Name
+    ii. Short, one sentence description
+    iii. Description of potential values (include data type and units)
+    iv. mean, median, quartiles, range if applicable
+    v. histogram/density plot
+    vi. Is this an outcome or a potential predictor? (dependent or independent variable)
 4.  CoNVO statement
 5.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
 6.  Identify an outcome and three independent variables based on your CoNVO statement and the pairs plot.  Plot each independent variable against the outcome.  Explain your choice of plot type.
