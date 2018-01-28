@@ -1,0 +1,40 @@
+---
+title: "Final Report Format"
+author: "Data Science Final Report Format"
+date: "Spring 2015"
+output: pdf_document
+---
+
+
+For the final report, we will use a report format that is in common use in the Medical community.  There are four parts.  
+
+
+1.  Introduction
+  - CoNVO
+    - Context - An organization (or individual) and why the organization is interested in this subject 
+    -  Need - is the decision the organization identified in the Context will make, along with a data question that needs to be answered to make the decision.
+    -  Vision - A description of a presentation of data that would answer the question identified in the Need.
+    -  Outcome - The action taken by the organization identified in the Context that is a result of having the question identified in the Need answered through the Vision.
+  - Describe the data
+    -  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected?
+    -  Volume - Quantity of data, number of observations. Type of observations.
+    -  Velocity - How the data is represented over time (do subjects change, is data added over time, etc.)
+    -  Variety - The range of data elements available for each observation. e.g. the topics covered in the database.
+    -  Veracity - How reliable is the data.
+    
+2.  Methodology
+  -  How you process the data prior to analysis.
+  -  How you will analyze the data (methods)
+  -  How will you validate the analysis.
+  
+3.  Results
+  -  Data summaries
+  -  Figures/plots
+  -  Remember that tables and figures should have titles, axis labels, and captions that help interpret the output.
+  -  Validation
+
+4.  Conclusion
+  -  Explanation of how the summaries and figures relate to the CoNVO statement.
+  -  Your overall interpretation of the results (should include comparisons so you can make claims on if the data suggest courses of action).
+  -  Discuss difficulties.
+  -  Discuss limitations.
