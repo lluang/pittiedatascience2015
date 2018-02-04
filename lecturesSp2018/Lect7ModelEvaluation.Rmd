@@ -3,9 +3,9 @@ title: "Model Evaluation Methods"
 author: "IE 2064"
 date: "February 2018"
 output:
-  html_document: default
-  slidy_presentation: default
   pdf_document: default
+  slidy_presentation: default
+  html_document: default
 ---
 
 General principles for model evaluation
@@ -31,7 +31,7 @@ Flexibility
 
 -  Some models are very flexible
 -  e.g. Boosting, Support Vector Machines
--  Likely to be very accurate emperically
+-  Likely to be very accurate empirically
 -  Con: very difficult to interpret and gain understanding from the results
 
 Interpretation
@@ -39,7 +39,7 @@ Interpretation
 
 -  Some model types lend themselves to easy interpretation
 -  e.g. regression methods, naive Bayes, association rules
--  May be less accurate emperically, but leads to understanding about the system
+-  May be less accurate empirically, but leads to understanding about the system
 -  Very useful if the goal is to inform a person making the decision as opposed to pure machine learning.
 
 Simplicity
@@ -217,7 +217,7 @@ Distance based metrics
 Normalized Distance
 =======
 
--  Look at the distance between a prediction and actual by normalied against the InterQuartile Range (IQR).
+-  Look at the distance between a prediction and actual by normalized against the InterQuartile Range (IQR).
 -  NDTP(u) - Normalized distance to typical price
 $$NDTP_p(u)=\frac{|u-\widetilde{U}_p|}{IQR_p}$$
 -  Unit price of observation minus the median of the unit prices of the product divided by the IQR of the unit prices of the product.
@@ -257,7 +257,7 @@ Using cross validation
 - Set random number seed
 - Train model using random holdout sets based on cross validation method
 
-Cross validation example
+Cross validation example using caret
 ==========
 ```{r}
 ctrl = trainControl(method="cv", number = 10)
@@ -380,7 +380,7 @@ Estimated prediction error curves
 Modeling in caret
 ================
 
-- `caret` develops a consistant interface between machine learning methods and model evaluation methods.
+- `caret` develops a consistent interface between machine learning methods and model evaluation methods.
 - A *wrapper* around the various machine learning packages which are found in a number of R packages
 -  train command takes data, outcome, method, metric, and type of cross validation method (trControl) and implements cross validation as well as a final model.
 
@@ -402,7 +402,7 @@ train(x, y,
 Specifying method
 ======
 -  *method* refers to the machine learning model type
--  Full list with arguements at https://topepo.github.io/caret/modelList.html
+-  Full list with arguments at https://topepo.github.io/caret/modelList.html
 
 trControl
 ==========
