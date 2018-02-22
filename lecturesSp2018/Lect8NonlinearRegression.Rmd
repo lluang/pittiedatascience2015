@@ -3,8 +3,8 @@ title: "Non-linear Regression Models"
 author: "IE 2064 Data Science"
 date: "February 2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
   slidy_presentation: default
   word_document: default
 ---
@@ -49,7 +49,7 @@ Available data
 
 Sample data
 ===================
-```{r, echo=FALSE }
+```{r, echo=FALSE, warning=FALSE }
 options(width=80, digits=2, scipen=8)
 library(DMwR)
 library(xts)

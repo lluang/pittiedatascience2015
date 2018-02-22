@@ -5,6 +5,8 @@ date: "February 2018"
 output:
   pdf_document: default
   beamer_presentation: default
+  html_document:
+    df_print: paged
   slidy_presentation: default
 ---
 
@@ -15,7 +17,7 @@ output:
 
 #which saves all datasets and variables that currently existed in the data set.  Then I reload the data in the following code chunk.
 ```
-```{r}
+```{r, warning=FALSE}
 library(AppliedPredictiveModeling)
 library(caret)
 data(solubility)
@@ -78,10 +80,9 @@ rpSmall <- rpart(y ~ ., data = trainData,
 ```
 
 
-Tune the model
+Tune the model using caret
 ====
 ```
-library(caret)
 set.seed(100)
 cartTune <- train(x = solTrainXtrans, y = solTrainY,
                   method = "rpart",
@@ -187,7 +188,7 @@ Note: Computationally expensive because of multiple models
 Implementation
 ===============
 
-Note: set multicore (`doMC`) for parallelization
+Note: set multicore (`do`) for parallelization
 ```
 library(doMC)
 registerDoMC(2)
@@ -235,7 +236,7 @@ Tuning grids in caret
 
 - We can specify the changing parameters across runs.
 - The tuning grid specifies the mix of parameters and creates a grid that covers all combinations.
-```{r}
+```
 mtryGrid <- data.frame(mtry = floor(seq(10, ncol(solTrainXtrans), 
                       length = 10)))
 ```
@@ -347,3 +348,7 @@ Models
 - Random forest
 - Boosting
 - Cubist
+
+```
+save.image("regressionTree.Rdata")
+```

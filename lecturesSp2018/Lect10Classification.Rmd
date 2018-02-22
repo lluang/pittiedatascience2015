@@ -1,0 +1,429 @@
+---
+title: 'Lecture 10: Classification models Evaluation'
+author: "IE2064 Data Science"
+date: "February 2018"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+
+Classification models
+=============
+
+What are classification models?
+========================================
+
+- Regression models create a prediction along a continuous response.
+- Classification models develop a prediction for a categorical response.
+  - Outcome is one of a set of pre-identified categories.
+- Note: regression models can be applied to classification problems when used correctly.
+- Example of outcomes: True/False, Purchase/no purchase, path taken, product selected.
+
+Predictions in classification models
+====================
+
+-  Classification models produce a continuously varied prediction of a probability.
+  - The predicted class will be the prediction with the highest probability.
+-  R-squared and RMSE not appropriate performance measures, so we need to develop performance measures based on correct/in-correct counts instead of measures based on distance to true answer.
+
+Uses of classification models
+===================================
+
+- Identifying observations for further action. e.g. fraud investigations.
+- Inputs into another model.
+
+Simple models for classification
+=================
+
+1. ZeroR - Rule based on no predictors
+2. OneR - Rule based on one predictor
+
+ZeroR
+=====
+
+- Always predict the majority class.
+- So will always predict the minority class wrong.
+- Usually used as a comparison model.
+
+OneR
+======
+
+1. Use the one predictor that leads to the best prediction.
+2. Similar to Regression Tree with one level of depth.
+3. This often matches expert intuition.  Consider a single factor to make a prediction.
+
+How classification models work
+===================
+
+- Classification models produce a continuous valued prediction in a form that has many properties of probability.
+  - Values are between 0 and 1
+  - Sum of all possible outcomes sum to 1
+  - Note that for some methods these are not true probability predictions, but they are close estimates.
+- Choose the class with the highest value.
+  - Prediction provides a measure of confidence.
+  
+Transforms into probabilities
+============
+
+- Some models produce predictions that do not fit the definition of probability.
+- Transform the predictions into a *probability-like* value that can be interpreted similarly to probabilities for classification.
+
+Softmax transformation
+=======================
+
+- $l$ is the $l$th class.
+- $\hat{y}_l$ is the numeric model prediction for the $l$th class.
+- $\hat{p}^*_l$ is the transformed value that is probability-like between 0 and 1.
+
+$$\hat{p}^*_l = \frac{e^{\hat{y}_l}}{\sum_{l=1}^C e^{\hat{y}_l}}$$
+
+
+Calibration plots
+==================================
+
+- Classification models usually have embedded an estimate of a probability-like value.
+- Calibration of models means relating the model probability-like calculation to actual probabilities.
+- *calibration plot* compares the predicted probabilities to actual probabilities
+  - Bin observations based on their predicted probability.
+  - Compare the predicted probability to the actual probability of observations with similar predictions.
+
+Setting up two class example
+===============
+
+- Generate test and training data based on a quadratic equation in two variables.
+
+$$log\left(\frac{p}{1-p}\right) = -1 - 2 X1 - 0.2 X1^2 + 2 X2^2$$
+
+```{r, warning=FALSE}
+library(AppliedPredictiveModeling)
+library(klaR)
+library(e1071)
+library(caret)
+library(MASS)
+library(ggplot2)
+set.seed(975)
+training <- quadBoundaryFunc(500)
+testing <- quadBoundaryFunc(1000)
+testing$class2 <- ifelse(testing$class == "Class1", 1, 0)
+testing$ID <- 1:nrow(testing)
+```
+
+Apply quadratic discriminant analysis and random forest to classification problem
+==================
+```{r, warning=FALSE}
+qdaFit <- qda(class ~ X1 + X2, data = training)
+library(randomForest)
+rfFit <- randomForest(class ~ X1 + X2, data = training, ntree = 2000)
+testing$qda <- predict(qdaFit, testing)$posterior[,1]
+testing$rf <- predict(rfFit, testing, type = "prob")[,1]
+
+
+```
+
+Evaluating the accuracy of models
+============
+
+- Each method generates a probability of an observation being a member of a class.
+- Need a method to determine if the predicted odds are correct.
+- It should be probabilistic in nature, and penalize both predicting an event too conservatively and too aggressively.
+- Perfect does not meet perfect predictions. The best score should imply that if you exam all observations where the method estimated a probability of (example) 20%, 20% of the time, the event should have occurred.
+
+
+Generate the calibration analysis
+============
+
+- Look at the relationship between two predictors and the classes.
+
+```{r}
+calData1 <- calibration(class ~ qda + rf, data = testing, cuts = 10)
+ggplot(training, aes(X1, X2, color=class, shape=class))+
+  geom_point() + xlab("X1") + ylab("X2") + ggtitle("Classes and predictors")
+```
+
+Presenting class probabilities for two classes
+=================
+
+- Create bins based on predicted probability of one class.
+- For observations in each bin, determine the observed event percentage and compare it to the predicted probability.
+- Plot curve. Closer to 45 degree line (observed percentage = bin midpoint) is better.
+- Higher than 45 indicates the model underestimated the probability of the event. Lower than 45 indicates the model overestimated.
+
+
+Plot the calibration curve
+====
+
+-  For a given value of model probability output, what was the actual probability of the event occurring?
+-  Which is better?
+
+```{r}
+ggplot(calData1$data) + geom_point(mapping=aes(midpoint, Percent, color=calibModelVar)) +
+  geom_line(mapping=aes(midpoint, Percent, color=calibModelVar, show.legend=TRUE)) +
+  geom_abline() +
+  scale_x_discrete() +
+  ggtitle("Calibration plot comparing QDA and random forest classifier probability predictions") + theme_bw()
+```
+
+
+
+Calibrate model
+==========
+- To calibrate the model, treat the predicted probabilities as inputs into a Model.
+
+```{r}
+trainProbs <- training
+trainProbs$qda <- predict(qdaFit)$posterior[,1]
+```
+
+
+Recalibrate as if predicting probabilities using Naive Bayes or QDA with sigmoidal (binomial) functions
+============
+```{r}
+nbCal <- NaiveBayes(class ~ qda, data = trainProbs, usekernel = TRUE)
+lrCal <- glm(relevel(class, "Class2") ~ qda, data = trainProbs, family = binomial)
+testing$qda2 <- predict(nbCal, testing[, "qda", drop = FALSE])$posterior[,1]
+testing$qda3 <- predict(lrCal, testing[, "qda", drop = FALSE], type = "response")
+```
+
+Apply QDA and RF again
+============
+```{r}
+### Manipulate the data a bit for pretty plotting
+simulatedProbs <- testing[, c("class", "rf", "qda3")]
+names(simulatedProbs) <- c("TrueClass", "RandomForestProb", "QDACalibrated")
+simulatedProbs$RandomForestClass <-  predict(rfFit, testing)
+
+calData2 <- calibration(class ~ qda + qda2 + qda3, data = testing)
+calData2$data$calibModelVar <- as.character(calData2$data$calibModelVar)
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda",
+                                      "QDA",
+                                      calData2$data$calibModelVar)
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda2",
+                                      "Naive Bayes Calibration",
+                                      calData2$data$calibModelVar)
+
+calData2$data$calibModelVar <- ifelse(calData2$data$calibModelVar == "qda3",
+                                      "Sigmoidal Calibration",
+                                      calData2$data$calibModelVar)
+
+calData2$data$calibModelVar <- factor(calData2$data$calibModelVar,
+                                      levels = c("QDA",
+                                                 "Naive Bayes Calibration",
+                                                 "Sigmoidal Calibration"))
+```
+
+Comparison of QDA and RF with recalibrated data
+=====================
+```{r}
+ggplot(calData2$data) + geom_point(mapping=aes(midpoint, Percent, color=calibModelVar)) +
+  geom_line(mapping=aes(midpoint, Percent, color=calibModelVar)) +
+  geom_abline() + xlab("Predicted probability") + ylab("Observed event probability")
+  ggtitle("Calibration plot comparing QDA, and Bayesian and Sigmoidal Calibration") + theme_bw()
+
+```
+
+
+Evaluating predicted classes
+===================
+
+Evaluating predicted classes
+======================
+
+- There are several methods for evaluating classification models based on a confusion matrix
+  -  Kappa statistic
+  -  Sensitivity vs Specificity
+  -  J index
+  -  PPV/NPV
+- Prediction accuracy
+  -  ROC
+  -  Lift charts
+- Goal is to find the model that offers the best performance, i.e. best calibration.
+  - The problem may be inherently difficult to predict so we evaluate based on the predicted probabilities, not if the model is right or not.
+
+
+Recreate German Credit data from Chapter 4 (model evaluation)
+=====
+```{r}
+data(GermanCredit)
+#$GermanCredit$Class <- GermanCredit$credit_risk
+GermanCredit <- GermanCredit[, -nearZeroVar(GermanCredit)]
+GermanCredit$CheckingAccountStatus.lt.0 <- NULL
+GermanCredit$SavingsAccountBonds.lt.100 <- NULL
+GermanCredit$EmploymentDuration.lt.1 <- NULL
+GermanCredit$EmploymentDuration.Unemployed <- NULL
+GermanCredit$Personal.Male.Married.Widowed <- NULL
+GermanCredit$Property.Unknown <- NULL
+GermanCredit$Housing.ForFree <- NULL
+
+## Split the data into training (80%) and test sets (20%)
+set.seed(100)
+inTrain <- createDataPartition(GermanCredit$Class, p = .8)[[1]]
+GermanCreditTrain <- GermanCredit[ inTrain, ]
+GermanCreditTest  <- GermanCredit[-inTrain, ]
+set.seed(1056)
+```
+
+Apply logistic model
+==================
+-  Note that the *y* variable is a Factor
+```{r}
+logisticReg <- train(Class ~ .,
+                     data = GermanCreditTrain,
+                     method = "glm",
+                     trControl = trainControl(method = "repeatedcv",
+                                              repeats = 10))
+logisticReg
+```
+
+Predict the test set
+===
+```{r}
+creditResults <- data.frame(obs = GermanCreditTest$Class)
+creditResults$prob <- predict(logisticReg, GermanCreditTest, type = "prob")[, "Bad"]
+creditResults$pred <- predict(logisticReg, GermanCreditTest)
+creditResults$Label <- ifelse(creditResults$obs == "Bad",
+                              "True Outcome: Bad Credit",
+                              "True Outcome: Good Credit")
+```
+Plot the probability of bad credit
+========
+
+```{r}
+ggplot(creditResults) + geom_histogram(aes(prob)) + facet_grid(. ~ Label) +
+          xlab("Probability of Bad Credit") + theme_bw()
+```
+
+Calculate and plot the calibration curve
+======
+
+```{r}
+ggplot(creditCalib$data) + geom_point(mapping=aes(midpoint, Percent, color=calibModelVar)) +
+  geom_line(mapping=aes(midpoint, Percent, color=calibModelVar)) +
+  geom_abline() +
+  xlab("Predicted probability") + ylab("Observed event percentage") +
+  ggtitle("Calibration plot for Bad Credit") + theme_bw()
+```
+
+
+Confusion matrix
+==============
+```{r}
+### Create the confusion matrix from the test set.
+cm <- confusionMatrix(data = creditResults$pred,
+                reference = creditResults$obs)
+```
+
+```{r}
+cm$table
+```
+
+   |  Positive  |  Negative
+---|------------|------------
+True | TP | FN
+False  | FP | TN
+
+Kappa statistic
+=================
+
+- Compared observed accuracy to the expected accuracy
+$$Kappa = \frac{O-E}{1-E}$$
+- Compare to Brier score
+$$BS = 1 - (x-p)^2$$
+- Can be extended to multi-class predictions by introducing a *weighting* factor to indicate greater errors.
+
+```{r}
+cm$overall[2]
+```
+
+
+Sensitivity and specificity
+====================
+-  *Sensitivity* - samples that were predicted to be true and were true compared to the samples that were true.
+  - Did you identify the true samples?
+-  *Specificity* - samples that were predicted to be false and were false compared to the total number of samples that were false
+  - Did you correctly exclude the false samples?
+  - *false positive*   1 - *specificity*
+***
+```{r}
+cm$byClass[1:2]
+```
+
+J Index
+========
+
+-  Collapse sensitivity and specificity into a single value
+$$J = Sensitivity + Specificity - 1$$
+```{r}
+cm$byClass[1]+cm$byClass[2] - 1
+```
+
+PPV and NPV
+===========
+
+-  May be interested in measures that are conditional on the *prevalence*
+-  *Positive Predictive Value* If predicted true, fraction that is true
+  $$PPV = \frac{TP}{TP+FP}$$
+-  *Negative Predictive Value* If predict false, fraction that is false
+
+
+Receiver Operating Characteristic
+==============================
+- ROC curve takes a model and allows its parameters to range through a set of values.
+- Display the tradeoff between sensitivity and specificity.
+- A perfect model will have 100\% sensitivity and specificity.
+- Completely ineffective will follow the 45 degree line (i.e. chance)
+- Summarize using Area Under Curve (AUC)
+  - Note that sometimes not all observations are equally important, and AUC obscures this.
+
+
+Create the confusion matrix from the test set.
+===
+```{r, warning=FALSE}
+library(pROC)
+confusionMatrix(data = creditResults$pred,
+                reference = creditResults$obs)
+creditROC <- roc(relevel(creditResults$obs, "Good"), creditResults$prob)
+
+coords(creditROC, "all")[,1:3]
+```
+
+Calculate Area under the curve (AUC)
+====
+```{r}
+auc(creditROC)
+ci.auc(creditROC)
+```
+
+Plot ROC curve
+===========
+```{r}
+plot(creditROC, legacy.axes = TRUE)
+```
+
+Lift charts
+================
+
+-  Rank samples by probability of being true
+-  Calculate the cumulative event rate as samples are added.
+-  If close to baseline event rate, there is no gain/lift from the model.
+  - Baseline event rate: what you would guess given no information.
+
+Constructing a lift chart
+=============
+
+1. Predict a set of test samples (not used in building the model, but outcomes are known)
+2.  Determine baseline event rate
+3.  Order data by classification probability
+4.  For each value of probability, calculate the percentage of true events of all samples below that probability value.
+5.  Divide percent of true events by baseline.
+
+Plot lift chart
+=======
+```{r}
+creditLift <- lift(obs ~ prob, data = creditResults)
+xyplot(creditLift)
+```
