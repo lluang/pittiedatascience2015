@@ -2,7 +2,7 @@
 ---
 title: "Data structures and visualization"
 author: "Louis Luangkesorn"
-date: "January 2017"
+date: "January 2018"
 output:
   pdf_document: default
   slidy_presentation: default
@@ -10,7 +10,6 @@ output:
 
 Data structures
 ========================================================
-type: section
 
 Features of R
 =============

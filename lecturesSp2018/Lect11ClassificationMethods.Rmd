@@ -1,0 +1,337 @@
+---
+title: 'Lecture 11: Linear Classification Methods'
+author: "IE 2064 Data Science"
+date: "February 2018"
+output:
+  slidy_presentation: default
+  pdf_document: default
+  html_document: default
+---
+
+Classification overview
+===========
+
+- We have data with features (predictors) and we want to predict the class a new observation falls in.
+- The number of candidate classes is finite (often 2)
+- Examples
+  1.  Person arriving at emergency room. What condition does the individual have?
+  2.  Is a transaction fraudulent?
+  3.  In a set of DNA sequence data, which DNA mutatinos are malignant and which are benign?
+  
+Why not a regression model?
+================
+
+-  One thought would be a regression
+  1. Classes do not always have a natural ordering
+  2. Classes are not evenly spaced
+  3. But you may be able to predict a probability
+  
+Types of classification models
+=========================
+
+1. Linear models
+2. Non-linear models
+3. Rule based models
+  
+Grant application example
+=============
+
+-  Outcomes of patent grant applications at the University of Melbourne.
+-  249 features
+-  Training data
+  - 8707 applications from 2004 - 2008
+-  Test data
+  - 2176 applications from 2009 - 2010
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(AppliedPredictiveModeling)
+library(caret)
+library(pROC)
+load("grantData.RData")
+#load("Lect11ClassificationMethods.Rdata")
+#load("12DescrimantAnalysis.Rdata")
+```
+
+Some preprocessing
+===========
+
+-  Create binary variables to represent various codes (e.g. the presence of a specific sponsor in a list.)
+-  Create dummy variables to represent unknown values.
+-  Remove zero variance variables (all grant proposals had the same value)
+-  Remove calculated variables (e.g. *allPub* is the sum of (*AstarTotal*, *ATotal*, *BTotal*, ad *CTotal*))
+
+Simple models for classification
+=================
+
+1. ZeroR - Rule based on no predictors
+2. OneR - Rule based on one predictor
+3. Logistic regression
+
+ZeroR
+=====
+
+- Always predict the majority class.
+- So will always predict the minority class wrong.
+- Usually used as a comparison model.
+
+```{r}
+summary(as.factor(training$Class))
+```
+
+OneR
+======
+
+1. Use the one predictor that leads to the best prediction
+2. Similar to Regression Tree with one level of depth.
+
+Linear classification methods
+==============
+
+1.  Logistic Regression
+2.  Linear Discriminant Analysis
+
+Logistic Regression
+=================
+
+1.  Linear regression forms a model that is linear in the parameters.
+2.  Minimizes the sum of the squared residuals of a prediction compared to actual.
+3.  Logistic regression models the log odds of an event as a linear function.
+4.  But we cannot guarantee that a slope-intercept model will constrain values within the range
+
+Log-odds model
+===============
+
+1.  Use regression to model the log of the odds. (log of odds can range from $-\infty$ to $\infty$)
+
+$$log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x_1 + \ldots$$
+
+2. Re-arrange for $p$
+
+$$p = \frac{1}{1 + exp[-(\beta_0 + \beta_1 x_1 +\ldots)]}$$
+
+This is known as the $sigmoidal$ function.  Values of $p$ will be between 0 and 1. (i.e. a probability)
+
+3. Use regression to find values of $\beta$ that maximize the likelihood 
+
+Implementation
+================
+- `glm` (general linear model)
+```{r}
+modelfit <- glm(Class ~ Day,
+               data = training[pre2008,],
+               # binomial family because Class has two values
+               family = "binomial")
+```
+
+Model (logistic regression)
+====
+```{r}
+modelfit
+```
+
+Generate prediction
+===========
+
+- `glm` uses the second factor (*unsuccessful*) as the event of interest, so this the prediction of rate of non-success.
+-  Use `predict` function to use new data on a created model
+
+```{r}
+successProb <- 1 - predict(modelfit,
+                           newdata = data.frame(Day=c(10, 150, 300, 350)),
+                           type="response")
+```
+```{r}
+successProb
+```
+
+
+Non-linear predictors
+=================
+
+- We can add a non linear term in a linear equation
+```{r}
+daySquaredModel <- glm(Class ~ Day + I(Day^2),
+                       data = training[pre2008,], 
+                       family = binomial)
+daySquaredModel
+```
+
+Regresssion modeling strategies (rms)
+=============
+-`glm` requires a formula, so does not work well when there are many predictors.
+- `lrm` function in the `rms` package is another way that can work
+
+```{r}
+library(rms)
+rcsfit <- lrm(Class ~ rcs(Day), data = training[pre2008,])
+```
+
+Results of lrm
+===========
+```{r}
+rcsfit
+```
+
+plot log odds
+====
+```{r}
+dayProfile <- Predict(rcsfit,
+                      Day = 0:365,
+                      fun=function(x) -x)
+plot(dayProfile, ylab="Log Odds")
+```
+
+lrm can also work with lists of predictors
+==================
+
+- Setup LGOCV
+
+```{r}
+testing$Day2 <- testing$Day^2
+training$Day2 <- training$Day^2
+fullSet <- c(fullSet, "Day2")
+reducedSet <- c(reducedSet, "Day2")
+ctrl <- trainControl(method = "LGOCV",
+                     summaryFunction = twoClassSummary,
+                     classProbs = TRUE,
+                     index = list(TrainSet = pre2008),
+                     savePredictions = TRUE)
+```
+
+Fit model with full predictor set
+==============
+```{r}
+set.seed(476)
+lrFull <- train(training[, c(fullSet)],
+               y=training$Class,
+               method = "glm",
+               metric ="ROC",
+               trControl = ctrl)
+```
+
+Results
+====
+```{r}
+lrFull
+```
+
+Smaller predictor set
+======
+```{r}
+set.seed(476)
+lrReduced <- train(training[, reducedSet],
+               y=training$Class,
+               method = "glm",
+               metric ="ROC",
+               trControl = ctrl)
+```
+
+Results for reduced set
+=======
+```{r}
+lrReduced
+```
+
+Checking performance of full model
+===================
+
+```{r}
+lrfullconfusion<-confusionMatrix(data = lrReduced$pred$pred,
+                reference = lrReduced$pred$obs)
+lrfullconfusion$table
+```
+
+Compare with reduced model.
+==========
+```{r}
+lrreducedconfusion <- confusionMatrix(data = lrFull$pred$pred,
+                reference = lrFull$pred$obs)
+lrreducedconfusion$table
+```
+
+
+ROC curve for full model
+===========
+
+```{r}
+fullRoc <- roc(response = lrFull$pred$obs,
+               predictor = lrFull$pred$successful,
+               levels = rev(levels(lrFull$pred$obs)))
+auc(fullRoc)
+plot(fullRoc, legacy.axes = TRUE)
+```
+
+
+
+
+ROC curve for reduced model
+===========
+
+```{r}
+reducedRoc <- roc(response = lrReduced$pred$obs,
+               predictor = lrReduced$pred$successful,
+               levels = rev(levels(lrReduced$pred$obs)))
+auc(reducedRoc)
+plot(reducedRoc, legacy.axes = TRUE)
+```
+
+Linear Discriminant Analysis
+==================
+
+-  Instead of a regression on minimizing the error in log odds, try minimizing the probability of misclassification
+-  Expansion of Bayes' rule, but with more predictor variables to condition on.
+- Another way of thinking is to maximize between-group variance compared to wihtin-group variance.
+$$\frac{b'\bf{B}b}{b'\bf{W}b}$$
+
+Example
+====
+- Center and scale data
+```{r}
+library(MASS)
+grantPreProcess <- preProcess(training[pre2008, reducedSet])
+grantPreProcess
+```
+
+Make prediction based on lda
+==========
+```{r}
+scaledPre2008 <- predict(grantPreProcess,
+                         newdata = training[pre2008, reducedSet])
+sclaed2008HoldOut <- predict(grantPreProcess,
+                             newdata = training[-pre2008, reducedSet])
+ldaModel <- lda(x=scaledPre2008,
+                grouping = training$Class[pre2008])
+```
+```{r}
+ldaModel
+```
+
+Make prediction
+==========
+
+- Using linear discriminant analysis
+```{r}
+set.seed(476)
+ldaFit1 <- train(x = training[, reducedSet],
+                 y = training$Class,
+                 method = "lda",
+                 preProc = c("center", "scale"),
+                 metric = "ROC",
+                 trControl = ctrl)
+lda1Confusion <- confusionMatrix(data = ldaFit1$pred$pred,
+reference = ldaFit1$pred$obs)
+```
+```{r}
+lda1Confusion
+```
+
+ROC curve for LDA
+===================
+```{r}
+reducedldaRoc <- roc(response = ldaFit1$pred$obs,
+               predictor = ldaFit1$pred$successful,
+               levels = rev(levels(ldaFit1$pred$obs)))
+auc(reducedldaRoc)
+plot(reducedldaRoc, legacy.axes = TRUE)
+```
