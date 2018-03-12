@@ -1,7 +1,7 @@
 ---
 title: "Non-linear classification methods"
 author: "IE 2064 Data Science"
-date: "March 2017"
+date: "March 2018"
 output:
   slidy_presentation: default
   pdf_document: default
@@ -42,12 +42,11 @@ output:
 ### Section 13.1 Nonlinear Discriminant Analysis
 
 options(digits=4)
+load("grantData.RData")
 #load("07_nonlinear.RData")
-load("13_Non-Linear_Class.Rdata")
+#load("13_Non-Linear_Class.Rdata")
 library(caret)
 library(pROC)
-#library(doMC)
-#registerDoMC(2)
 ```
 Nonlinear classification models
 ================
@@ -75,7 +74,7 @@ Mechanics
 -  Use grant application data
 -  Use LGOCV (Leave Group Out CV)
 
-```
+```{r}
 ctrl <- trainControl(method = "LGOCV",
              summaryFunction = twoClassSummary,
              classProbs = TRUE,
@@ -173,7 +172,7 @@ mdaFit$pred <- merge(mdaFit$pred,  mdaFit$bestTune)
 mdaCM <- confusionMatrix(mdaFit, norm = "none")
 mdaCM$table
 ```
-```
+```{r}
 mdaRoc <- roc(response = mdaFit$pred$obs,
         predictor = mdaFit$pred$successful,
         levels = rev(levels(mdaFit$pred$obs)))
@@ -247,7 +246,7 @@ Implementation
 
 =====
 
-```
+```{r}
 nnetGrid <- expand.grid(size = 1:10, decay = c(0, .1, 1, 2))
 maxSize <- max(nnetGrid$size)
 
@@ -273,7 +272,7 @@ Results for model 1 - Simple network model
 nnetFit
 ```
 
-```
+```{r}
 set.seed(476)
 nnetFit2 <- train(x = training[,reducedSet], 
               y = training$Class,
@@ -293,7 +292,7 @@ Second model - Add additional preprocessing (SpatialSign)
 ```{r nnet2, echo=FALSE}
 nnetFit2
 ```
-```
+```{r}
 nnetGrid$bag <- FALSE
 
 set.seed(476)
@@ -317,7 +316,7 @@ Neural net model 3 - Use AvNNet package implementation.
 nnetFit3
 ```
 
-```
+```{r}
 set.seed(476)
 nnetFit4 <- train(x = training[,reducedSet], 
               y = training$Class,
@@ -339,7 +338,7 @@ Neural net model 4, use AvNNet implementation with additional preprocessing (Spa
 ```{r nnet4, echo=FALSE}
 nnetFit4
 ```
-```
+```{r}
 nnetFit4$pred <- merge(nnetFit4$pred,  nnetFit4$bestTune)
 nnetCM <- confusionMatrix(nnetFit4, norm = "none")
 ```
@@ -351,7 +350,7 @@ Neural net model 4 confusion matrix
 nnetCM$table
 ```
 
-```
+```{r}
 nnetRoc <- roc(response = nnetFit4$pred$obs,
            predictor = nnetFit4$pred$successful,
            levels = rev(levels(nnetFit4$pred$obs)))
@@ -425,21 +424,21 @@ Application of FDA to grant model
 
 -  Tuning based the type of linear model. (e.g. retained terms for lasso or MARS)
 -  Result
-  
 
-```
+
+```{r}
 set.seed(476)
 fdaFit <- train(x = training[,reducedSet], 
           y = training$Class,
           method = "fda",
           metric = "ROC",
-          tuneGrid = expand.grid(degree = 1, nprune = :25),
+          tuneGrid = expand.grid(degree = 1, nprune = 25),
           trControl = ctrl)
 ```
 ```{r, echo=FALSE}
 fdaFit
 ```
-```
+```{r}
 fdaFit$pred <- merge(fdaFit$pred,  fdaFit$bestTune)
 fdaCM <- confusionMatrix(fdaFit, norm = "none")
 fdaCM
@@ -477,7 +476,7 @@ Creating a support vector
   - Recognize there are no perfect boundaries.
   - Planes are scored by distance from boundary to points (greater is better) and penalized for points on wrong side or too close to boundary (within the margin)
 
-```
+```{r}
 library(kernlab)
 
 set.seed(201)
@@ -500,7 +499,7 @@ Example SVM output
 svmRFitFull$finalModel
 ```
 
-```
+```{r}
 set.seed(202)
 sigmaRangeReduced <- sigest(as.matrix(training[,reducedSet]))
 svmRGridReduced <- expand.grid(sigma = sigmaRangeReduced[1],
@@ -521,7 +520,7 @@ SVM with reduced set of predictors
 svmRFitReduced$finalModel
 ```
 
-```
+```{r}
 svmPGrid <-  expand.grid(degree = 1:2,
                          scale = c(0.01, .005),
                          C = 2^(seq(-6, -2, length = 10)))
@@ -536,11 +535,11 @@ svmPFitFull <- train(x = training[,fullSet],
                      trControl = ctrl)
 ```
 
-```
+```{r}
 svmPFitFull
 ```
 
-```
+```{r}
 svmPGrid2 <-  expand.grid(degree = 1:2,
                           scale = c(0.01, .005),
                           C = 2^(seq(-6, -2, length = 10)))
@@ -554,10 +553,10 @@ svmPFitReduced <- train(x = training[,reducedSet],
                         fit = FALSE,
                         trControl = ctrl)
 ```
-```
+```{r}
 svmPFitReduced
 ```
-```
+```{r}
 svmPFitReduced$pred <- merge(svmPFitReduced$pred,  svmPFitReduced$bestTune)
 svmPCM <- confusionMatrix(svmPFitReduced, norm = "none")
 svmPRoc <- roc(response = svmPFitReduced$pred$obs,
@@ -587,7 +586,7 @@ xyplot(ROC ~ C|Set, data = svmRadialResults,
        scales = list(x = list(log = 2)))
 ```
 
-```
+```{r}
 svmPolyResults <- rbind(svmPFitReduced$results,
                         svmPFitFull$results)
 svmPolyResults$Set <- c(rep("Reduced Set", nrow(svmPFitReduced$result)),
@@ -653,7 +652,7 @@ kNN quality
 Implementation of kNN
 =========
 
-```
+```{r}
 set.seed(476)
 knnFit <- train(x = training[,reducedSet], 
                 y = training$Class,
@@ -672,7 +671,7 @@ knnFit$finalModel
 
 KNN Confusion matrix
 =====
-```
+```{r}
 knnFit$pred <- merge(knnFit$pred,  knnFit$bestTune)
 knnCM <- confusionMatrix(knnFit, norm = "none")
 ```
@@ -681,7 +680,7 @@ knnCM$table
 ```
 KNN ROC plot
 ===========
-```
+```{r}
 knnRoc <- roc(response = knnFit$pred$obs,
               predictor = knnFit$pred$successful,
               levels = rev(levels(knnFit$pred$obs)))
@@ -725,7 +724,7 @@ $$P(X|Y=C_l) = \Pi_{j=1}^P P(X_j|Y=C_l)$$
 - Can introduce a *Laplace  correction factor* between 1 and 2 in the training data in each class to the numerator and denominator.
 
 
-```
+```{r}
 nbTraining <- training[, c("Class", nbPredictors)]
 nbTesting <- testing[, c("Class", nbPredictors)]
 
@@ -750,7 +749,7 @@ nBayesFit <- train(x = nbTraining[,nbPredictors],
 Naive Bayes model
 ==============
 ```{r, echo=FALSE}
-#load("nBayesFit.RData")
+load("nBayesFit.RData")
 nBayesFit$finalModel$apriori
 ```
 
