@@ -3,36 +3,36 @@ title: "Non-linear classification methods"
 author: "IE 2064 Data Science"
 date: "March 2018"
 output:
-  slidy_presentation: default
   pdf_document: default
+  slidy_presentation: default
 ---
 ```{r loadlibraries, echo=FALSE}
 ################################################################################
 ### R code from Applied Predictive Modeling (2013) by Kuhn and Johnson.
 ### Copyright 2013 Kuhn and Johnson
 ### Web Page: http://www.appliedpredictivemodeling.com
-### Contact: Max Kuhn (mxkuhn@gmail.com) 
+### Contact: Max Kuhn (mxkuhn@gmail.com)
 ###
 ### Chapter 13 Non-Linear Classification Models
 ###
-### Required packages: AppliedPredictiveModeling, caret, doMC (optional) 
+### Required packages: AppliedPredictiveModeling, caret, doMC (optional)
 ###                    kernlab, klaR, lattice, latticeExtra, MASS, mda, nnet,
 ###                    pROC
 ###
 ### Data used: The grant application data. See the file 'CreateGrantData.R'
 ###
-### Notes: 
+### Notes:
 ### 1) This code is provided without warranty.
 ###
 ### 2) This code should help the user reproduce the results in the
 ### text. There will be differences between this code and what is is
 ### the computing section. For example, the computing sections show
 ### how the source functions work (e.g. randomForest() or plsr()),
-### which were not directly used when creating the book. Also, there may be 
-### syntax differences that occur over time as packages evolve. These files 
+### which were not directly used when creating the book. Also, there may be
+### syntax differences that occur over time as packages evolve. These files
 ### will reflect those changes.
 ###
-### 3) In some cases, the calculations in the book were run in 
+### 3) In some cases, the calculations in the book were run in
 ### parallel. The sub-processes may reset the random number seed.
 ### Your results may slightly vary.
 ###
@@ -42,11 +42,13 @@ output:
 ### Section 13.1 Nonlinear Discriminant Analysis
 
 options(digits=4)
-load("grantData.RData")
+#load("grantData.RData")
 #load("07_nonlinear.RData")
-#load("13_Non-Linear_Class.Rdata")
+load("13_Non-Linear_Class.Rdata")
 library(caret)
 library(pROC)
+library(kernlab)
+library(klaR)
 ```
 Nonlinear classification models
 ================
@@ -75,7 +77,7 @@ Mechanics
 -  Use LGOCV (Leave Group Out CV)
 
 ```{r}
-ctrl <- trainControl(method = "LGOCV",
+lgoctrl <- trainControl(method = "LGOCV",
              summaryFunction = twoClassSummary,
              classProbs = TRUE,
              index = list(TrainSet = pre2008),
@@ -106,8 +108,8 @@ Requirements for QDA
   - Number of predictors must be less than the number of cases within each class.
   - Predictors must not have pthological levels of collinearity (must be independendent).
   - If predictors are indicators for discrete categories, they can only be modeled as linear functions.
-  
-  
+
+
 Regularized Discriminant Analysis
 ==========
 
@@ -150,15 +152,15 @@ MDA implementation
 
 - 'mda' package included with caret.
 
-```{r}
+```
 set.seed(476)
-mdaFit <- train(x = training[,reducedSet], 
+mdaFit <- train(x = training[,reducedSet],
           y = training$Class,
           method = "mda",
           metric = "ROC",
           tries = 40,
           tuneGrid = expand.grid(subclasses = 1:8),
-          trControl = ctrl)
+          trControl = lgoctrl)
 ```
 
 MDA result - confusion matrix
@@ -167,7 +169,7 @@ MDA result - confusion matrix
 ```{r mixturediscrimantanalysisoutput, echo=FALSE}
 mdaFit
 
-mdaFit$results <- mdaFit$results[!is.na(mdaFit$results$ROC),]                
+mdaFit$results <- mdaFit$results[!is.na(mdaFit$results$ROC),]
 mdaFit$pred <- merge(mdaFit$pred,  mdaFit$bestTune)
 mdaCM <- confusionMatrix(mdaFit, norm = "none")
 mdaCM$table
@@ -241,16 +243,16 @@ Implementation
 ================
 
 - Tuned by number of units in hidden layer and the weight decay.
--  Preprocessing will center and scale the data so that each observation variable values are in terms of the mean and standard deviation of that variable. 
+-  Preprocessing will center and scale the data so that each observation variable values are in terms of the mean and standard deviation of that variable.
 -  SpatialSign - projection of vector onto a unit length circle (1 1-norm)
 
 =====
 
-```{r}
+```
 nnetGrid <- expand.grid(size = 1:10, decay = c(0, .1, 1, 2))
 maxSize <- max(nnetGrid$size)
 
-nnetFit <- train(x = training[,reducedSet], 
+nnetFit <- train(x = training[,reducedSet],
            y = training$Class,
            method = "nnet",
            metric = "ROC",
@@ -258,10 +260,10 @@ nnetFit <- train(x = training[,reducedSet],
            tuneGrid = nnetGrid,
            trace = FALSE,
            maxit = 2000,
-           MaxNWts = 1*(maxSize * 
+           MaxNWts = 1*(maxSize *
               (length(reducedSet) + 1) + maxSize + 1),
-           trControl = ctrl)
-```            
+           trControl = lgoctrl)
+```
 
 Results for model 1 - Simple network model
 ===============
@@ -272,9 +274,9 @@ Results for model 1 - Simple network model
 nnetFit
 ```
 
-```{r}
+```
 set.seed(476)
-nnetFit2 <- train(x = training[,reducedSet], 
+nnetFit2 <- train(x = training[,reducedSet],
               y = training$Class,
               method = "nnet",
               metric = "ROC",
@@ -282,21 +284,21 @@ nnetFit2 <- train(x = training[,reducedSet],
               tuneGrid = nnetGrid,
               trace = FALSE,
               maxit = 2000,
-              MaxNWts = 1*(maxSize * 
+              MaxNWts = 1*(maxSize *
                   (length(reducedSet) + 1) + maxSize + 1),
-              trControl = ctrl)
+              trControl = lgoctrl)
 ```
 
 Second model - Add additional preprocessing (SpatialSign)
 ============
 ```{r nnet2, echo=FALSE}
-nnetFit2
+nnetFit2$results
 ```
-```{r}
+```
 nnetGrid$bag <- FALSE
 
 set.seed(476)
-nnetFit3 <- train(x = training[,reducedSet], 
+nnetFit3 <- train(x = training[,reducedSet],
               y = training$Class,
               method = "avNNet",
               metric = "ROC",
@@ -306,9 +308,9 @@ nnetFit3 <- train(x = training[,reducedSet],
               trace = FALSE,
               maxit = 2000,
               MaxNWts = 10*(maxSize * (length(reducedSet) + 1) + maxSize + 1),
-              allowParallel = FALSE, 
+              allowParallel = FALSE,
               ## this will cause to many workers to be launched.
-              trControl = ctrl)
+              trControl = lgoctrl)
 ```
 
 Neural net model 3 - Use AvNNet package implementation.
@@ -316,9 +318,9 @@ Neural net model 3 - Use AvNNet package implementation.
 nnetFit3
 ```
 
-```{r}
+```
 set.seed(476)
-nnetFit4 <- train(x = training[,reducedSet], 
+nnetFit4 <- train(x = training[,reducedSet],
               y = training$Class,
               method = "avNNet",
               metric = "ROC",
@@ -327,10 +329,10 @@ nnetFit4 <- train(x = training[,reducedSet],
               trace = FALSE,
               maxit = 2000,
               repeats = 10,
-              MaxNWts = 10*(maxSize * 
+              MaxNWts = 10*(maxSize *
                 (length(reducedSet) + 1) + maxSize + 1),
-              allowParallel = FALSE, 
-              trControl = ctrl)
+              allowParallel = FALSE,
+              trControl = lgoctrl)
 ```
 
 Neural net model 4, use AvNNet implementation with additional preprocessing (SpatialSign)
@@ -396,8 +398,8 @@ useOuterStrips(
        lty = 1,
        ylab = "ROC AUC (2008 Hold-Out Data)",
        xlab = "Number of Hidden Units",
-       auto.key = list(columns = 4, 
-                   title = "Weight Decay", 
+       auto.key = list(columns = 4,
+                   title = "Weight Decay",
                    cex.title = 1)))
 ```
 
@@ -428,12 +430,12 @@ Application of FDA to grant model
 
 ```{r}
 set.seed(476)
-fdaFit <- train(x = training[,reducedSet], 
+fdaFit <- train(x = training[,reducedSet],
           y = training$Class,
           method = "fda",
           metric = "ROC",
-          tuneGrid = expand.grid(degree = 1, nprune = 25),
-          trControl = ctrl)
+          tuneGrid = expand.grid(degree = 1, nprune = 2:25),
+          trControl = lgoctrl)
 ```
 ```{r, echo=FALSE}
 fdaFit
@@ -476,21 +478,19 @@ Creating a support vector
   - Recognize there are no perfect boundaries.
   - Planes are scored by distance from boundary to points (greater is better) and penalized for points on wrong side or too close to boundary (within the margin)
 
-```{r}
-library(kernlab)
-
+```
 set.seed(201)
 sigmaRangeFull <- sigest(as.matrix(training[,fullSet]))
 svmRGridFull <- expand.grid(sigma =  as.vector(sigmaRangeFull)[1],
                             C = 2^(-3:4))
 set.seed(476)
-svmRFitFull <- train(x = training[,fullSet], 
+svmRFitFull <- train(x = training[,fullSet],
                      y = training$Class,
                      method = "svmRadial",
                      metric = "ROC",
                      preProc = c("center", "scale"),
                      tuneGrid = svmRGridFull,
-                     trControl = ctrl)
+                     trControl = lgoctrl)
 ```
 
 Example SVM output
@@ -499,19 +499,19 @@ Example SVM output
 svmRFitFull$finalModel
 ```
 
-```{r}
+```
 set.seed(202)
 sigmaRangeReduced <- sigest(as.matrix(training[,reducedSet]))
 svmRGridReduced <- expand.grid(sigma = sigmaRangeReduced[1],
                                C = 2^(seq(-4, 4)))
 set.seed(476)
-svmRFitReduced <- train(x = training[,reducedSet], 
+svmRFitReduced <- train(x = training[,reducedSet],
                         y = training$Class,
                         method = "svmRadial",
                         metric = "ROC",
                         preProc = c("center", "scale"),
                         tuneGrid = svmRGridReduced,
-                        trControl = ctrl)
+                        trControl = lgoctrl)
 ```
 
 SVM with reduced set of predictors
@@ -520,13 +520,13 @@ SVM with reduced set of predictors
 svmRFitReduced$finalModel
 ```
 
-```{r}
+```
 svmPGrid <-  expand.grid(degree = 1:2,
                          scale = c(0.01, .005),
                          C = 2^(seq(-6, -2, length = 10)))
 
 set.seed(476)
-svmPFitFull <- train(x = training[,fullSet], 
+svmPFitFull <- train(x = training[,fullSet],
                      y = training$Class,
                      method = "svmPoly",
                      metric = "ROC",
@@ -539,19 +539,19 @@ svmPFitFull <- train(x = training[,fullSet],
 svmPFitFull
 ```
 
-```{r}
+```
 svmPGrid2 <-  expand.grid(degree = 1:2,
                           scale = c(0.01, .005),
                           C = 2^(seq(-6, -2, length = 10)))
 set.seed(476)
-svmPFitReduced <- train(x = training[,reducedSet], 
+svmPFitReduced <- train(x = training[,reducedSet],
                         y = training$Class,
                         method = "svmPoly",
                         metric = "ROC",
                         preProc = c("center", "scale"),
                         tuneGrid = svmPGrid2,
                         fit = FALSE,
-                        trControl = ctrl)
+                        trControl = lgoctrl)
 ```
 ```{r}
 svmPFitReduced
@@ -568,8 +568,8 @@ svmRadialResults <- rbind(svmRFitReduced$results,
                           svmRFitFull$results)
 svmRadialResults$Set <- c(rep("Reduced Set", nrow(svmRFitReduced$result)),
                           rep("Full Set", nrow(svmRFitFull$result)))
-svmRadialResults$Sigma <- paste("sigma = ", 
-                                format(svmRadialResults$sigma, 
+svmRadialResults$Sigma <- paste("sigma = ",
+                                format(svmRadialResults$sigma,
                                        scientific = FALSE, digits= 5))
 svmRadialResults <- svmRadialResults[!is.na(svmRadialResults$ROC),]
 ```
@@ -592,8 +592,8 @@ svmPolyResults <- rbind(svmPFitReduced$results,
 svmPolyResults$Set <- c(rep("Reduced Set", nrow(svmPFitReduced$result)),
                         rep("Full Set", nrow(svmPFitFull$result)))
 svmPolyResults <- svmPolyResults[!is.na(svmPolyResults$ROC),]
-svmPolyResults$scale <- paste("scale = ", 
-                              format(svmPolyResults$scale, 
+svmPolyResults$scale <- paste("scale = ",
+                              format(svmPolyResults$scale,
                                      scientific = FALSE))
 svmPolyResults$Degree <- "Linear"
 svmPolyResults$Degree[svmPolyResults$degree == 2] <- "Quadratic"
@@ -654,7 +654,7 @@ Implementation of kNN
 
 ```{r}
 set.seed(476)
-knnFit <- train(x = training[,reducedSet], 
+knnFit <- train(x = training[,reducedSet],
                 y = training$Class,
                 method = "knn",
                 metric = "ROC",
@@ -724,7 +724,7 @@ $$P(X|Y=C_l) = \Pi_{j=1}^P P(X_j|Y=C_l)$$
 - Can introduce a *Laplace  correction factor* between 1 and 2 in the training data in each class to the numerator and denominator.
 
 
-```{r}
+```
 nbTraining <- training[, c("Class", nbPredictors)]
 nbTesting <- testing[, c("Class", nbPredictors)]
 
@@ -742,14 +742,13 @@ nBayesFit <- train(x = nbTraining[,nbPredictors],
                    y = nbTraining$Class,
                    method = "nb",
                    metric = "ROC",
-                   tuneGrid = data.frame(usekernel = c(TRUE, FALSE), fL = 2),
+                   tuneGrid = data.frame(usekernel = c(TRUE, FALSE), fL = 2, adjust = c(TRUE, FALSE)),
                    trControl = ctrl)
 ```
 
 Naive Bayes model
 ==============
 ```{r, echo=FALSE}
-load("nBayesFit.RData")
 nBayesFit$finalModel$apriori
 ```
 
@@ -776,4 +775,3 @@ plot(nnetRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE, print.a
 plot(nBayesRoc, type = "s", legacy.axes = TRUE, print.auc=TRUE)
 par(mfrow=c(1,1))
 ```
-
