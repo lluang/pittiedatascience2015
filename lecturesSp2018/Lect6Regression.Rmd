@@ -563,14 +563,6 @@ When facing a predictive task, we have to make the following decisions:
 -  Select the evaluation metrics that will be used to compare the models.
 -  Choose the experimental methodology for obtaining reliable estimates of these metrics.
 
----
-Author: IE 2064 Data Science
-Date: February 2017
-Title: Variations on linear regression
-output:
-  beamer_presentation: default
-  slidy_presentation: default
----
 ```{r}
 
 ## Section 6.1 Case Study: Quantitative Structure- Activity
@@ -580,7 +572,7 @@ library(AppliedPredictiveModeling)
 data(solubility)
 library(caret)
 library(lattice)
-load("regression_cousins.Rdata")
+#load("regression_cousins.Rdata")
 ```
 ##  Case study: Quantitative structure-activity relationship modeling
 
@@ -658,7 +650,7 @@ ctrl <- trainControl(method = "cv", index = indx)
 
 ## Linear regression with all predictors
 
-```
+```{r}
 set.seed(100)
 lmTune0 <- train(x = solTrainXtrans, y = solTrainY,
                  method = "lm",
@@ -669,7 +661,7 @@ lmTune0
 ```
 
 ## Remove predictors with correlations that are too high
-```
+```{r}
 tooHigh <- findCorrelation(cor(solTrainXtrans), .9)
 trainXfiltered <- solTrainXtrans[, -tooHigh]
 testXfiltered  <-  solTestXtrans[, -tooHigh]
@@ -699,7 +691,7 @@ testResults <- data.frame(obs = solTestY,
 -  Scores are used to generate loadings **p**
 -  **W, t, p** are used to predict new samples
 
-```
+```{r}
 set.seed(100)
 plsTune <- train(x = solTrainXtrans, y = solTrainY,
                  method = "pls",
@@ -768,7 +760,7 @@ $$SSE_{L2} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^P \beta_j^2$$
 
 $$R^2_{adf} = 1 - \frac{(1-R^2)(n-1)}{n-k-1}$$
 
-```
+```{r}
 ridgeGrid <- expand.grid(lambda = seq(0, .1, length = 15))
 
 set.seed(100)
@@ -798,7 +790,7 @@ $$SSE_{L1} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^P |\beta_j|$$
   
 
 
-```
+```{r}
 
 enetGrid <- expand.grid(lambda = c(0, 0.01, .1), 
                         fraction = seq(.05, 1, length = 20))

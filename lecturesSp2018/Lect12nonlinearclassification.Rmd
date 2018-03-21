@@ -725,6 +725,10 @@ $$P(X|Y=C_l) = \Pi_{j=1}^P P(X_j|Y=C_l)$$
 
 
 ```{r}
+factors <- c("SponsorCode", "ContractValueBand", "Month", "Weekday")
+nbPredictors <- factorPredictors[factorPredictors %in% reducedSet]
+#nbPredictors <- c(nbPredictors, factors)
+nbPredictors <- nbPredictors[nbPredictors != "SponsorUnk"]
 nbTraining <- training[, c("Class", nbPredictors)]
 nbTesting <- testing[, c("Class", nbPredictors)]
 
