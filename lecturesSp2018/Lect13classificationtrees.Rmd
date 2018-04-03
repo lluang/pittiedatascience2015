@@ -3,13 +3,16 @@ Title: Classification trees and rule based methods
 author: "IE 2064 Data Science"
 date: "April 2018"
 output:
-  pdf_document: default
   beamer_presentation: default
+  html_document:
+    df_print: paged
   slidy_presentation: default
+  pdf_document: default
+  ioslides_presentation: default
 ---
 
 
-```{r loadlibraries, echo=FALSE}
+```{r loadlibraries, echo=FALSE, message=FALSE, warning=FALSE}
 options(digits = 4)
 library(dplyr)
 library(magrittr)
@@ -144,11 +147,10 @@ rpartCM$table
 Working through the ROC curve
 =============
 ```{r}
-rpartRoc$thresholds
-```
-```{r}
-print(rpartRoc$sensitivities)
-print(rpartRoc$specificities)
+rocoutput <- data.frame(thresholds=rpartRoc$thresholds,
+                        sensitivites=rpartRoc$sensitivities,
+                        specificities=rpartRoc$specificities)
+rocoutput
 ```
 
 rpart with reduced set of predictors
