@@ -465,9 +465,9 @@ legend(.75, .2,
 ROC plots
 =======
 ```{r, echo=FALSE, fig=TRUE}
-plot(treebagRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
-plot(rpartRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
-plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+plot(treebagRoc, type = "s", col = rgb(.8, .2, .2, .2), legacy.axes = TRUE)
+plot(rpartRoc, type = "s", add = TRUE, col = rgb(.2, .8, .2, .2), legacy.axes = TRUE)
+plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .8, .2), legacy.axes = TRUE)
 legend(.75, .2,
        c("Grouped Categories", "Independent Categories"),
        lwd = c(1, 1),
