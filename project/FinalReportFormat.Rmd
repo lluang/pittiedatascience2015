@@ -1,40 +1,50 @@
 ---
-title: "Final Report Format"
+title: "Case study and report format"
 author: "Data Science Final Report Format"
-date: "Spring 2015"
+date: "Spring 2019"
 output: pdf_document
 ---
 
+Case Study format
+Found in James Cochrane, Analytics Body of Knowledge
 
-For the final report, we will use a report format that is in common use in the Medical community.  There are four parts.  
+# Section 1 – Overview
+
+Review the scenario and context. Identify the problem(s) to be addressed.
+Discuss the important players and stakeholders and their interests and motivations. Assume you are employed as an analyst for the organization in the case.  Context, Need.
+
+#	Section 2 - Methodology
+
+Explain and justify the approach(es) that you propose to use in addressing the
+problem(s)/ responding to the question(s) suggested by the case. Discuss any
+assumptions (mathematical or otherwise) that you are making, and explain
+the consequences that could arise if your assumptions are invalid. If appropriate, explain why other approaches under consideration are inferior or unsuitable. Use nontechnical terms that someone with a minimal background in operations research can understand.  Vision
+
+#	Section 3 - Results
+
+Present and interpret the results. Explain the potential implications of the
+analysis. Include graphs, displays, calculations, or printouts if appropriate, or
+place them in appendices and refer to them in this section. Do not include
+graphs, displays, calculations, or printouts if they do not provide illumination.
+Suggest a decision or a strategy if appropriate. If possible, discuss issues that
+may arise in implementation of the suggested decision or strategy. Be creative
+and use intuition. Outcome
+
+#	Section 4 - Critical Assessment
+
+Examine the approaches to data collection and analysis. Discuss positive and
+negative aspects of this process. Suggest (i) ways to improve the analytic
+process you just completed and (ii) directions for future analysis.
+
+#	Appendices-Relevant Printouts, Tables, and Graphics
+
+Results and displays may be placed in appendices. Note that appendices
+should be numbered and appropriately labeled, and each appendix should be referred to at least once in the body of the case analysis.
 
 
-1.  Introduction
-  - CoNVO
-    - Context - An organization (or individual) and why the organization is interested in this subject 
-    -  Need - is the decision the organization identified in the Context will make, along with a data question that needs to be answered to make the decision.
-    -  Vision - A description of a presentation of data that would answer the question identified in the Need.
-    -  Outcome - The action taken by the organization identified in the Context that is a result of having the question identified in the Need answered through the Vision.
-  - Describe the data
-    -  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected?
-    -  Volume - Quantity of data, number of observations. Type of observations.
-    -  Velocity - How the data is represented over time (do subjects change, is data added over time, etc.)
-    -  Variety - The range of data elements available for each observation. e.g. the topics covered in the database.
-    -  Veracity - How reliable is the data.
-    
-2.  Methodology
-  -  How you process the data prior to analysis.
-  -  How you will analyze the data (methods)
-  -  How will you validate the analysis.
-  
-3.  Results
-  -  Data summaries
-  -  Figures/plots
-  -  Remember that tables and figures should have titles, axis labels, and captions that help interpret the output.
-  -  Validation
+# Notes:
 
-4.  Conclusion
-  -  Explanation of how the summaries and figures relate to the CoNVO statement.
-  -  Your overall interpretation of the results (should include comparisons so you can make claims on if the data suggest courses of action).
-  -  Discuss difficulties.
-  -  Discuss limitations.
+-	Other than in Methodology, use nontechnical terms that someone with a minimal background in statistics or operations research can understand.  I.e. a client that does not have a graduate degree in engineering.
+-	Avoid discussions of the mechanics of the solution algorithm or software used in the analysis.  i.e. Name methods and algorithms.  Software packages and programming languages are the environment you implement your methods in.
+-	Resist the temptation to review or critique the teaching case (this is not the place for the student to explain how she or he feels about the assignment).
+

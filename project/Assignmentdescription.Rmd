@@ -1,6 +1,6 @@
 ---
 title: IE 2064 Data Science Project Description
-date: Spring 2018
+date: Spring 2019
 output:
   pdf_document: default
   html_document: default
@@ -10,7 +10,9 @@ Course project for IE 2064 Data Science
 
 The goal of this course is to gain practical skills, knowledge, and understanding in the analysis of data to make data driven decisions.  The grading in this course is built around three presentations on a single topic, where the presentations demonstrate increasing understanding of the data, the problem domain, and the application of methods for processing, analyzing, and presenting the data, question, and results.  The project may be done individually or a group of 2.
 
-Each assignment for the project consists of a short paper and a presentation. The paper should be written in R Markdown format (delivered as a pdf) and the presentation should be written in R Presentation format (delivered as HTML or PDF)
+For a projecct dataset and problem, you may look at Kaggle (http://www.kaggle.com) for datasets.  Just as important, the Kaggle competition datasets are sponsored by a company that has an actual problem, so you may write the CONVO portion of the assignment based on that company. Note: if you use a Kaggle dataset, it must be a true competition, as these have an actual problem and setting. So you may not choose a dataset with any of following labels: *getting started*, *playground*, or *knowledge*.  You may choose *research*, but look carefully before you do this to make sure that you will be able to write a useable CONVO statement, as this tends to determine a successful project.
+
+Each assignment for the project consists of a short paper and a presentation. The paper should be written in R Markdown format (delivered as a pdf) and the presentation should be written in R Presentation format (delivered as HTML or PDF).  The format should follow the outline given in the case study report format document.
 
 For parts 1 and 2, the paper should be around 4-5 pages (not counting figures), the presentation should be 5-8 minutes.
 
@@ -51,8 +53,10 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 1.  Identify a data set. Discuss the collection of the data. Who organized the collection, who actually performed the collection, for what purposes.
 2.  Discuss types of questions that users of the data may be interested in using the Context, Needs, Vision, Outcome framework.
 3.  Data summary. Discuss element present in the context of the elements of big data: Volume, Velocity, Variety, Veracity. Provide useful statistical summaries.
-4.  Data visualization
-5.  Text analysis - What were difficulties faced doing the analysis?
+4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
+5.  Identify an outcome and three independent variables based on your CoNVO statement and the pairs plot.  Use at least three plot types for this part (geoms) (Note: the easy way to do this is to take from the five named plot types, but you may find more complex plots are more useful.
+6.  Design and create a single plot that shows the effects of all three independent variables in question 6. Explain and interpret the plot.  Be sure to reference the CoNVO statement in question 4.
+7.  Working with the data - What were difficulties faced while preparing the data for analysis?
 
 
 Preliminary data analysis
@@ -63,9 +67,8 @@ Due March 14
 1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
 2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
 3.  Preliminary analysis including data visualization.
-4.  First application of an applicable machine learning method for the problem.
-5.  Hypothesis(es) to be tested for the final project.
-6.  Plan of work.
+4.  Apply methods using set of methods following the same rules as the applicable homework assignment (e.g. is this a regression problem or a classification problem)
+6.  Plan of work.  Identify what class of methods you will be comparing in the final project.  Note: 
 
 
 Final project
