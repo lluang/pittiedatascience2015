@@ -32,15 +32,15 @@ In addition, you are encourage to discuss and assist with each other's projects.
 Project description
 ===================
 
-1.  Exploratory data analysis (February 14)
-2.  Preliminary data analysis (March 14)
-3.  Final report and presentation (April 25)
+1.  Exploratory data analysis (February 20)
+2.  Preliminary data analysis (March 20)
+3.  Final report and presentation (April 24)
 
 
 Exploratory Data Analysis
 ============================
 
-- Due February 14
+- Due February 13
 
 From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the following:
 
@@ -54,7 +54,8 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 2.  Discuss types of questions that users of the data may be interested in using the Context, Needs, Vision, Outcome framework.
 3.  Data summary. Discuss element present in the context of the elements of big data: Volume, Velocity, Variety, Veracity. Provide useful statistical summaries.
 4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
-5.  Identify an outcome and three independent variables based on your CoNVO statement and the pairs plot.  Use at least three plot types for this part (geoms) (Note: the easy way to do this is to take from the five named plot types, but you may find more complex plots are more useful.
+5.  Identify an outcome and three independent variables based on your CoNVO statement and the pairs plot.  
+6.  Explore the variables applying the five basic plot types at least once each.  Note: the easy way to do this is to take from the five named plot types, but you may find more complex plots are more useful.
 6.  Design and create a single plot that shows the effects of all three independent variables in question 6. Explain and interpret the plot.  Be sure to reference the CoNVO statement in question 4.
 7.  Working with the data - What were difficulties faced while preparing the data for analysis?
 
@@ -62,7 +63,7 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 Preliminary data analysis
 =============================
 
-Due March 14
+Due March 20
 
 1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
 2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
@@ -74,7 +75,7 @@ Due March 14
 Final project
 =================
 
-April 25
+April 24
 
 1.  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected? What makes it interesting (Think in terms of the dimensions of big data: velocity, volume, variety)
 2.  Discuss problem being studied in terms of CoNVO.
