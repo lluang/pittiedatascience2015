@@ -1,142 +1,404 @@
 ---
-title: "Data structures and visualization"
-author: "Louis Luangkesorn"
+title: "Data In R"
+author: "IE 2064 Data Science"
 date: "January 2019"
 output:
-  html_document:
-    df_print: paged
   pdf_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+  html_document: default
   slidy_presentation: default
 ---
 
-Data structures
+- It will help to have R Studio open and follow along in this lecture.
+- Download ACS housing and personal data as well as the data dictionary
+
+Data analysis language
 ========================================================
 
-Features of R
-=============
+**R** is a Data analysis language
 
--  an effective data handling and storage facility,
--  a suite of operators for calculations on arrays, in particular matrices,
--  a large, coherent, integrated collection of intermediate tools for data analysis,
--  graphical facilities for data analysis and display either directly at the computer or on hardcopy, and
--  a well developed, simple and effective programming language (called ‘S’) which includes conditionals, loops, user defined recursive functions and input and output facilities.
+-  Reading in data in various formats.
+-  Manipulating data.
+-  Exploratory data analysis.
+-  Graphical display.
 
-Working with R
-==============
-
-- R is an computational environment and a programming language.
-- The benefit of a programming language is that analysis is reproducable, just change the data set.
-- The benefit of a computational environment is that you can inspect the options you have available while you are performing the analysis.
-
-Getting help
-============
-
--  R-Studio help is typically in the lower left.
-  -  Manuals (An Introduction to R)
-  -  Installed packages
-  -  Search capability
--  Type `help(function)` in the Console
-
-```{r, echo=TRUE}
-# help(solve)
-```
-
-
-Vignette
-========
-
-- Better packages will have a *vignette*
-    - `Help -> User guides, package vignettes and other documentation`
-    - Generally, a complex example of use of the package.
-    - Often a good tutorial and introduction
-    - Occasionally, a journal quality article
-    - Start here when learning to use a new package
-    
-```{r}
-browseVignettes("dplyr")
-vignette("dplyr")
-```
-
-Data
-=============
-type: section
-
-Working with data 
+Reading in data
 =================
 
--  R generally uses dynamic typing, you do not declare your variables.
--  A variable can have text, integers, or numbers.
--  Typing in a variable name gives the contents of the variable (also available in the `Environment` window in the upper right of R Studio)
--  Typing in a function name with no parenthesis shows the source code of the function.
+Data exists in various forms
 
-Vectors
-=======
+-  Text files
+  -  (Comma) delimited (csv)
+  -  Tabular (fixed format) text (tab)
+-  Excel spreadsheets
+-  Databases
+  -  Local (MS Access, SQLite)
+  -  Server (Oracle, IBM DB2, MySQL)
+-  Web API
+  - Twitter, Facebook, Google, Quandl
+  
+Why do we want to use to the data
+==================================
 
--  The base unit of data that can be analyzed is the *vector*
--  Operations on a vector are performed on all members
--  Many mathematical functions also work on vectors.
+- We have a question that needs to be answered.
+- We have a decision that needs to be made.
+- We will do something when we observe an event.
 
-```{r}
-x <- c(10.4, 5.6, 3.1, 6.4, 21.7)
-print(1/x)
-print(c(mean(x), sd(x)))
-```
-
-Logical vectors
+Working in R
 ===============
 
--  If you use an `if -> else` statement on a vector, you get a vector of `TRUE/FALSE` values
-```{r}
-x > 5
+Starting R
+==========
+
+-  R is a data analysis environment
+  -  The programming language
+  -  The system of libraries and books around it.
+-  R Studio is an Integrated Development environment.
+  -  If you are already a computer programmer, you can use your editing tools to work in R.
+  -  R Studio includes an editor, console, environment viewer, history
+  -  Access to help files
+  
+Interactive R
+===============
+
+R can be used as a calculator
+
+```{r calculator}
+3+5
+```
+
+Run a function
+===============
+
+```{r rnorm}
+x = rnorm(20)
+y = rexp(20)
+plot(x,y)
+```
+
+Some data types
+===============
+
+Some standard data types
+
+- Integers, floats
+- Characters, strings
+- Dates
+- When is a number not a number?  Factors
+
+Some data structures
+======================
+
+-  Vectors (numbers)
+-  You can apply functions over entire vectors (vectorization)
+
+```{r vector}
+a <- c(3, 5, 3, 7, 10)
+b = c(1, 2, 3, 4, 5)
+1/b
+sum((a-mean(a))^2)/(length(a)-1)
+var(a)
+```
+
+Sequences
+============
+
+You can construct a sequence like a for loop
+
+```{r sequence}
+seq(-5, 5, by=2)
+seq(-5, 5, 2)
 ```
 
 
-Representing data
-=================
-
--  We often represent data as rows and columns.
--  Usually, a row is a record, each column contains information about that record.
--  We could put them in a matrix, but sometimes the columns are not numbers.
--  A `data.frame` can recognize that each column is of a different type and will treat it correctly.
-
-Data frames
+Matrices
 ===========
 
-- *Data frames* are the key data structure you will use.
-- Composed of vectors, factors, matrices, lists, or other data frames.
-- Think of them as a list of records, where each record contains many different types of information.
-- Create a data frame by using `data.frame` with a list of the columns and the variables that contain the data for each column.
+You can create matrices all at once, or by having vectors as columns or rows.
+
+```{r matrixexample}
+mat <- matrix(nrow = 3, ncol = 2, c(1,2,3,4,5,6))
+mat2 <- cbind(1:4, c("dog", "cat", "bird", "dog"))
+mat3 <- rbind(c(1,2,4,5), c(6,7,0,4))
+mat
+mat2
+mat3
+```
+
+Data frames
+=============
+
+- Data frames are the primary data structure you will work with.
+- Like a matrix, but you can have different data types.
+- Maintain relationship between rows and columns.
+- The better **R** packages all work on data frames.
+  -  ggplot2, tidyr, reshape, dplyr
+  
+```{r dataframe1}
+students <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       c(3,2,2,1,0,-1),
+                       c("H", "G", "G", "R", "S", "G"))
+names(students) <- c("name", "year", "house") # name the columns
+class(students)
+class(students$name)
+class(students$year)
+class(students$house)
+students
+dim(students)
+```
+
+Dataframes from vectors
+========================
+You can also create a dataframe from a set of vectors
+
+```{r dataframevectors}
+hogwartstudents <- data.frame(name = students$name, year = students$year, house = students$house)
+hogwartstudents
+```
+
+
+Reading from a file
+====================
+
+- The standard way of creating a data frame is to read in table data from somewhere else
 
 ```
-> accountants <- data.frame(home=statef, loot=incomes, shot=incomef)
+read.table("hogwarts.tab")
+read.csv("hogwarts.csv")
+readWorksheetFromFile("hogwarts.xlsx", sheet="Sheet1")
+read.fwf("hogwarts.dat")
 ```
 
-Importing data
+Read housing and personal record
+===================
+
+```{r readhousing}
+# Need to point this to lab datasets
+acshousing <- read.csv("../data/ss12hpaPittsburgh01701.csv")
+head(acshousing[,1:10])
+```
+```{r readpersonal}
+acspersonal <- read.csv("../data/ss12ppaPittsburgh01701.csv")
+head(acspersonal[,1:10])
+
+```
+
+
+Reading from databases
+======================
+
+-  **R** has a standard format for accessing databases.
+-  You need a database driver, create a connection, then send SQL to the database.
+-  Database driver is in the *RSQLite* package.
+
+Packages
+===========
+
+-  Most functionality in **R** (or any other data analysis environment) is in the form of *packages* or *libraries*.
+-  Packages are created to do a specific task or type of analysis.
+-  The *RSQLite* package handles connection to SQLite databases.
+-  Other packages include *XLConnect* (for Excel spreadsheets), *ggplot2* (for charts), and *plyr* and *reshape* (for data manipulation)
+
+Reading from a database
+=======================
+
+```
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acs01701 <- dbGetQuery(con, sql)
+```
+
+Using SQL from R
+=================
+
+This is a very large dataset. Maybe we should have taken only a small number of columns.
+
+```
+sql <- "SELECT
+        SERIALNO, ST, PUMA, 
+        NP, TYPE, ACR, BATH, BDSP, BLD,
+        MRGP, RNTP, TEN, YBL
+        FROM SS12HPA"
+acshousing <- dbGetQuery(con, sql)
+summary(acshousing)
+```
+
+Reading data from an Excel spreadsheet
+======================================
+
+- Excel spreadsheets can be read using the package *readxl* (included in `tidyverse`)
+
+```{r readxl, warning=FALSE}
+library(dplyr)
+library(readxl)
+```
+
+Using *readxl*
+=================
+
+-  You can load a workbook (Excel file)
+-  Then read a worksheet
+-  The sheet is read in as a data.frame
+
+```
+acsperson<- read_excel("../data/ss12ppaPittsburgh01701.xlsx", sheet = "ss12ppaPittsburgh01701")
+head(acsperson)
+```
+
+
+
+What to the codes mean?
+=======================
+
+- Look up the code in the data dictionary.
+- Create a data frame using `rbind` and the data.
+
+```{r tenure}
+tenure <- as.data.frame(
+           rbind(c("","NA"),
+                 c("b","N/A  (GQ/vacant)"),
+                 c("1", "Owned with mortgage or loan (include home equity loans)"),
+                 c("2","Owned free and clear"),
+                 c("3","Rented"),
+                 c("4","Occupied without payment of rent"))
+           )
+colnames(tenure) <- c("TEN", "description")
+```
+
+You can write a function to look up the value for each survey answer
+=====================================================================
+
+- This is the same as an inner join.
+
+```{r gettenure}
+acshousing$TEN <- as.factor(acshousing$TEN)
+acshousing %>% 
+  left_join(tenure) %>% 
+    select(SERIALNO, PUMA, ST, TEN) %>%
+      head()
+```
+
+General procedure for getting data into **R**
+===============================================
+
+-  Determine data source
+-  Load package(library) that works with that data source
+-  Connect to data source
+-  Determine options (column titles in first row, delimiters, named)
+-  Read data into data frame
+-  Find data dictionary to translate column names into real names.
+
+The functions and libraries we need
+===========================
+
+- read.csv() - comma separated values
+- read.fwf() - Fixed width formatted data
+- read.table() - Text data tables
+- read.delim() - like read.csv, except you declare the delimiter
+- readxl - Microsoft Excel
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+Filter
+========
+
+```{r filtergryffindor}
+hogwartstudents %>%
+  filter(house=='G')
+```
+
+Arrange
+==========
+```{r sorthogwarts}
+hogwartstudents %>% 
+  arrange(year, name)
+```
+
+Select columns
 ==============
 
-- Data import functions in R assume that you want to have the data in a data frame.
-- `File -> Import Dataset -> From Text (readr)`
-- Load a library that allows access to data file type (`readr`, `readxl`)
-- Read data file - Specify file path
+```{r}
+hogwartstudents %>% select(name, house)
+```
+
+Distinct rows
+================
+
+- Remove duplicates from a dataset
+
+```
+newdf <- olddf %>% distinct()
+```
+
+Calculations (Mutate)
+==============
+```{r}
+acshousing %>%
+  mutate(incomeper=ADJINC/NP) %>%
+  select(SERIALNO, ADJINC, NP, incomeper) %>%
+  head()
+```
+
+Summarize (Group By)
+====================
+```{r summarizehogwarts}
+hogwartstudents %>% 
+  group_by(house) %>%
+  summarize(n())
+```
+
+Random sample
+====================
+
+- Sampling can specify number or probability
+
+```{r studentsrandom}
+hogwartstudents %>%
+  sample_n(3)
+```
+
+```{r studentsrandomfrac}
+hogwartstudents %>%
+  sample_frac(.3)
+```
+
+two-table verbs (JOIN)
+======
+
+- We can replace all of the `JOIN` operations from SQL in R as well.
+- One way is to use logical statements in the brackets (as in above)
+- Another way is to use the `join` and `filter` statements from the `dplyr` package (part of `tidyverse`)
 
 ```{r}
-library(readr)
-train <- read_csv("data/titanic/train.csv")
+acshousing %>%
+  left_join(acspersonal, by="SERIALNO") %>% 
+  filter(FES %in% c("5", "6", "7", "8")) %>%
+  select(SERIALNO, SPORDER, FES, AGEP, HINCP) %>%
+  head()
 ```
 
 
 Plotting with ggplot2
 =======================
-type: section
-
 
 Packages
 ========
 
 -  `Packages` are libraries that contain functionality for R
 -  These libraries include the machine learning and text processing methods that we will use.
--  'ggplot' is a library that implements the *Grammer of Graphics*, plots are built from components.
-  - It is very flexible.
 
 ```{r}
 library(ggplot2)
@@ -158,10 +420,17 @@ Some examples
 -  Note the `,` which indicates that you are getting all of the columns.
 
 ```{r}
-library(ggplot2)
 set.seed(1410)
 dsmall = diamonds[sample(nrow(diamonds),200),]
 ```
+
+Introduction to ggplot
+=======================
+
+-  *ggplot* treats plots as a collection of layers.
+-  The layers can be modified independently.
+-  Data, appearance, plot type, and formatting are treated separately.
+-  Allows for quick replacement of data using same parameters or exploring different representations of the same data.
 
 Introduction to ggplot
 =======================
@@ -301,7 +570,7 @@ ggplot(dsmall, aes(x=color, y=price/carat)) + geom_jitter()
 alpha
 ======
 
-- `alpha` adjusts the transparancy, so it is more apparent that multiple data points overlap.
+- `alpha` adjusts the transparency, so it is more apparent that multiple data points overlap.
 ```{r}
 ggplot(dsmall, aes(x=color, y=price/carat)) + geom_point(alpha = 1/5)
 ```
@@ -336,4 +605,3 @@ A plot is composed of:
 -  facets - Indicates multiple plots
 
 More can be found in *ggplot2: Elegant graphics for data analysis*
-
