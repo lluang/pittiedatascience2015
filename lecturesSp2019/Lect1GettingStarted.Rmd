@@ -3,10 +3,12 @@ title: "Getting Started in Data Science"
 author: "Louis Luangkesorn"
 date: "January 2019"
 output:
-  slidy_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
   html_document: default
   pdf_document: default
-  beamer_presentation: default
+  slidy_presentation: default
 ---
 
 Notecard
@@ -129,7 +131,7 @@ Homeworks
 Case study
 ==========
 
--  Apply basic methods to a competition dataset.
+-  Apply basic methods in a realistic setting.
 -  Part 1
   -  Practice writing CONVO statements
   -  Practice in applying data visualization
@@ -141,7 +143,7 @@ Project
 
 - Three papers/presentations
 - Find a data set and a question
-- Kaggle.com
+    - Kaggle.com
 
 1.  Exploratory Data Analysis
 2.  Preliminary Data Analysis
@@ -250,11 +252,9 @@ Data acquisition
 Data analysis
 =============
 
--  Summarizing data.
+-  Summarizing and visualizing data.
 -  Make inferences about the larger context.
--  Visualization of data.
--  Analysis is always done in the context of decision makers.
-
+-  Analysis is always done in the context of making a decision.
 
 ![Thinking with data (Moderndive)](../resources/thinkingwithdataflowchart.002.png)
 
@@ -384,7 +384,7 @@ Analytical environments
 6.  Data analysis programming languages (dynamic)
     -  Matlab, Python, R, F#, Julia, Clojure, Scala
 7.  GUI based Machine Learning tools/interfaces
-    -  Weka, KMINE, Rapidminer
+    -  Weka, KMINE, Rapidminer, Orange
 
 Criteria
 ========================================================
@@ -434,8 +434,8 @@ Presentation of results
 
 -  Graphics and charting libraries.
 -  Excel (not flexible)
--  Matlab, Python, R, Javascript all have good and flexible libraries.
--  Libraries exist for Java, C++ but they tend to not be flexible.
+-  Python, R, Javascript all have good and flexible libraries.
+-  Libraries exist for Java, C++, Matlab but they tend to not be flexible.
 
 
 Tools for data hacking
@@ -445,8 +445,7 @@ Data Hackers
 ====================
 
 -  Data is a commodity traded electronically; therefore, in order to be in this market you need to speak hacker (computer programming).
--  This, however, does not require a background in computer science.
--  Being able to manipulate text files at the command-line
+-  This does not require a background in computer science.
 -  Understanding vectorized operations
 -  Thinking algorithmically.
 

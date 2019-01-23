@@ -3,9 +3,12 @@ title: "Thinking about data"
 author: "Louis Luangkesorn"
 date: "January 2019"
 output:
-  pdf_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
   html_document: default
   slidy_presentation: default
+  pdf_document: default
 ---
 
 The Data Science Venn Diagram
@@ -33,7 +36,6 @@ Hacking skills
 Math and Statistics
 ===================
 
-
 R
 ===
 
@@ -51,7 +53,7 @@ Rattle
 ggplot
 ======
 
--  Graphics package
+-  Graphics library
 -  Based on *Grammer of graphics*
 -  Instead of having different commands for different types of plots, have a unified functional interface that takes different sets of options to produce different plots.
 -  Very easy to try different visualizations on the same data set.
@@ -68,11 +70,6 @@ Substantive knowledge
 - Understand the implications of your results and communicate with clients.
 - Know methods used in your field
     - **CRAN Task Views** can help with implementations of subject specific models.
-
-
-Thinking about data
-===================
-
 
 Thinking about data
 ===================
