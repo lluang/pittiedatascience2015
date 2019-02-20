@@ -3,8 +3,8 @@ title: "Non-linear Regression Models"
 author: "IE 2064 Data Science"
 date: "February 2019"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   slidy_presentation: default
   word_document: default
 ---
@@ -51,12 +51,18 @@ Sample data
 ===================
 ```{r, echo=FALSE, warning=FALSE }
 options(width=80, digits=2, scipen=8)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+library(caret)
 library(DMwR)
 library(xts)
 library(quantmod)
 library(randomForest)
 library(earth)
 library(TTR)
+
 data(GSPC)
 head(GSPC)
 ```
@@ -82,6 +88,11 @@ T.ind <- function(quotes,tgt.margin=0.025,n.days=10) {
   if (is.xts(quotes)) xts(x,time(quotes)) else x
 }
 ```
+
+Using quantmod library
+======================
+
+-  `quantmod` is a library that specializes in financial modeling.
 ```{r, echo=FALSE}
 candleChart(last(GSPC,"3 months"), theme="white", TA=NULL) # from quantmod
 avgPrice <- function(p) apply(HLC(p), 1,  mean)
@@ -146,17 +157,50 @@ rf <- buildModel(data.model,method='randomForest',
              ntree=50, importance=T)
 ```
 
+Repeat using caret
+===================
+
+- Create a data frame
+```{r}
+pricemodel <- data.frame(Tind = T.ind(GSPC), 
+       Delt(Cl(GSPC),k=1:10),
+       myATR(GSPC) ,
+       mySMI(GSPC) ,
+       myADX(GSPC) ,
+       myAroon(GSPC) ,
+       myBB(GSPC)  ,
+       myChaikinVol(GSPC) ,
+       myCLV(GSPC) ,
+       CMO(Cl(GSPC)) ,
+       EMA = EMA(Delt(Cl(GSPC))) ,
+       myEMV(GSPC) ,
+       myVolat = myVolat(GSPC)  ,
+       myMACD(GSPC) ,
+       myMFI(GSPC) ,
+       RSI(Cl(GSPC)) ,
+       mySAR(GSPC) ,
+       runMean = runMean(Cl(GSPC)) ,
+       runSD = runSD(Cl(GSPC)))
 ```
-train(x, y, 
-      method = "rf",  
-      preProcess = NULL,
-      ..., 
-      weights = NULL,
-      metric = ifelse(is.factor(y), "Accuracy", "RMSE"),   
-      maximize = ifelse(metric %in% c("RMSE", "logLoss"), FALSE, TRUE),
-      trControl = trainControl(), 
-      tuneGrid = NULL,  tuneLength = 3)
+Apply random forest using carat
+=============
 ```
+pricemodel <- pricemodel[complete.cases(pricemodel),]
+set.seed(1234)
+mtryGrid <- data.frame(mtry = floor(seq(10, ncol(pricemodel[,-1]), 
+                      length = 5)))
+indx <- createFolds(pricemodel[,"Tind"], returnTrain = TRUE)
+ctrl <- trainControl(method = "cv", index = indx)
+rf <- train(x = pricemodel[,-1], 
+            y = pricemodel[,"Tind"],
+            method='rf',
+            tuneGrid = mtryGrid,
+            ntree = 50,
+            importance = TRUE,
+            trControl = ctrl)
+
+```
+
 
 Check importance of the variables
 ==================================
@@ -268,7 +312,7 @@ Using training data with time series
 - How do we decide that variability is just normal variability (keep it) or due to a change in the volatility (replace it)?
 - We can create a window of data that we use at any point in time, gradually throwing away old data.
 
-![Prediction window](resources/predictionwindow.png)
+![Prediction window](../resources/predictionwindow.png)
 
 
 Artificial Neural Networks
@@ -630,7 +674,7 @@ data(GSPC)
 date <- rownames(Tdata.train[start+len.tr,])
 market <- GSPC[paste(date,'/',sep='')][1:len.ts]
 
-# learning the model and obtaining its signal predictions
+# training the model and obtaining its signal predictions
 library(e1071)
 s <- svm(Tform,Tdata.train[tr,],cost=10,gamma=0.01)
 p <- predict(s,Tdata.train[ts,])
