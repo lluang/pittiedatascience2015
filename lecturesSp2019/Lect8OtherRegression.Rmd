@@ -4,7 +4,9 @@ author: "IE 2064 Data Science"
 date: "February 2019"
 output:
   pdf_document: default
-  beamer_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
   html_document:
     df_print: paged
   slidy_presentation: default
@@ -18,7 +20,8 @@ save.image("regressionTree.Rdata")
 
 at the end of the file, which saves all datasets and variables that currently existed in the data set.  Then I reload the data using the `load` command in the following code chunk.
 
-```{r, warning=FALSE}
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
 library(dplyr)
 library(magrittr)
 library(ggplot2)
@@ -122,6 +125,7 @@ cartTune
 ```
 
 Results with standard deviations of error calculations
+==============
 ```{r}
 cartTune$results %>% head()
 ```
@@ -132,6 +136,8 @@ Final model
 cartTune$finalModel
 ```
 
+Recursive partitioning tree
+=====================
 ```{r}
 library(rpart)
 library(rpart.plot)
