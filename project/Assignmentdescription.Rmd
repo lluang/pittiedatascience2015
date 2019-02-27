@@ -1,9 +1,10 @@
 ---
-title: IE 2064 Data Science Project Description
-date: Spring 2019
+title: "IE 2064 Data Science Project Description"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
+date: "Spring 2019"
 ---
 Course project for IE 2064 Data Science
 ====================================

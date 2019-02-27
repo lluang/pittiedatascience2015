@@ -1,15 +1,14 @@
 ---
+title: 'Homework 2: Regression'
+author: "IE 2064 Data Science"
+date: "March 7, 2019"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
-Homework 2: Regression
-====================
 
--  IE 2064 Data Science
--  February 28, 2018
 
-**Due Wednesday February 28, 2018**
+**CHANGE Due Wednesday March 6, 2019**
 
 Note: Your dataset from EDA is probably naturally either a regression problem or a classification problem.  So you do not necessarily need to use the same dataset for this assignment as the EDA dataset if it is unrealistic for a regression problem.
 
