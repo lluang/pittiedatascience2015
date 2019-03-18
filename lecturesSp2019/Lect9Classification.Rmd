@@ -297,8 +297,6 @@ ggplot(creditResults) + geom_histogram(aes(prob)) + facet_grid(. ~ Label) +
 
 Calculate and plot the calibration curve
 ======
-Calculate and plot the calibration curve
-======
 ```{r}
 creditCalib <- calibration(obs ~ prob, data = creditResults)
 ggplot(creditCalib$data) + geom_point(mapping=aes(midpoint, Percent, color=calibModelVar)) +
