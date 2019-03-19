@@ -7,6 +7,9 @@ output:
   html_document: default
   slidy_presentation: default
   word_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
 ---
 
 Overview
@@ -49,7 +52,7 @@ Available data
 
 Sample data
 ===================
-```{r, echo=FALSE, warning=FALSE }
+```{r, echo=FALSE, warning=FALSE, message=FALSE }
 options(width=80, digits=2, scipen=8)
 library(dplyr)
 library(magrittr)
