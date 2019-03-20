@@ -3,11 +3,11 @@ title: "Non-linear classification methods"
 author: "IE 2064 Data Science"
 date: "March 2019"
 output:
+  pdf_document: default
+  slidy_presentation: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
-  slidy_presentation: default
-  pdf_document: default
 ---
 ```{r loadlibraries, echo=FALSE, message=FALSE}
 ################################################################################
@@ -231,7 +231,7 @@ $$\hat{p}^*_l = \frac{e^{\hat{y}_l}}{\sum_{l=1}^C e^{\hat{y}_l}}$$
 
 Neural network illustration
 ======
-![Neural networks](../resources/neural_c.png)
+![Neural networks](../resources/neural_C.png)
 
 Overfitting in neural networks
 ==============================
@@ -428,7 +428,7 @@ Flexible discriminant analysis
 - Result can be used to create more complex boundaries
 - E.g. FDA with MARS and four terms.
 
-![LDA vs FDA (with MARS)](../resources/LDAVsFDA.png)
+![LDA vs FDA (with MARS)](../resources/LDAvsFDA.png)
 
 
 Application of FDA to grant model
