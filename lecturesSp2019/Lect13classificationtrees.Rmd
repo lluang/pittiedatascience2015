@@ -3,11 +3,11 @@ Title: Classification trees and rule based methods
 author: "IE 2064 Data Science"
 date: "March 2019"
 output:
-  beamer_presentation: default
+  pdf_document: default
   html_document:
     df_print: paged
   slidy_presentation: default
-  pdf_document: default
+  beamer_presentation: default
   ioslides_presentation: default
 ---
 
@@ -101,6 +101,16 @@ ctrl <- trainControl(method = "LGOCV",
                      savePredictions = TRUE)
 ```
 
+Performance - ROC Curve
+=======================
+
+-  *Sensitivity* - samples that were predicted to be true and were true compared to the samples that were true.
+  - Did you identify the true samples?
+-  *Specificity* - samples that were predicted to be false and were false compared to the total number of samples that were false
+  - Did you correctly exclude the false samples?
+  - *false positive*   1 - *specificity*
+-  Use threshold to move along ROC curve
+
 Recursive partitioning
 =========================
 
@@ -125,8 +135,13 @@ rpartFit
 rpartRoc <- roc(response = rpartFit$pred$obs,
                 predictor = rpartFit$pred$successful,
                 levels = rev(levels(rpartFit$pred$obs)))
-
 ```
+
+
+```{r}
+plot(rpartRoc, type = "s",  legacy.axes = TRUE)
+```
+
 
 rpart final tree
 ===
@@ -153,6 +168,11 @@ rocoutput <- data.frame(thresholds=rpartRoc$thresholds,
 rocoutput
 ```
 
+
+```{r}
+plot(rpartRoc, type = "s",  legacy.axes = TRUE)
+```
+
 rpart with reduced set of predictors
 ===
 ```
@@ -167,6 +187,7 @@ rpartFactorFit <- train(x = training[,factorPredictors],
 ```{r}
 rpartFactorFit
 ```
+
 ROC curves
 ============
 ```{r}
@@ -176,6 +197,21 @@ rpartFactorRoc <- roc(response = rpartFactorFit$pred$obs,
 
 ```
 
+
+```{r}
+plot(rpartFactorRoc, type = "s", legacy.axes = TRUE)
+```
+
+
+Choose where on the ROC curve you want to be
+======
+
+```{r}
+rpartrocoutput <- data.frame(thresholds=rpartRoc$thresholds,
+                        sensitivites=rpartRoc$sensitivities,
+                        specificities=rpartRoc$specificities)
+rpartrocoutput
+```
 
 Plot tree with reduced set of predictors
 ===
@@ -210,9 +246,9 @@ plot(rpartFactorRoc,
      print.thres.pattern = "",
      print.thres.cex = 1.2)
 legend(.75, .2,
-       c("Grouped Categories", "Independent Categories"),
+       c("All predictors", "Reduced predictors"),
        lwd = c(1, 1),
-       col = c("black", "red"),
+       col = c("red", "black"),
        pch = c(16, 3))
 ```
 
@@ -255,6 +291,11 @@ j48FactorRoc <- roc(response = j48FactorFit$pred$obs,
                     levels = rev(levels(j48FactorFit$pred$obs)))
 ```
 
+```{r}
+plot(j48FactorRoc, type = "s", legacy.axes = TRUE)
+```
+
+
 J48 with full set of predictors
 ===
 ```
@@ -285,11 +326,16 @@ j48Roc <- roc(response = j48Fit$pred$obs,
               levels = rev(levels(j48Fit$pred$obs)))
 ```
 
+```{r}
+plot(j48Roc, type = "s", legacy.axes = TRUE)
+```
+
+
 J48 Classification tree ROC plots of partial and full set of predictors
 =====
 
 ```{r, plottreeROC, echo=FALSE, fig=TRUE}
-plot(j48FactorRoc, type = "s", print.thres = c(.5), 
+plot(j48FactorRoc, type = "s", col = "black", print.thres = c(.5), 
      print.thres.pch = 16, print.thres.pattern = "", 
      print.thres.cex = 1.2, legacy.axes = TRUE)
 
@@ -298,12 +344,11 @@ plot(j48Roc, type = "s", print.thres = c(.5),
      print.thres.cex = 1.2, legacy.axes = TRUE,
      add = TRUE, col = "red", print.thres.col = "red")
 legend(.75, .2,
-       c("Grouped Categories", "Independent Categories"),
+       c("J48 Reduced factors", "J48"),
        lwd = c(1, 1),
        col = c("black", "red"),
        pch = c(16, 3))
-#plot(rpartFactorRoc, type = "s", add = TRUE, 
-#     col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
+
 ```
 
 Rule based models
@@ -341,6 +386,11 @@ partRoc <- roc(response = partFit$pred$obs,
 partRoc
 ```
 
+```{r}
+plot(partRoc, type = "s", legacy.axes = TRUE)
+```
+
+
 Partitioning with reduced set of predictors
 ============
 
@@ -371,6 +421,10 @@ partFactorRoc <- roc(response = partFactorFit$pred$obs,
                      predictor = partFactorFit$pred$successful,
                      levels = rev(levels(partFactorFit$pred$obs)))
 partFactorRoc
+```
+
+```{r}
+plot(partFactorRoc, type = "s", legacy.axes = TRUE)
 ```
 
 Bagging
@@ -434,6 +488,11 @@ treebagFactorRoc <- roc(response = treebagFactorFit$pred$obs,
                         levels = rev(levels(treebagFactorFit$pred$obs)))
 ```
 
+
+```{r}
+plot(treebagFactorRoc, type = "s", legacy.axes = TRUE)
+```
+
 Confusion matrix for bagged trees
 ===============
 ```{r, cache=TRUE,  echo=FALSE}
@@ -444,45 +503,40 @@ Bagged tree ROC plots vs recursive partitioning and J48 - reduced predictors
 =====
 
 ```{r, cache=TRUE,  echo=FALSE, fig=TRUE}
-plot(rpartRoc, type = "s", col = rgb(.2, .2, .2, .2), legacy.axes = TRUE)
-plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .2, .2), 
-     legacy.axes = TRUE)
+plot(rpartRoc, type = "s", col = "black", legacy.axes = TRUE)
+plot(j48FactorRoc, type = "s", add = TRUE, col = "blue", 
+     legacy.axes = TRUE )
 plot(treebagRoc, type = "s", add = TRUE, print.thres = c(.5), 
      print.thres.pch = 3, legacy.axes = TRUE, print.thres.pattern = "", 
      print.thres.cex = 1.2,
      col = "red", print.thres.col = "red")
-plot(treebagFactorRoc, type = "s", add = TRUE, print.thres = c(.5), 
+plot(treebagFactorRoc, type = "s", col = "green", add = TRUE, print.thres = c(.5), 
      print.thres.pch = 16, print.thres.pattern = "", legacy.axes = TRUE, 
      print.thres.cex = 1.2)
 legend(.75, .2,
-       c("Grouped Categories", "Independent Categories"),
+       c("R partitioning", "J48", "Bagged Tree", "Bagged Tree Reduced"),
        lwd = c(1, 1),
-       col = c("black", "red"),
+       col = c("black", "blue", "red", "green"),
        pch = c(16, 3))
 ```
 
 
-ROC plots
-=======
-```{r, echo=FALSE, fig=TRUE}
-plot(treebagRoc, type = "s", col = rgb(.8, .2, .2, .2), legacy.axes = TRUE)
-plot(rpartRoc, type = "s", add = TRUE, col = rgb(.2, .8, .2, .2), legacy.axes = TRUE)
-plot(j48FactorRoc, type = "s", add = TRUE, col = rgb(.2, .2, .8, .2), legacy.axes = TRUE)
-legend(.75, .2,
-       c("Grouped Categories", "Independent Categories"),
-       lwd = c(1, 1),
-       col = c("black", "red"),
-       pch = c(16, 3))
-```
 
 Random Forest
 =======
 
 - Instead of the regression tree for every iteration of random forest, a classification tree is used.
 - Tuning parameter is the number of randomly selected predictors to choose from.
+- Models differ by the available candidate factors
 
 Boosting
 =========
 
 -  AdaBoost generates a sequence of weak classifiers.
--  At every interaction, samples that are incorrectly classified are given more weight, so subsequent models that are part of the ensemble are better at samples that were incorrectly classified earlier.
+-  At every iteration, samples that are incorrectly classified are given more weight, so subsequent models that are part of the ensemble are better at samples that were incorrectly classified earlier.
+
+Bagging
+=========
+
+-  For each iteration, a bootstrapped data sample is created
+-  Models differ on the dataset used (which elements are samples repeatedly and which samples become used for evaluation)
