@@ -27,26 +27,58 @@ library(readr)
     
     
     
-```{r}
-lendingclub <- read_csv("data/accepted_2007_to_2018Q3.csv",
+```
+{r}
+lendingclub <- read_csv("../data/accepted_2007_to_2018Q3.csv",
 col_types = cols(delinq_2yrs = col_character(),
 desc = col_skip(), earliest_cr_line = col_date(format = "%b-%Y"),
 grade = col_factor(levels = c("G",
 "F", "E", "D", "C", "B", "A")),
 issue_d = col_date(format = "%b-%Y"),
+loan_status = col_factor(levels = c("Current",
+                                    "Fully Paid",
+                                    "Charged Off",
+                                    "Late (31-120 days)",
+                                    "In Grace Period",
+                                    "Late (16-30 days)",
+                                    "Default")),
 pub_rec_bankruptcies = col_character(),
 settlement_amount = col_skip(), settlement_percentage = col_skip(),
 settlement_term = col_skip(), term = col_factor(levels = c("36 months",
 "60 months")), url = col_skip(), debt_settlement_flag_date = col_skip(), 
 settlement_status  = col_skip(), settlement_date = col_skip() ))
-
-summary(lendingclub)
+save(lendingclub, file="lendingclub.Rdata")
 ```
 
 ```{r}
-
+load("lendingclub.Rdata")
 ```
-3.  CoNVO statement
-4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
-5.  Explore at least five independent variables as identified in the pairs plot.  Apply each of the five basic plot types at least once.  You may find that you have to build on the basic plot type to make something meaningful.
+)
+
+```{r}
+lendingclubsample <- lendingclub[  , colSums(is.na(lendingclub)) < 100]
+lendingclubsample <- lendingclubsample[,nearZeroVar(lendingclubsample),]
+
+lendingclubsample2 <- sample_frac(lendingclubsample, size=0.01)
+summary(lendingclubsample2)
+save(lendingclubsample2, file="lendingclubsample2.RData")
+```
+```{r}
+load("lendingclubsample2.RData")
+```
+
+
+```{r}
+lendingclubplot <- lendingclubsample2 %>% 
+  select(loan_amnt, funded_amnt, funded_amnt_inv, term, int_rate, grade, emp_length, home_ownership, annual_inc, installment)
+ggpairs(lendingclubplot)
+```
+
+```{r}
+trnctrl <- trainControl(method=cv, number=10)
+```
+
+```{r}
+lassoFit1 <- train(x=)
+```
 
