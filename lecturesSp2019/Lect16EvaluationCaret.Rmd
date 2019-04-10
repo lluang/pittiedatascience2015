@@ -1,0 +1,307 @@
+---
+title: "Lecture 16 Model training and evaluation"
+author: "IE2064 Data Science"
+date: "April 2019"
+output:
+  beamer_presentation: default
+  html_document: default
+  pdf_document: default
+---
+
+Overview of Data science workflow
+========================================
+
+- CoNVO
+- Data preparation/munging
+- Exploratory data analysis
+- Determine model
+  - Determine modeling parameters
+    - Divide data into train/test data
+      - Process data
+      - Fit model on training data
+      - Test model on test/hold-out data
+    - Evaluate model
+  - Determine optimal parameter set
+- Determine best model
+  - Fit final model using all data
+- Predictions
+
+
+CoNVO
+======================
+incremental: true
+
+-  **Co**ntext
+-  **N**eeds
+-  **V**ision
+-  **O**utcome
+
+Exploratory data analysis
+===================================
+
+-  Reading in data
+-  Data processing
+  - Outliers and missing values
+-  Data manipulation
+-  Data visualization
+
+Evaluate 4 V's of Big Data
+==========================
+
+Understand what kind of difficulties you need to manage
+
+-  Volume 
+    - How many observations? 
+    - What does each observation represent?
+    - How much computer memory does it take?
+-  Variety
+    - What information is available on every observation?
+    - Are the variables related to each other?
+    - What are the data types represented?
+-  Velocity
+    - Does time matter?
+    - Does the environment change over time?
+    - Does a decision need to be made within a time horizon?
+    - Does the system change over time?
+    - Does data have an expiration date?
+-  Veracity
+    - Do data elements have clear definitions?
+    - Does the range of values make sense?
+    - Are data collection methods sound?
+    - Do survey respondents have an incentive to tell the truth? to lie?
+
+Determine  best model
+======
+- Choose a model type
+  - Determine modeling parameters
+    - Divide data into train/test data
+      - Process data
+      - Fit model on training data based on cross validation
+    - Evaluate model
+  - Determine optimal parameter set
+  - Test models on testing data
+- Determine best model
+
+
+Modeling
+===========
+
+![Branches of Machine Learning](../resources/ml_map.png)
+
+Predictions
+=============
+
+- Fit final model using all available data
+- Predictions based on new observations
+  - Predict the outcome based on the descriptive information.
+  
+Sonar example
+============
+
+Sonar data
+===============
+- Data from `mlbench` (machine learning benchmarks)
+-  Goal is to classify sonar signals
+  -  Metal cylinder representing a mine (M) 
+  -  Rock (R)
+-  Data set
+  - Energy returned on a given frequency band over a period of time
+  - 60 defined bands
+  - Energy in each band in a range 0.0 - 1.0
+
+Sonar data summary
+=============
+```{r, echo=FALSE}
+library(mlbench)
+data(Sonar)
+summary(Sonar)
+```
+
+Split data using caret
+==================
+
+```{r}
+library(caret)
+set.seed(1234)
+inTrain <- createDataPartition(y = Sonar$Class,
+                    ## the outcome data are needed
+                    p = .75,
+                    ## The percentage of data in the
+                    ## training set
+                    list = FALSE)
+head(inTrain)
+```
+
+Assign data to test and training data
+====================
+```{r}
+training <- Sonar[ inTrain,]
+testing <- Sonar[-inTrain,]
+nrow(training)
+nrow(testing)
+```
+
+Setup 10-fold cross validation
+=======
+
+```{r}
+fitControl <- trainControl(## 10-fold CV
+                           method = "repeatedcv",
+                           number = 10,
+                           ## repeated ten times
+                           repeats = 10)
+```
+
+Choose a model type
+=====================
+
+-  Classification model, try a boosted tree model (`gbm` package)
+-  Takes three tuning parameters
+  -  Number of iterations, i.e. trees, (called n.trees in the gbm function)
+  -  Complexity of the tree, called interaction.depth
+  -  Learning rate: how quickly the algorithm adapts, called shrinkage
+  
+Train model
+==========
+-  `caret` package rationalizes machine learning algorithm calls from a number of other packages.
+
+```{r}
+
+gbmFit1 <- train(Class ~ ., data = training,
+                 method = "gbm",
+                 trControl = fitControl,
+                 ## This last option is actually one
+                 ## for gbm() that passes through
+                 verbose = FALSE)
+gbmFit1$results
+```
+
+Tuning grid
+============
+
+-  We can take control of how the parameters are explored through the *tuning grid*.
+-  Let's look at *n.trees* in more detail.
+
+```{r}
+gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9),
+                        n.trees = (1:30)*50,
+                        shrinkage = 0.1,
+                        n.minobsinnode=10)
+set.seed(825)
+gbmFit2 <- train(Class ~ ., data = training,
+                 method = "gbm",
+                 trControl = fitControl,
+                 verbose = FALSE,
+                 ## Now specify the exact models 
+                 ## to evaludate:
+                 tuneGrid = gbmGrid)
+gbmFit2$results
+```
+
+
+Relationship between estimates of performance and tuning parameters
+===================
+```{r}
+trellis.par.set(caretTheme())
+plot(gbmFit2)
+```
+
+Or specify a different performance measure
+=======
+```{r}
+trellis.par.set(caretTheme())
+plot(gbmFit2, metric = "Kappa")
+```
+
+Or across two parameters at a time
+========
+```{r}
+trellis.par.set(caretTheme())
+plot(gbmFit2, metric = "Kappa", plotType = "level",
+     scales = list(x = list(rot = 90)))
+```
+
+Usually way of evaluating classifiers is ROC
+=================================
+```{r}
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 10,
+                           repeats = 10,
+                           ## Estimate class probabilities
+                           classProbs = TRUE,
+                           ## Evaluate performance using 
+                           ## the following function
+                           summaryFunction = twoClassSummary)
+
+set.seed(825)
+gbmFit3 <- train(Class ~ ., data = training,
+                 method = "gbm",
+                 trControl = fitControl,
+                 verbose = FALSE,
+                 tuneGrid = gbmGrid,
+                 ## Specify which metric to optimize
+                 metric = "ROC")
+gbmFit3$results
+```
+
+
+Look at ROC
+=========
+```{r}
+plot(gbmFit3)
+```
+
+
+Use the trained model to make predictions
+===================
+
+- The `predict` function takes the trained model (`gbmFit3`) and applies it to new data (`testing`)
+- Can output both the predicted classification and a probability
+
+```{r}
+predict(gbmFit3, newdata = head(testing))
+predict(gbmFit3, newdata = head(testing), type = "prob")
+```
+
+Make predictions based on model parameters that are already known
+===================
+
+- `predict` can take in a set of parameters
+-  Train based on `none` method.
+-  Tune grid based on the desired parameters.
+```{r}
+fitControl <- trainControl(method = "none", classProbs = TRUE)
+
+set.seed(825)
+gbmFit4 <- train(Class ~ ., data = training,
+                 method = "gbm",
+                 trControl = fitControl,
+                 verbose = FALSE,
+                 ## Only a single model can be passed to the
+                 ## function when no resampling is used:
+                 tuneGrid = data.frame(interaction.depth = 4,
+                                       n.trees = 100,
+                                       shrinkage = .1,
+                                      n.minobsinnode=10),
+                 metric = "ROC")
+gbmFit4
+```
+
+Look at performance
+=============
+```{r}
+predict(gbmFit4, newdata = head(testing))
+predict(gbmFit4, newdata = head(testing), type = "prob")
+```
+
+
+Summary
+====
+
+-  The `caret` package takes machine learning methods that are found in a wide range of packages and gives them a common interface.
+  - https://topepo.github.io/caret/modelList.html
+-  Includes methods for
+  -  Data partitioning
+  -  Controlling training (e.g. cross validation)
+  -  Model development and parameter tuning
+  -  Making and testing predictions 
