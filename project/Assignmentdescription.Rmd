@@ -1,10 +1,10 @@
 ---
 title: "IE 2064 Data Science Project Description"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document: default
-date: "Spring 2019"
+date: "Spring 2020"
 ---
 Course project for IE 2064 Data Science
 ====================================
@@ -33,15 +33,15 @@ In addition, you are encourage to discuss and assist with each other's projects.
 Project description
 ===================
 
-1.  Exploratory data analysis (February 20)
-2.  Preliminary data analysis (March 20)
-3.  Final report and presentation (April 24)
+1.  Proposal and Exploratory data analysis (February 12)
+2.  Preliminary data analysis (April 1])
+3.  Final report and presentation (April 15)
 
 
 Exploratory Data Analysis
 ============================
 
-- Due February 13
+- Due February 12
 
 From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the following:
 
@@ -57,26 +57,25 @@ From John Tukey, the objectives of Exploratory Data Analysis (EDA) are to do the
 4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
 5.  Identify an outcome and three independent variables based on your CoNVO statement and the pairs plot.  
 6.  Explore the variables applying the five basic plot types at least once each.  Note: the easy way to do this is to take from the five named plot types, but you may find more complex plots are more useful.
-6.  Design and create a single plot that shows the effects of all three independent variables in question 6. Explain and interpret the plot.  Be sure to reference the CoNVO statement in question 4.
-7.  Working with the data - What were difficulties faced while preparing the data for analysis?
+7.  Design and create a single plot that shows the effects of all three independent variables in question 8.  Working with the data - What were difficulties faced while preparing the data for analysis?
 
 
 Preliminary data analysis
 =============================
 
-Due March 20
+Due April 1
 
 1.  Propose a question that you will explore for the final project.  What makes it interesting? Difficult?
 2.  Discuss what kind of problem this question is. Who would be the (hypothetical) recipient of this work? Why is the problem important.  What decisions would be made by the recipients who use the results.
 3.  Preliminary analysis including data visualization.
-4.  Apply methods using set of methods following the same rules as the applicable homework assignment (e.g. is this a regression problem or a classification problem)
+4.  Apply methods using set of methods following the same rules as the applicable homework assignment (e.g. is this a regression problem or a classification problem. Pick one from each class of methods)
 6.  Plan of work.  Identify what class of methods you will be comparing in the final project.  Note: 
 
 
 Final project
 =================
 
-April 24
+April 15
 
 1.  Discuss origin and structure of data.  What is missing?  Why was it collected?  How was it collected? What makes it interesting (Think in terms of the dimensions of big data: velocity, volume, variety)
 2.  Discuss problem being studied in terms of CoNVO.
