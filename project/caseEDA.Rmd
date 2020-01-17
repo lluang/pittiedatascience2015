@@ -1,21 +1,21 @@
 ---
 title: 'Lending Club Case: Exploratory Data Analysis'
 author: "IE 2064 Data Science"
-date: "January 23, 2019"
+date: "January 15, 2020"
 output:
   pdf_document: default
   html_document: default
 ---
 
-**Due Wednesday February 6, 2019**
+**Due Wednesday February 5, 2020**
 
-1.  Using R, read in the data.  Note where you need to transform data and how you did this (e.g. declare it to be factor, ordered, normalize data, etc.). You may have to complete question 2 before you can completely answer this.
+1.  Download the Lending Club data from  https://www.kaggle.com/wordsforthewise/lending-club. Using R, read in the data.  Note where you need to transform data and how you did this (e.g. declare it to be factor, ordered, normalize data, etc.). You may have to complete question 2 before you can completely answer this.
 2.  Describe all of the fields in the data set. Note: you may group fields if it makes sense.
     i. Name
     ii. Short, one sentence description
     iii. Description of potential values (include data type and units)
     iv. mean, median, 25/75 quartiles, range if applicable
     vi. Is this an outcome or a potential predictor? (dependent or independent variable)
-3.  CoNVO statement
+3.  Write a CoNVO statement where you are an analyst working with Jasmin Gonzales.
 4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
 5.  Explore at least five independent variables as identified in the pairs plot.  Apply each of the five basic plot types at least once.  You may find that you have to build on the basic plot type to make something meaningful.
