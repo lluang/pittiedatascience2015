@@ -3,17 +3,17 @@ title: "Non-linear Regression Models"
 author: "IE 2064 Data Science"
 date: "February 2020"
 output:
-  pdf_document: default
-  html_document: default
-  slidy_presentation: 
-    fig_width: 4 
-    fig_height: 2
-  word_document: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
     fig_width: 4 
     fig_height: 2
+  pdf_document: default
+  slidy_presentation: 
+    fig_width: 4 
+    fig_height: 2
+  word_document: default
+  html_document: default
 ---
 
 Overview
@@ -26,7 +26,13 @@ Overview
 
 Solubility data
 ====================
-Data used: The solubility from the AppliedPredictiveModeling package
+
+- Data set of 1267 chemical compounds
+-  208 binary "fingerprints" that indicate the presence of a specific chemical substructure
+-  16 count descriptors (e.g. number of bonds or number of a specific type of atom)
+-  Four continuous descriptors (e.g. molecular weight or surface area)
+- Target: solubility values
+
 ###
 ```{r Load the data, error=FALSE, warning=FALSE, message=FALSE}
 
@@ -103,11 +109,16 @@ testResults <- data.frame(obs = solTestY,
                           NNet = predict(nnetTune, solTestXtrans))
 ```
 
+Neural net variable importance
+================================
+```{r}
+nnetImp <- varImp(nnetTune, scale = FALSE)
+plot(nnetImp, top = 25)
+```
+
+
 Multiple Adaptive Regression Splines
 ====================================
-
-MARS
-====
 
 -  Example of an additive regression model.
 -  Has the general form
@@ -136,17 +147,13 @@ set.seed(100)
 marsTune
 ```
 
-Plot MARS results
+Plot MARS error vs complexity
 ====================
 ```{r}
 plot(marsTune)
-```
-
-MARS predictions
-======
-```{r}
 testResults$MARS <- predict(marsTune, solTestXtrans)
 ```
+
 
 MARS variable importance
 ============
@@ -157,9 +164,6 @@ plot(marsImp, top = 25)
 
 Support Vector Machines
 =======================
-
-SVM
-===
 
 -  Modeling tools that can be applied to both regression and classification tasks.
 -  Implemented in the package `kernlab` and `e1071` (`svm`)
@@ -178,18 +182,17 @@ SVM finds the hyperplane that maximizes the separation between cases belonging t
 SVM example
 ============
 
-```
-{r}
+```{r}
 set.seed(100)
-svmRTune <- train(x = solTrainXtrans, y = solTrainY,
-                  method = "svmRadial",
-                  preProc = c("center", "scale"),
-                  tuneLength = 14,
-                  trControl = ctrl)
+# svmRTune <- train(x = solTrainXtrans, y = solTrainY,
+#                   method = "svmRadial",
+#                   preProc = c("center", "scale"),
+#                   tuneLength = 14,
+#                   trControl = ctrl)
 svmRTune
 ```
 
-Plot results
+Plot error vs complexity
 ===============
 ```{r}
 plot(svmRTune, scales = list(x = list(log = 2)))                 
@@ -197,28 +200,21 @@ plot(svmRTune, scales = list(x = list(log = 2)))
 
 Use svmPoly version
 =====
-```
-{r svmpoly}
+```{r svmpoly}
 svmGrid <- expand.grid(degree = 1:2, 
                        scale = c(0.01, 0.005, 0.001), 
                        C = 2^(-2:5))
 set.seed(100)
-svmPTune <- train(x = solTrainXtrans, y = solTrainY,
-                  method = "svmPoly",
-                  preProc = c("center", "scale"),
-                  tuneGrid = svmGrid,
-                  trControl = ctrl)
+# svmPTune <- train(x = solTrainXtrans, y = solTrainY,
+#                   method = "svmPoly",
+#                   preProc = c("center", "scale"),
+#                   tuneGrid = svmGrid,
+#                   trControl = ctrl)
 
 svmPTune
 ```
 
-Plot svmPoly
-=============
-```{r}
-plot(svmPTune, 
-     scales = list(x = list(log = 2), 
-                   between = list(x = .5, y = 1)))                 
-```
+
 
 Save prediction results for comparison
 ====================
@@ -242,11 +238,11 @@ Applying knn
 knnDescr <- solTrainXtrans[, -nearZeroVar(solTrainXtrans)]
 
 set.seed(100)
-knnTune <- train(x = knnDescr, y = solTrainY,
-                 method = "knn",
-                 preProc = c("center", "scale"),
-                 tuneGrid = data.frame(k = 1:20),
-                 trControl = ctrl)
+# knnTune <- train(x = knnDescr, y = solTrainY,
+#                  method = "knn",
+#                  preProc = c("center", "scale"),
+#                  tuneGrid = data.frame(k = 1:20),
+#                  trControl = ctrl)
                  
 knnTune
 ```
@@ -261,7 +257,7 @@ testResults$Knn <- predict(knnTune, solTestXtrans[, names(knnDescr)])
 ```
 
 
-Why non-linear methods work?
+Why do non-linear methods work?
 ============================
 
 -  World is not linear
