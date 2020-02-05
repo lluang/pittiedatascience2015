@@ -155,16 +155,15 @@ Feature selection
 - Take that list of 22 indicators, see if we can narrow it down.
 
 ```{r featureselection}
-library(randomForest)
 data.model <- specifyModel(T.ind(GSPC) ~ 
        Delt(Cl(GSPC),k=1:10) +myATR(GSPC) + mySMI(GSPC) + myADX(GSPC) + myAroon(GSPC) +  myBB(GSPC)  + myChaikinVol(GSPC) + myCLV(GSPC) +  CMO(Cl(GSPC)) + EMA(Delt(Cl(GSPC))) + myEMV(GSPC) +  myVolat(GSPC)  + myMACD(GSPC) + myMFI(GSPC) + RSI(Cl(GSPC)) + mySAR(GSPC) + runMean(Cl(GSPC)) + runSD(Cl(GSPC)))
 set.seed(1234)
-rf <- buildModel(data.model,method='randomForest',
-             training.per=c(start(GSPC),index(GSPC["1999-12-31"])),
-             ntree=50, importance=T)
+#rf <- buildModel(data.model,method='randomForest',
+#             training.per=c(start(GSPC),index(GSPC["1999-12-31"])),
+#             ntree=50, importance=T)
 ```
 
-Repeat using caret
+using caret
 ===================
 
 - Create a data frame
@@ -189,9 +188,36 @@ pricemodel <- data.frame(Tind = T.ind(GSPC),
        runMean = runMean(Cl(GSPC)) ,
        runSD = runSD(Cl(GSPC)))
 ```
-Apply random forest using carat
+Apply neural net using carat
 =============
-```{r}
+
+```{r nncaret}
+pricemodel <- pricemodel[complete.cases(pricemodel),]
+set.seed(1234)
+indx <- createFolds(pricemodel[,"Tind"], returnTrain = TRUE)
+ctrl <- trainControl(method = "cv", index = indx)
+nnetGrid <- expand.grid(size = seq(from = 1, to = 5, by = 2),
+                        decay = seq(from = 0.1, to = 0.5, by = 0.2))
+nncaret <- train(x = pricemodel[,-1], 
+            y = pricemodel[,"Tind"],
+            preProcess = 'scale',
+            method='nnet',
+            linout=T,trace=F,
+            importance=TRUE,
+            tuneGrid = nnetGrid,
+            trControl = ctrl)
+```
+
+```
+{r}
+preds <- predict(nncaret, Tdata.train[1001:2000,])
+sigs.nn <- trading.signals(preds, 0.1, -0.1)
+true.sigs <- trading.signals(Tdata.train[1001:2000,'T.ind.GSPC'],0.1,-0.1)
+confusionMatrix(sigs.nn,true.sigs)
+```
+
+```
+{r rfcaret}
 pricemodel <- pricemodel[complete.cases(pricemodel),]
 set.seed(1234)
 mtryGrid <- data.frame(mtry = floor(seq(10, ncol(pricemodel[,-1]), 
@@ -213,14 +239,14 @@ Check importance of the variables
 ==================================
 
 ```{r}
-varImp(rf)
+varImp(nncaret)
 ```
 
 Pick the most important variables
 =================================
 
 ```{r}
-imp <- varImp(rf)
+imp <- varImp(nncaret)
 imp
 ```
 
@@ -228,6 +254,19 @@ Use the most important indicators in a model
 ============================================
 
 ```{r}
+data.model <- specifyModel(
+  T.ind(GSPC) ~ runMean(Cl(GSPC))+
+    mySAR(GSPC) +
+    myVolat(GSPC) +
+    myMACD(GSPC) + 
+    myATR(GSPC) + 
+    myADX(GSPC) + 
+    Delt(Cl(GSPC),k=1) 
+     )
+```
+
+```
+{r}
 data.model <- specifyModel(
   T.ind(GSPC) ~ Delt(Cl(GSPC),k=1) + 
     myATR(GSPC) + myADX(GSPC) + 
@@ -354,11 +393,10 @@ ANN Example
 ```{r annexample, echo=FALSE}
 set.seed(1234)
 library(nnet)
-library(nnet)
 ```
 
 
-```{r}
+```{r nncaret}
 nncaret <- train(x = Tdata.train[1:1000,-1], 
             y = Tdata.train[1:1000,1],
             preProcess = 'scale',
@@ -384,17 +422,9 @@ set.seed(1234)
 signals <- trading.signals(Tdata.train[,'T.ind.GSPC'],0.1,-0.1)
 #norm.data <- data.frame(signals=signals,scale(Tdata.train[,-1]))
 ```
-```
-{r}
-nn <- nnet(signals ~ .,norm.data[1:1000,],size=10,decay=0.01,maxit=1000,trace=F)
-```
-```
-{r, echo=FALSE}
-preds <- predict(nn,norm.data[1001:2000,],type='class')
-sigs.PR(preds,norm.data[1001:2000,1])
-```
 
-```{r}
+
+```{r nnsignals}
 nnsignals <- train(x = Tdata.train[1:1000,-1], 
             y = signals[1:1000],
             preProcess = 'scale',
@@ -435,7 +465,7 @@ SVM example
 ============
 
 -First, use version in `e1071` package.
-```{r}
+```{r svme1071}
 library(e1071)
 svme1701 <- train(x = Tdata.train[1:1000,-1], 
             y = signals[1:1000],
@@ -462,7 +492,7 @@ Again using kernlab
 library(kernlab)
 ```
 
-```{r}
+```{r svmkernlab}
 svmkernlab <- train(x = Tdata.train[1:1000,-1], 
             y = signals[1:1000],
             method='svmLinear',
@@ -500,13 +530,10 @@ $$H[+(x_i-t)] = max(0, x_i-t)$$
 
 MARS example
 ============
-```{r}
+```{r marsearth}
 library(earth)
 e <- earth(Tform,Tdata.train[1:1000,])
-e.preds <- predict(e,Tdata.train[1001:2000,])
-sigs.e <- trading.signals(e.preds,0.1,-0.1)
-true.sigs <- trading.signals(Tdata.train[1001:2000,'T.ind.GSPC'],0.1,-0.1)
-sigs.PR(sigs.e,true.sigs)
+
 ```
 
 ```{r}
@@ -514,10 +541,15 @@ mars <- train(x = Tdata.train[1:1000,-1],
             y = signals[1:1000],
             method='earth',
             trControl = ctrl)
+e.preds <- predict(mars,Tdata.train[1001:2000,])
+sigs.e <- trading.signals(e.preds,0.1,-0.1)
+true.sigs <- trading.signals(Tdata.train[1001:2000,'T.ind.GSPC'],0.1,-0.1)
+confusionMatrix(sigs.e,true.sigs)
 ```
 
 
-```{r}
+```
+{r}
 kernlab.preds <- predict(svme1701,Tdata.train[1001:2000,])
 #true.sigs <- trading.signals(Tdata.train[1001:2000,'T.ind.GSPC'],0.1,-0.1)
 confusionMatrix(krenlab.preds, true.sigs)
@@ -1029,3 +1061,8 @@ Methods discussed
 -  Multivariate adaptive regression splines
 -  Evaluation using Monte Carlo methods.
 -  Precision and recall
+
+
+```{r}
+save.image(file="nonlinearRegression.Rdata")
+```

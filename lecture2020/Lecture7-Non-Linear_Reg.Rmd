@@ -1,0 +1,282 @@
+---
+title: "Non-linear Regression Models"
+author: "IE 2064 Data Science"
+date: "February 2020"
+output:
+  pdf_document: default
+  html_document: default
+  slidy_presentation: 
+    fig_width: 4 
+    fig_height: 2
+  word_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_width: 4 
+    fig_height: 2
+---
+
+Overview
+========
+
+-  Artificial Neural Networks
+-  Support Vector Machines
+-  Multivariate adaptive regression splines
+
+
+Solubility data
+====================
+Data used: The solubility from the AppliedPredictiveModeling package
+###
+```{r Load the data, error=FALSE, warning=FALSE, message=FALSE}
+
+library(AppliedPredictiveModeling)
+data(solubility)
+
+### Create a control funciton that will be used across models. We
+### create the fold assignments explictily instead of relying on the
+### random number seed being set to identical values.
+```
+
+Set up Caret
+==============
+
+```{r setupcrossvalidation}
+library(caret)
+set.seed(100)
+indx <- createFolds(solTrainY, returnTrain = TRUE)
+ctrl <- trainControl(method = "cv", index = indx)
+# Note: I read the entire file once and saved workspace using save.image("nonlinearreg.Rdata")
+# then commneted out all of the model training lines
+load("nonlinearreg.Rdata")
+```
+
+Artificial Neural Networks
+==========================
+
+-  Frequently used in financial forecasting because of ability do deal with highly non-linear problems.
+-  *Feed forward neural nets* is implemented in the R `nnet` package.
+-  Formed by a set of computing units linked to each other.
+  1. Linear combination of inputs.
+  2. Non-linear computation to obtain output value.
+  3. Result fed to other neurons in the network.
+  4. Each neuron connection has a weight.
+  
+Feed-forward ANN
+================
+
+-  Neurons organized in layers.
+-  First layer contains inputs (initially the training observations)
+-  Last layer contains the predictions of the neural network from presented input data.
+-  In between, weights are updated to optimize the predictions according to an error criterion.
+
+
+![Neural network diagram](../resources/anndiagram.png)
+
+```{r}
+nnetGrid <- expand.grid(decay = c(0, 0.01, .1), 
+                       size = c(1, 3, 5, 7, 9, 11, 13), 
+                       bag = FALSE)
+
+set.seed(100)
+# nnetTune <- train(x = solTrainXtrans, y = solTrainY,
+#                   method = "avNNet",
+#                   tuneGrid = nnetGrid,
+#                   trControl = ctrl,
+#                   preProc = c("center", "scale"),
+#                   linout = TRUE,
+#                   trace = FALSE,
+#                   MaxNWts = 13 * (ncol(solTrainXtrans) + 1) + 13 + 1,
+#                   maxit = 1000,
+#                   allowParallel = FALSE)
+nnetTune
+```
+
+```{r plot nnetresults}
+plot(nnetTune)
+```
+
+nnet prediction
+==============
+```{r}
+testResults <- data.frame(obs = solTestY,
+                          NNet = predict(nnetTune, solTestXtrans))
+```
+
+Multiple Adaptive Regression Splines
+====================================
+
+MARS
+====
+
+-  Example of an additive regression model.
+-  Has the general form
+$$mars(x) = c_0 + \sum_{i=1}^k c_i B_i(x)$$
+-  $B_i$ are *basis function*
+
+Basis functions
+===============
+
+- Generally take the form of *hinge* functions
+$$H[-(x_i-t)] = max(0, t-x_i)$$
+$$H[+(x_i-t)] = max(0, x_i-t)$$
+-  $x_i$ are predictors
+-  $t$ is a threshold on the predictor.
+-  Implemented in package `mda` (`mars()`)
+-  Package `earth` (`earth()`)
+
+MARS example
+============
+```{r}
+set.seed(100)
+# marsTune <- train(x = solTrainXtrans, y = solTrainY,
+#                   method = "earth",
+#                   tuneGrid = expand.grid(degree = 1, nprune = 2:38),
+#                   trControl = ctrl)
+marsTune
+```
+
+Plot MARS results
+====================
+```{r}
+plot(marsTune)
+```
+
+MARS predictions
+======
+```{r}
+testResults$MARS <- predict(marsTune, solTestXtrans)
+```
+
+MARS variable importance
+============
+```{r}
+marsImp <- varImp(marsTune, scale = FALSE)
+plot(marsImp, top = 25)
+```
+
+Support Vector Machines
+=======================
+
+SVM
+===
+
+-  Modeling tools that can be applied to both regression and classification tasks.
+-  Implemented in the package `kernlab` and `e1071` (`svm`)
+-  Map original data to a high-dimensional space.
+-  Apply linear models to separate the data using hyperplanes.
+-  Mapping of the original data is through *kernal functions*.
+
+SVM Hyperplane
+==============
+
+SVM finds the hyperplane that maximizes the separation between cases belonging to different classes.
+
+![SVM plane](../resources/svmplane.png)
+
+
+SVM example
+============
+
+```
+{r}
+set.seed(100)
+svmRTune <- train(x = solTrainXtrans, y = solTrainY,
+                  method = "svmRadial",
+                  preProc = c("center", "scale"),
+                  tuneLength = 14,
+                  trControl = ctrl)
+svmRTune
+```
+
+Plot results
+===============
+```{r}
+plot(svmRTune, scales = list(x = list(log = 2)))                 
+```
+
+Use svmPoly version
+=====
+```
+{r svmpoly}
+svmGrid <- expand.grid(degree = 1:2, 
+                       scale = c(0.01, 0.005, 0.001), 
+                       C = 2^(-2:5))
+set.seed(100)
+svmPTune <- train(x = solTrainXtrans, y = solTrainY,
+                  method = "svmPoly",
+                  preProc = c("center", "scale"),
+                  tuneGrid = svmGrid,
+                  trControl = ctrl)
+
+svmPTune
+```
+
+Plot svmPoly
+=============
+```{r}
+plot(svmPTune, 
+     scales = list(x = list(log = 2), 
+                   between = list(x = .5, y = 1)))                 
+```
+
+Save prediction results for comparison
+====================
+```{r}
+testResults$SVMr <- predict(svmRTune, solTestXtrans)
+testResults$SVMp <- predict(svmPTune, solTestXtrans)
+```
+
+k-Nearest neighbors
+===================
+
+- Prediction based on $N$ nearest test points
+- Should scale values first!
+- If numeric variables, use distance  $\sqrt{\sum (x_i-\bar{x})^2}$
+- If factor variable, if same value distance equals = 0, otherwise distance = 1 on that variable.
+
+Applying knn
+==============
+```{r knn}
+### First we remove near-zero variance predictors
+knnDescr <- solTrainXtrans[, -nearZeroVar(solTrainXtrans)]
+
+set.seed(100)
+knnTune <- train(x = knnDescr, y = solTrainY,
+                 method = "knn",
+                 preProc = c("center", "scale"),
+                 tuneGrid = data.frame(k = 1:20),
+                 trControl = ctrl)
+                 
+knnTune
+```
+
+Plot RMSE
+===========
+```{r}
+plot(knnTune)
+testResults$Knn <- predict(knnTune, solTestXtrans[, names(knnDescr)])
+# This creates the R workspace image that I loaded at the top of this file
+# save.image("nonlinearreg.Rdata")
+```
+
+
+Why non-linear methods work?
+============================
+
+-  World is not linear
+-  Discontinuities in the system
+
+Simple vs complex
+==================
+
+- kNN is a simple to explain model
+- SVM is not too bad to explain, but difficult to interpret
+- Neural nets is difficult to explain and impossible to interpret
+    -  Neural nets with many layers is also known as deep learning
+
+################################################################################
+### Session Information
+sessionInfo()
+q("no")
+```
