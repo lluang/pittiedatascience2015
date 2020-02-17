@@ -1,14 +1,12 @@
 ---
 title: 'Homework 2: Regression'
 author: "IE 2064 Data Science"
-date: "March 7, 2019"
+date: "February 26, 2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
-
-**CHANGE Due Wednesday March 6, 2019**
 
 Note: Your dataset from EDA is probably naturally either a regression problem or a classification problem.  So you do not necessarily need to use the same dataset for this assignment as the EDA dataset if it is unrealistic for a regression problem.
 
@@ -22,8 +20,9 @@ Note: Your dataset from EDA is probably naturally either a regression problem or
 3.  A hypothetical CoNVO statement that identifies a potential client, with context and need. .  
 4.  Use 10 fold cross validation with one model from each of the following categories to:
 
-        1.  Determine the correct complexity of the model.
-        2.  Compare each using Root mean square error.
+    1.  Determine the correct complexity of the model.
+    2.  Compare each using Root mean square error.
+
     i.  Linear modes
         1.  Linear regression,
         2.  Lasso
@@ -38,7 +37,8 @@ Note: Your dataset from EDA is probably naturally either a regression problem or
     v. Ensemble methods
         1.  Random forests
         2.  Boosting
-        3.  Cubist
+        3.  Bagging
+        4.  Cubist
 
 5.  Present the results as if you were going present this to the hypothetical client (vision). How would the client react (outcome)?
 

@@ -1,7 +1,7 @@
 ---
 title: 'Lending Club Case: Exploratory Data Analysis'
 author: "IE 2064 Data Science"
-date: "January 15, 2020"
+date: "February 5, 2020"
 output:
   pdf_document: default
   html_document: default

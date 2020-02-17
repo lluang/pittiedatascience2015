@@ -4,11 +4,13 @@ author: "IE 2064 Data Science"
 date: "February 2019"
 output:
   pdf_document: default
+  html_document:
+    df_print: paged
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
-  html_document:
-    df_print: paged
+    fig_width: 4 
+    fig_height: 2
   slidy_presentation: default
 ---
 
@@ -28,7 +30,7 @@ library(ggplot2)
 library(AppliedPredictiveModeling)
 library(caret)
 data(solubility)
-load("data/regressionTree.Rdata")
+load("regressionTree.Rdata")
 
 ```
 
@@ -95,8 +97,7 @@ Smoothing
 Using caret for regression trees
 ====
 
-```
-{r}
+```{r}
 library(rpart)
 ### Fit two CART models to show the initial splitting process. rpart 
 ### only uses formulas, so we put the predictors and outcome into
@@ -112,8 +113,7 @@ rpSmall <- rpart(y ~ ., data = trainData,
 
 Tune the model using caret
 ====
-```
-{r}
+```{r}
 set.seed(100)
 cartTune <- train(x = solTrainXtrans, y = solTrainY,
                   method = "rpart",
@@ -186,6 +186,7 @@ Ensemble methods
 
 -  Ensemble techniques combine the predictions of many models to develop a prediction.
 -  Intuitively, every model has a range it is good in, models will counter each other's weaknesses.
+-  Different methods apply different ways of creating the models
 -  Random forests - Models differ by allowable predictors
 -  Bagging - Random generations of datasets through Bootstrap selection
 -  Boosting - Each iteration oversamples where prior models performed poorly
@@ -193,9 +194,10 @@ Ensemble methods
 Random Forests
 ===============
 
-- Ensemble model
-- Note that in bagging trees, they typically look very similar.
-- Generally start with the same predictor variables.
+- Ensemble model.
+- Randomly sample subset of predictors.
+- Because each tree has different predictors, they should make different predcitions.
+-  Majority vote across models.
 - Random Forests reduce tree correlation by randomly selecting which predictors to consider.
 
 Random Forest simplified
@@ -221,6 +223,9 @@ Tuning grids in caret
 
 - We can specify the changing parameters across runs.
 - The tuning grid specifies the mix of parameters and creates a grid that covers all combinations.
+- ntree: Number of trees to create
+- mtry:  Number of chosen variables in each tree
+- length:  How many values of mtry to try
 ```{r} 
 mtryGrid <- data.frame(mtry = floor(seq(10, ncol(solTrainXtrans), 
                       length = 10)))
@@ -228,15 +233,14 @@ mtryGrid <- data.frame(mtry = floor(seq(10, ncol(solTrainXtrans),
 
 Implementation with tuning grid
 ==============
-```
-{r}
+```{r}
 set.seed(100)
-rfTune <- train(x = solTrainXtrans, y = solTrainY,
-                method = "rf",
-                tuneGrid = mtryGrid,
-                ntree = 50,
-                importance = TRUE,
-                trControl = ctrl)
+# rfTune <- train(x = solTrainXtrans, y = solTrainY,
+#                 method = "rf",
+#                 tuneGrid = mtryGrid,
+#                 ntree = 50,
+#                 importance = TRUE,
+#                 trControl = ctrl)
 ```
 
 Results
@@ -252,10 +256,12 @@ rfTune$results
 Results plot
 =========
 
+- Try ggplot because built in `plot` command does not show SD
+
 ```{r}
 ggplot(rfTune$results, aes(x=mtry, y=RMSE)) + 
   geom_pointrange(aes(ymin = RMSE-RMSESD, ymax=RMSE+RMSESD)) + geom_line() + 
-   ylab("RMSE (Crossvalidation)") + xlab("Number of randomly selected variables")
+   ylab("RMSE (Crossvalidation)") + xlab("Number of randomly selected variables (mtry)")
 
 ```
 
@@ -263,11 +269,11 @@ ggplot(rfTune$results, aes(x=mtry, y=RMSE)) +
 Bagged Trees
 =========
 
--  Combines bootstrapping and a regression method to construct ensemble.
+-  Create different model through use of bootstrapping to construct different data sets.
 
 1.  For i in 1:m
   -  Generate a bootstrap sample of the original data.
-  -  Train and unpruned tree model on this sample
+  -  Train an unpruned tree model on this sample
 2.  Use the $m$ models to make a prediction.
 3.  Average the $m$ predictions for a final prediction.
 
@@ -299,12 +305,11 @@ set.seed(100)
 
 Bagging using caret and regression trees
 ===================
-```
-{r}
-treebagTune <- train(x = solTrainXtrans, y = solTrainY,
-                     method = "treebag",
-                     nbagg = 10,
-                     trControl = ctrl)
+```{r}
+# treebagTune <- train(x = solTrainXtrans, y = solTrainY,
+#                      method = "treebag",
+#                      nbagg = 10,
+#                      trControl = ctrl)
 ```
 ```{r}
 treebagTune
@@ -314,9 +319,6 @@ treebagTune
 treebagTune$results
 ```
 
-
-Boosting
-==========
 
 Boosting
 =============
@@ -329,12 +331,12 @@ Method
 =============
 
 1.  Select tree depth $D$ and number of iterations $K$
-2.  Computer average response $\bar{y}$ as the average predicted value for each sample (i.e. no model)
+2.  Compute average response $\bar{y}$ as the average predicted value for each sample (i.e. no model)
 3.  For $k$ in 1 to $K$
-  -  Computer residual for each sample
-  -  Fit a regression tree of depth $D$ using the residuals (i.e. predict the residuals)
-  -  Predict each sample using the regression tree.
-  - Update predicted value of each sample by adding the previous iterations predicted value to the new prediction.
+    -  Compute residual for each sample
+    -  Fit a regression tree of depth $D$ using the residuals (i.e. predict the residuals)
+    -  Predict each sample using the regression tree.
+    - Update predicted value of each sample by adding the previous iterations predicted value to the new prediction.
   
 Comments on boosting
 ==================
@@ -346,8 +348,7 @@ Comments on boosting
 
 Setup
 ======
-```
-{r}
+```{r}
 gbmGrid <- expand.grid(interaction.depth = seq(1, 7, by = 2),
                        n.trees = seq(200, 1000, by = 200),
                        shrinkage = c(0.01, 0.1),
@@ -357,13 +358,12 @@ set.seed(100)
 
 Implementation with caret
 =====================
-```
-{r}
-gbmTune <- train(x = solTrainXtrans, y = solTrainY,
-                 method = "gbm",
-                 tuneGrid = gbmGrid,
-                 trControl = ctrl,
-                 verbose = FALSE)
+```{r}
+# gbmTune <- train(x = solTrainXtrans, y = solTrainY,
+#                  method = "gbm",
+#                  tuneGrid = gbmGrid,
+#                  trControl = ctrl,
+#                  verbose = FALSE)
 ```
 
 Results
@@ -404,7 +404,6 @@ Models
 - Boosting
 
 
-```
-{r}
-save.image("regressionTree.Rdata")
+```{r}
+#save.image("regressionTree.Rdata")
 ```
