@@ -4,10 +4,10 @@ author: "IE 2064 Data Science"
 date: "March 2020"
 output:
   pdf_document: default
+  beamer_presentation: default
+  slidy_presentation: default
   html_document:
     df_print: paged
-  slidy_presentation: default
-  beamer_presentation: default
   ioslides_presentation: default
 ---
 
@@ -119,7 +119,8 @@ Recursive partitioning
 - Splitting based on maximizing the Gini coefficient.
 - Ensemble models use trees as their base method.
 
-```{r}
+```
+{r}
 set.seed(476)
 rpartFit <- train(x = training[,fullSet], 
                    y = training$Class,
@@ -481,6 +482,9 @@ Bagged Tree ROC
 treebagRoc <- roc(response = treebagFit$pred$obs,
                   predictor = treebagFit$pred$successful,
                   levels = rev(levels(treebagFit$pred$obs)))
+```
+```
+{r}
 set.seed(476)
 treebagFactorFit <- train(x = training[,factorPredictors], 
                           y = training$Class,
@@ -531,6 +535,11 @@ legend(.75, .2,
        pch = c(16, 3))
 ```
 
+Bagging
+=========
+
+-  For each iteration, a bootstrapped data sample is created
+-  Models differ on the dataset used (which elements are samples repeatedly and which samples become used for evaluation)
 
 
 Random Forest
@@ -540,40 +549,15 @@ Random Forest
 - Tuning parameter is the number of randomly selected predictors to choose from.
 - Models differ by the available candidate factors
 
-```{r}
-set.seed(476)
-randomforestFit <- train(x = training[,fullSet], 
-                    y = training$Class,
-                    method = "rf",
-                    mtry = 10,
-                    metric = "ROC",
-                    trControl = ctrl)
-```
-```{r, cache=TRUE,  echo=FALSE}
-randomforestFit$results
-```
 
 Boosting
 =========
 
--  AdaBoost generates a sequence of weak classifiers.
+-  Boosting methods generates a sequence of weak classifiers.
 -  At every iteration, samples that are incorrectly classified are given more weight, so subsequent models that are part of the ensemble are better at samples that were incorrectly classified earlier.
 
+
+
+
 ```{r}
-set.seed(476)
-adaboostFit <- train(x = training[,fullSet], 
-                    y = training$Class,
-                    method = "adaboost",
-                    nIter = 50,
-                    metric = "ROC",
-                    trControl = ctrl)
-```
-```{r, cache=TRUE,  echo=FALSE}
-adaboostFit$results
-```
-
-Bagging
-=========
-
--  For each iteration, a bootstrapped data sample is created
--  Models differ on the dataset used (which elements are samples repeatedly and which samples become used for evaluation)
+save.image(file="../data/Lect12ClassificationTrees.Rdata")
