@@ -486,12 +486,17 @@ treebagRoc <- roc(response = treebagFit$pred$obs,
                   predictor = treebagFit$pred$successful,
                   levels = rev(levels(treebagFit$pred$obs)))
 set.seed(476)
+```
+```
+{r}
 treebagFactorFit <- train(x = training[,factorPredictors], 
                           y = training$Class,
                           method = "treebag",
                           nbagg = 50,
                           metric = "ROC",
                           trControl = ctrl)
+```
+```{r}
 treebagFactorFit$result
 ```
 
@@ -581,3 +586,8 @@ Bagging
 
 -  For each iteration, a bootstrapped data sample is created
 -  Models differ on the dataset used (which elements are samples repeatedly and which samples become used for evaluation)
+
+```{r}
+save.image("../data/Lect12ClassificationTrees.Rdata")
+
+```
