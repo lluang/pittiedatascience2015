@@ -1,13 +1,13 @@
 ---
 title: 'Homework 3: Classification'
 author: "IE 2064 Data Science"
-date: "March 21, 2019"
+date: "April 1, 2020"
 output:
   html_document: default
   pdf_document: default
 ---
 
-**CHANGE Due Wednesday March 27, 2019**
+**CHANGE Due Wednesday April 1, 2020**
 
 Note: Your dataset from EDA is probably naturally either a regression problem or a classification problem.  So you do not necessarily need to use the same dataset for this assignment as the EDA dataset.
 
