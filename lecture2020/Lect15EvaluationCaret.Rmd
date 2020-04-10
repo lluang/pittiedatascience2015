@@ -3,9 +3,13 @@ title: "Lecture 15 Model training and evaluation"
 author: "IE2064 Data Science"
 date: "April 2020"
 output:
-  pdf_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_width: 4 
+    fig_height: 2
   html_document: default
-  beamer_presentation: default
+  pdf_document: default
 ---
 
 Overview of Data science workflow
@@ -29,7 +33,6 @@ Overview of Data science workflow
 
 CoNVO
 ======================
-incremental: true
 
 -  **Co**ntext
 -  **N**eeds
