@@ -2,6 +2,7 @@
 title: "Regression"
 author: "IE 2064 Data Science"
 output:
+  html_document: default
   pdf_document: default
   beamer_presentation: 
     colortheme: whale
@@ -12,7 +13,7 @@ output:
     fig_width: 4 
     fig_height: 2
   word_document: default
-  html_document: default
+
 ---
 
 

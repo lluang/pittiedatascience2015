@@ -3,12 +3,13 @@ title: "Visualization and data munging"
 author: "Louis Luangkesorn"
 date: "January 2020"
 output:
+  html_document:
+    df_print: paged
   beamer_presentation:
     colortheme: whale
     theme: AnnArbor
   pdf_document: default
-  html_document:
-    df_print: paged
+
   slidy_presentation: default
 ---
 
